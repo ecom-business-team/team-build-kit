@@ -122,6 +122,7 @@ Verify against the PRD:
 At the end of each work item, update affected living docs **to the Documentation Standard** (`~/.claude/skills/_shared/documentation_standard.md` — same templates and content rules the docs were created from):
 - **CONTEXT.md** — if structure changed (new workflows, tables, folders)
 - **system_contracts.md** — if boundaries were added/modified
+- **Open-item register** — did this work close an entry in the workspace's missing-wires / open-inputs register (a `DATA_CONTRACT.md`, a blockers table)? **Mark it closed now, in the same sitting.** Building a wire and recording that it is built are two acts, and only the first has a deadline, so the second is the one that silently rots. A register that lists shipped work as missing sends the next PRD looking for something that already exists.
 - **Decision log** — if decisions were made
 - **Changelog** — entry for what was built
 

@@ -60,7 +60,7 @@ Answer all five in writing. This is the heart of the gate — reuse the CLAUDE.m
 
 | Question | What to answer |
 |----------|----------------|
-| **What breaks?** | Every failure mode. For every handoff: what if the next step never fires — how long until someone notices? For every write: what happens if it runs twice? (idempotency) |
+| **What breaks?** | Every failure mode. For every handoff: what if the next step never fires — how long until someone notices? For every write: what happens if it runs twice? (idempotency) **And: which collaborators does the test suite supply itself, and does the real one have the same shape?** A hand-made stub is fine for values and dangerous for interfaces — a suite that builds its own resolver, client or config object can pass green while production throws on the first call, because the fixture's *shape* was invented rather than taken from the thing it stands in for. |
 | **Who notices?** | For each failure: does someone get notified (owner + specific next action), or does it fail silently? Where is the source of truth, and can it drift? |
 | **What's the fallback?** | For each automated step that fails: is there a manual path forward? For each human step: is a system sitting idle waiting, and does anyone know? |
 | **What's the contingency?** | If it goes wrong in production: what's the rollback or kill switch? Can we undo go-live in one step? |
@@ -131,6 +131,7 @@ Append to `project_log.md`:
 Ask: what worked / what was painful / what to do differently. Append to `project_log.md` under Lessons Learned. If a lesson suggests a change to the mental models, checklists, or these skills — propose the specific change.
 
 ### Step 3: Final Documentation
+- **Close the register entries this build satisfied** — the missing-wires / open-inputs table the workspace's PRDs read first. Mark each built wire closed with what built it, and downgrade any entry that turned out to be a data or decision problem rather than a missing wire. This is the step that rots when skipped, and it rots invisibly.
 - Remaining living-doc updates (CONTEXT.md, system_contracts.md, decision log, changelog) — **to the Documentation Standard** (`~/.claude/skills/_shared/documentation_standard.md`). If a required doc doesn't exist, run `/new-workspace` to instantiate it to standard rather than hand-rolling it.
 - `project_log.md`: Status → **Complete**, completion date, any deferred follow-ups.
 

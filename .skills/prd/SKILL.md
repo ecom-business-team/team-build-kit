@@ -71,6 +71,9 @@ BEGINNING STATE (verified):
 Systems involved:
 - [system] — [current state, key facts]
 
+Kind of thing built:
+- [one of the six kinds (documentation_standard.md §4), or a composite naming its parts — and the proof each kind requires]
+
 Schema / data:
 - [table] — [columns, relationships, conventions]
 
@@ -233,6 +236,7 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 **Constraint:** [One sentence — the bottleneck this addresses]
 **Memo:** [relative path to memo, e.g. ../memos/payout_disputes.md]
 **Initiative:** [relative path to the planning folder's state.md and the roadmap item, or "standalone"]
+**Kind:** [one of the six kinds, or a composite naming its parts, with the proof each requires — from the Phase 1 briefing]
 **Date:** [Date]
 **Status:** Draft / Approved
 

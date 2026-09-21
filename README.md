@@ -51,8 +51,8 @@ Type these in any Claude Code session:
 
 ## Start here
 
-1. **Open [`flow.html`](flow.html)** in your browser — it walks one complete example build (a simple expense tracker) through every gate, so you can see *why* each step exists before you do it yourself.
-2. **Read [`HOW_WE_BUILD.md`](HOW_WE_BUILD.md)** — the short "why" behind the whole approach. The one idea to take away: **complexity is the enemy. If you can't explain it simply, it's probably too complicated.**
+1. **Read [`why_we_build.md`](workspace/why_we_build.md)** — why we build this way, in plain words: two ladders, six kinds, three gates, one state layer, and what goes wrong when each is skipped. If you downloaded the kit, open `workspace/why_we_build.html` in your browser for the same document with its diagrams drawn.
+2. The one idea to take away: **complexity is the enemy. If you can't explain it simply, it's probably too complicated.**
 
 Then run `/new-workspace` and start building.
 

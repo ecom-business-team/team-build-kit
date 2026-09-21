@@ -22,15 +22,13 @@ Say:
 
 > "Done — you now have `/new-workspace`, `/memo`, `/prd`, `/build`, `/ship`, `/quick-fix`, and `/update-build-kit` in every Claude Code session.
 >
-> Two things before you build anything:
-> 1. Open **flow.html** in your browser — it walks one full example so you can see why each step exists.
-> 2. Skim **HOW_WE_BUILD.md** — the short *why* behind it.
+> One thing before you build anything: read **workspace/why_we_build.md** — why we build this way, in plain words (open **workspace/why_we_build.html** in your browser to see it with its diagrams). The one idea: complexity is the enemy. If you can't explain it simply, it's probably too complicated.
 >
 > When you're ready, run `/new-workspace` to set up a home for your work."
 
 ## Step 4: Do NOT clean up
 
-This is a living kit. Leave `.skills/`, `README.md`, `flow.html`, `HOW_WE_BUILD.md`, and this file in place. They are how `/update-build-kit` re-installs the latest version. The repo folder is the kit, not a throwaway scaffold.
+This is a living kit. Leave `.skills/`, `workspace/`, `README.md`, and this file in place. They are how `/update-build-kit` re-installs the latest version. The repo folder is the kit, not a throwaway scaffold.
 
 ---
 

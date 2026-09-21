@@ -1,0 +1,36 @@
+# MANIFEST — every file the Team Build Kit ships, one path per line, relative to this repo.
+# [promoted] lines are copied from the source workspace by its kit_promote.py:
+#   .skills/<p>    <- the installed skills folder/<p>      workspace/<p>  <- the workspace root/<p>
+# [native] lines are written in this repo and never copied.
+# install.sh and /update-build-kit install every .skills/ line into ~/.claude/skills/.
+[promoted]
+.skills/memo/SKILL.md
+.skills/prd/SKILL.md
+.skills/build/SKILL.md
+.skills/ship/SKILL.md
+.skills/quick-fix/SKILL.md
+.skills/new-workspace/SKILL.md
+.skills/session-close/SKILL.md
+.skills/day/SKILL.md
+.skills/week/SKILL.md
+.skills/_shared/documentation_standard.md
+.skills/_shared/project_close.md
+.skills/_shared/claude_md_template.md
+workspace/.claude/hooks/session_ledger.py
+workspace/.claude/hooks/session_start_gate.py
+workspace/.claude/hooks/practices_gate.py
+workspace/.claude/hooks/state_budget_gate.py
+workspace/.claude/tools/orientation_cost.py
+workspace/documentation_standard.md
+workspace/workflow_design_standard.md
+workspace/testing_standard.md
+workspace/glossary.md
+workspace/_practices/CONTEXT.md
+workspace/_practices/investigation.md
+workspace/_practices/integration-audit.md
+workspace/_practices/subagents.md
+workspace/_practices/deploying.md
+workspace/_practices/claude-code.md
+workspace/_practices/llm-workflows.md
+[native]
+.skills/update-build-kit/SKILL.md

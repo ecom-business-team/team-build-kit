@@ -4,22 +4,17 @@ When the user says **"get started"** (or anything indicating they want to instal
 
 ## Step 1: Install the skills
 
-Copy the skills + the shared Documentation Standard into the user's global skills directory. Run this from the repo root:
+Install every `.skills/` file the kit's `MANIFEST` lists into the user's global skills directory, taking them from this folder. Run this from the repo root:
 
 ```bash
-for s in new-workspace memo prd build ship quick-fix update-build-kit; do
-  rm -rf ~/.claude/skills/"$s" && cp -r ".skills/$s" ~/.claude/skills/"$s"
-done
-mkdir -p ~/.claude/skills/_shared
-cp ".skills/_shared/documentation_standard.md" ~/.claude/skills/_shared/documentation_standard.md
-echo "Installed:"; ls -1 ~/.claude/skills/{new-workspace,memo,prd,build,ship,quick-fix,update-build-kit}/SKILL.md ~/.claude/skills/_shared/documentation_standard.md
+TBK_BASE="file://$PWD" bash install.sh
 ```
 
-Tell the user first: *"I'm installing 7 skills + a shared standard into your Claude Code. I just need your permission once to copy the files."*
+Tell the user first: *"I'm installing the Team Build Kit's skills into your Claude Code — every file its MANIFEST lists. I just need your permission once to copy the files."*
 
 ## Step 2: Verify the install (smoke test)
 
-Confirm all 8 files printed by the command above exist. The four core lifecycle skills (`prd`, `build`, `ship`, `new-workspace`) **depend on** `~/.claude/skills/_shared/documentation_standard.md` — if it's missing, they break. If any file is missing, re-run Step 1 before continuing.
+Confirm the command printed ✅ with its file count. The four core lifecycle skills (`prd`, `build`, `ship`, `new-workspace`) **depend on** `~/.claude/skills/_shared/documentation_standard.md` — if it's missing, they break. If the command printed ❌, nothing was installed; re-run Step 1 before continuing.
 
 ## Step 3: Orient the user (do NOT skip)
 

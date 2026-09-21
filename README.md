@@ -64,7 +64,7 @@ Then run `/new-workspace` and start building.
 /update-build-kit
 ```
 
-Pulls the latest version of the kit and re-installs the skills. Run it whenever you hear there's an update — your own work is never touched.
+Pulls the latest version of the kit and re-installs the skills. Run it whenever you hear there's an update — your own work is never touched. What the kit ships is listed in `MANIFEST`; `workspace/` holds files a later version installs into your workspace.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: quick-fix
-description: Diagnose and fix small issues without project scaffolding. Use for bug fixes, config tweaks, workflow adjustments, or minor enhancements that don't require new architecture. Emphasizes deep diagnosis over quick action.
+description: Diagnose and fix small issues without project scaffolding — and end with the same blast-radius exit gate as /build (if others depend on it or it writes real data, the six Gate-3 questions run inline before it goes live). Use for bug fixes, config tweaks, workflow adjustments, or minor enhancements that don't require new architecture. Emphasizes deep diagnosis over quick action.
 ---
 
 # /quick-fix
@@ -86,9 +86,28 @@ The fix should feel mechanical at this point — the hard thinking was Phase 1.
 
 ## Phase 3: VERIFY
 
-1. Test that the original problem is resolved
+1. Test that the original problem is resolved **with the proof the system's kind requires**: the **Kind** line of its `CONTEXT.md` names the kind, and the kinds table in `documentation_standard.md` §4 ("The third axis") names the proof — replay through the real entry point for an automation; tests plus a live probe for a service; smoke through the real login for an application; tests on fixtures plus a real-data check for a tool; a cold read for a procedure; review against its sources for knowledge. The method for the code kinds is `testing_standard.md`.
 2. Spot-check that adjacent functionality still works
 3. If there's an easy way to trigger the flow end-to-end, do it
+
+---
+
+## Phase 3.5: EXIT GATE — the blast-radius router (the same rule as `/build`)
+
+A quick fix skips design; it never skips the exit gate. Before the fix goes live — the deploy, the replay, the bulk write, the workflow re-activation — ask the four router questions: **Does someone other than you depend on it? Does it write or change real data? Is its output relied on for decisions? Does it touch money, outside parties or business-critical truth?**
+
+- **None fire →** ship it; go to Phase 4.
+- **Any fire →** answer the six Gate-3 questions **inline, in miniature** — a paragraph, not a review document — before anything goes live:
+  1. **What breaks** if this runs twice, or half-runs? (idempotency, for every write)
+  2. **Who notices** if it fails, and how fast? (a noticer with an owner and an action — or "silent", which is a hole)
+  3. **What is the fallback** — the manual path if the automated one fails?
+  4. **What is the contingency** — the one-step undo? (a bulk write needs its prestate snapshot FIRST: `bulk_ops/`, the tripwire)
+  5. **How do we fix it** at 2 am — the procedure, written where the next person looks?
+  6. **What does it conclude without testing** — what did the canary or the sample decide about the items it never examined, and what makes them representative?
+
+  Every "nothing" or "don't know" is a hole: **fix it now** (add the noticer, the snapshot, the idempotency guard) or **escalate** to `/memo` — never note it and proceed. Record the six answers in the session-log entry (a quick fix has no project log) and say out loud what went live.
+
+Why this exists: quick-fix is the most-used path and it does write real data — rows replayed through a webhook, statuses re-fired on a board — on discipline alone until now. One exit dimension, blast radius, now covers both paths; intake keeps its own question, does this need design.
 
 ---
 
@@ -99,6 +118,7 @@ Per the Living Documentation Rule:
 1. Check if any living documents reference the changed entity
 2. Flag proposed updates for approval
 3. Add a changelog entry if the change is meaningful (skip for trivial config tweaks)
+4. If the system's `CONTEXT.md` predates 2026-09-20 and has no **Kind** and **Proved by** lines, add them now — two lines, from what Phase 1 observed.
 
 **Do NOT create:** project folders, tickets, PROJECT_LOG, retrospectives, or decision log entries. This is a quick fix.
 

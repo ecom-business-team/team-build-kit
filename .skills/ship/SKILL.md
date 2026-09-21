@@ -1,11 +1,11 @@
 ---
 name: ship
-description: Gate 3 — "others can rely on it." The resilience review a build must clear before it goes live, triggered when the blast radius crosses the line (someone else depends on it, it writes/changes real data, its output is relied on for important decisions, or it touches money / outside parties / business-critical truth). Surfaces what breaks / who notices / fallback / contingency / how-we-fix, dispositions every hole (fix / escalate / accept), then takes the build live and closes the project. Invoked by /build when the router fires.
+description: Gate 3 — "others can rely on it." The resilience review a build must clear before it goes live, triggered when the blast radius crosses the line (someone else depends on it, it writes/changes real data, its output is relied on for important decisions, or it touches money / outside parties / business-critical truth). Surfaces what breaks / who notices / fallback / contingency / how-we-fix / what it concludes without testing, dispositions every hole (fix / escalate / accept), then takes the build live and closes the project. Invoked by /build when the router fires.
 ---
 
 # /ship
 
-**Definition of done:** Ship proves a build is safe for **others to rely on** before it goes live, then takes it live and closes the project. It is **Gate 3** — and it only triggers when the blast radius is real. The build already works (that's `/build`); ship answers a different question: *when this runs in production and something goes wrong, what happens?* If you can't answer what breaks, who notices, the fallback, the contingency, and how we fix it — it does not go live.
+**Definition of done:** Ship proves a build is safe for **others to rely on** before it goes live, then takes it live and closes the project. It is **Gate 3** — and it only triggers when the blast radius is real. The build already works (that's `/build`); ship answers a different question: *when this runs in production and something goes wrong, what happens?* If you can't answer what breaks, who notices, the fallback, the contingency, how we fix it, and what it concludes without testing — it does not go live.
 
 **This is the human review gate.** For your own builds, it's a deliberate self-review before exposing something real. For the team, this is the point where they bring the build to you — the resilience review is exactly the judgment a non-technical builder can't self-administer. **The written review is the audit surface:** it's what lets you (or a fresh session) verify the gate was cleared honestly, not rubber-stamped.
 
@@ -23,7 +23,7 @@ If none fire, there is no `/ship` — `/build` ships freely and closes the proje
 
 ```
 /ship [project name]
-/ship auto-categorizer
+/ship payout-disputes
 ```
 
 ## When to Use
@@ -39,7 +39,7 @@ If none fire, there is no `/ship` — `/build` ships freely and closes the proje
 
 ## Prerequisite
 
-A `/build` that passed end-of-build verification, with a `project_log.md` recording the router result. Read the PRD's pre-mortem and impact map before starting — this review builds on them.
+A `/build` that passed end-of-build verification, with `state.md` recording the router result. **Orient from the project's `state.md` first** (`/build` Phase 1-A: read it, run its verify block, announce the position) — it names the held steps and what needs the owner. Then read the PRD's pre-mortem and impact map by section, and the project log only where `state.md` points. This review builds on them.
 
 ---
 
@@ -50,13 +50,13 @@ State exactly which router condition(s) fire and **who/what is exposed**:
 - What real data does it write or change?
 - What money / outside party / business-critical truth does it touch?
 
-This sets the depth of the review. A tool that moves real money gets a harder look than one that writes an internal note someone reads.
+This sets the depth of the review. A workflow that moves money to creators gets a harder look than one that writes an internal status field someone reads.
 
 ---
 
 ## Phase 2: RESILIENCE REVIEW (the Gate-3 content)
 
-Answer all five in writing. This is the heart of the gate — reuse the CLAUDE.md Workflow Design Standard quality lens.
+Answer all six in writing. This is the heart of the gate — reuse the CLAUDE.md Workflow Design Standard quality lens.
 
 | Question | What to answer |
 |----------|----------------|
@@ -65,6 +65,7 @@ Answer all five in writing. This is the heart of the gate — reuse the CLAUDE.m
 | **What's the fallback?** | For each automated step that fails: is there a manual path forward? For each human step: is a system sitting idle waiting, and does anyone know? |
 | **What's the contingency?** | If it goes wrong in production: what's the rollback or kill switch? Can we undo go-live in one step? |
 | **How do we fix it?** | The recovery procedure, written down concretely — so the person on the hook at 2am can follow it. |
+| **What does it conclude without testing?** | For every gate, canary, smoke test, spot-check, sample, or `limit 1` read: what does it decide about items it never examined, and what makes the examined item representative? Check **both** directions — a *pass* that authorizes untested items, and a *failure* that condemns them. If nothing establishes representativeness, that's a hole. |
 
 Every answer of "I don't know" or "nothing" where there should be something is a **hole**. Holes are not noted and moved past — they go to Phase 3 for disposition.
 
@@ -78,11 +79,13 @@ Finding holes is worthless if nothing happens to them. **Every hole from Phase 2
 |-------------|-----------------|--------|
 | **Fix now** | The hole is a *missing safeguard* you can build in this scope — no failure alert, no idempotency guard, no retry, no manual-fallback path | Build the safeguard, then re-run that resilience question. Go-live stays blocked until it's in. This is the default. |
 | **Escalate** | The hole is a *design flaw*, not a missing safeguard — a silent-drift source of truth, two systems writing one field, an architecture that can't support the needed fallback | Stop. Return to `/prd` (or `/memo` if the underlying problem was mis-framed). You do not bolt a safeguard onto a broken design. |
-| **Accept** | A real but acceptable residual — the cost to close it exceeds the risk, it is reversible, and the contingency is written down | Record the decision and the contingency. **Requires explicit human sign-off.** For the team, this is the call they bring to Zak — it is not theirs to make alone. |
+| **Accept** | A real but acceptable residual — the cost to close it exceeds the risk, it is reversible, and the contingency is written down | Record the decision and the contingency. **Requires explicit human sign-off.** For the team, this is the call they bring to the owner — it is not theirs to make alone. |
 
 **Go-live gate:** every hole is now either **Fixed** or **Accepted-with-sign-off.** An undispositioned hole blocks go-live — no exceptions. A hole you quietly tolerate is exactly the failure this gate exists to prevent (Surface, don't sweep).
 
 Record each hole and its disposition in the Ship Review (Phase 6).
+
+**Each Gate-3 round is a session.** When a round ends — review written, blockers fixed, or waiting on the owner — rewrite `state.md` (Position: Gate 3 round N done; Next: …; Held; Needs {owner}), print the handoff card (template §4.10) and stop, exactly as `/build` Phase 2 Step 5. The next round resumes from the snapshot.
 
 ---
 
@@ -93,6 +96,7 @@ Confirm before flipping the switch:
 - **Reversibility** — go-live can be undone in one step (cutover, not a one-way door).
 - **Monitoring** — every automated event posts to the team's notification channel with what happened, the link, who's tagged (by their ID in that channel), and their specific next action. A notification without an owner and an action is useless. (CLAUDE.md Operational Standards.)
 - **Bulk-ops safety** — if go-live involves a bulk data change (backfill / mass update or delete of > 10 records / restore / recompute): snapshot pre-state first into `{workspace}/bulk_ops/{YYYYMMDD}_{slug}/` with a README. Don't go live without it. (Session Close Protocol #9.)
+- **Drop safety** — if the build dropped (or its contract phase will drop) any schema object, confirm the verbatim definitions were persisted to the project folder BEFORE the drop. If any drop happened un-snapshotted, say so explicitly in the review — don't paper over it.
 
 ---
 
@@ -109,7 +113,7 @@ If the smoke test fails: execute the contingency from Phase 2, do not leave it h
 
 ## Phase 6: CLOSE
 
-`/ship` owns the close for builds that cross the line.
+`/ship` owns the close for builds that cross the line (we don't use `/close-project`).
 
 ### Step 1: Record the Gate-3 review
 Append to `project_log.md`:
@@ -122,25 +126,14 @@ Append to `project_log.md`:
 **Fallback:** …
 **Contingency:** …
 **How we fix it:** …
+**Concludes without testing:** [each gate/canary/sample → what it decides about untested items, what makes the sample representative, both pass and fail directions — or "none: every item is examined individually"]
 **Holes & dispositions:**
 - [hole] → Fixed: [safeguard built] / Escalated: [back to /prd, why] / Accepted: [residual + contingency + who signed off]
 **Go-live:** [date, cutover method, smoke-test result, monitoring confirmed]
 ```
 
-### Step 2: Learning Capture
-Ask: what worked / what was painful / what to do differently. Append to `project_log.md` under Lessons Learned. If a lesson suggests a change to the mental models, checklists, or these skills — propose the specific change.
-
-### Step 3: Final Documentation
-- **Close the register entries this build satisfied** — the missing-wires / open-inputs table the workspace's PRDs read first. Mark each built wire closed with what built it, and downgrade any entry that turned out to be a data or decision problem rather than a missing wire. This is the step that rots when skipped, and it rots invisibly.
-- Remaining living-doc updates (CONTEXT.md, system_contracts.md, decision log, changelog) — **to the Documentation Standard** (`~/.claude/skills/_shared/documentation_standard.md`). If a required doc doesn't exist, run `/new-workspace` to instantiate it to standard rather than hand-rolling it.
-- `project_log.md`: Status → **Complete**, completion date, any deferred follow-ups.
-
-### Step 4: Archive
-- Move `{workspace}/_admin/prds/{project-name}/` → `{workspace}/_admin/_archive/{project-name}/`.
-- Move the memo `_admin/memos/{slug}.md` → `_admin/memos/_done/` (its build is now shipped).
-
-### Step 5: Summary
-Present a final summary, including the go-live state and any monitoring/owners now in place.
+### Step 2: The shared close
+Everything after the review is **one shared procedure**, `~/.claude/skills/_shared/project_close.md`, run top to bottom. It captures the lessons (provisional until real use), brings the living documents current including the register entries this build satisfied, archives the project folder and moves the memo to `_done/` (a blocking step), rewrites the initiative's state file (the milestone row becomes shipped and the tray is refilled), **schedules the outcome check** (the memo's success definition, verified against real use on the date it names or 14 days after go-live, after which the milestone reads `reached`), and prints the handoff card with the go-live state and the monitoring owners now in place.
 
 ---
 

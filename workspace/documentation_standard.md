@@ -1,0 +1,180 @@
+# Documentation Standard — Minimum Viable Architecture (MVA)
+
+**Canonical.** This is the single source of truth for how workspaces, systems, and their documents are structured. Every new project is built from this standard from day one — no backfilling. Distributed to the team via team-build-kit; this copy is the original.
+
+**Objective served:** everything learned while building is captured once and **found and actioned at the moment of need**. Documentation exists for retrieval, not record-keeping. Token economy is the constraint; retrieval-at-need is the goal.
+
+---
+
+## 1. The three context tiers
+
+| Tier | Loaded | Contains |
+|------|--------|----------|
+| **1 — Always** | Every session | Root CLAUDE.md: routing + behavioral principles + tripwires. Target 600–900 words. |
+| **2 — On trigger** | When an activity starts | Skills (protocols, procedures) + `_practices/` (per-tool knowledge — injected mechanically by the PreToolUse practices gate on first tool use, and listed in each CONTEXT.md for navigation) |
+| **3 — On navigation** | When entering a workspace | The workspace's MVA doc set (this standard) |
+
+**Tier-1 admission** (all three required): behavioral not factual · applies to the majority of sessions · fails silently if absent. Everything else lives down the tree, where routing finds it loudly.
+
+**Tripwire pattern:** a silent-failure protocol too big for tier 1 gets a one-line compressed rule in tier 1 pointing at the full tier-2 doc. The tier-2 doc is canonical; the tier-1 line is an index entry.
+
+Tiering applies **recursively**: a leaf CONTEXT.md obeys the same economy as the root file.
+
+## 2. Where a fact lives — the two placement tests
+
+**The portability test** (project vs practices): *would this still be true and useful if this project were deleted?*
+- Still true → `_practices/{tool}.md` — how the tool behaves anywhere ("a host's `up` command deploys only the linked service").
+- Becomes meaningless → the project's CONTEXT.md — this project's parameters (service names, deploy commands, credentials locations, doc IDs, owned tables).
+- A learning with both halves is **split at capture** (the routine case): tool-general truth → practices; project instance → project docs. The project CONTEXT.md links every practice file it depends on.
+
+**The boundary test** (within a project): *does it cross a system boundary?*
+- Crosses (contracts, status lifecycle, field handoffs, cross-system decisions) → workspace root (`system_contracts.md`, `decision_log.md`, `kpis.md`); systems point up.
+- Internal to one system → that system's CONTEXT.md; the root points down via routing.
+
+One canonical home, referenced elsewhere, never duplicated.
+
+## 3. Document types (Diátaxis discipline)
+
+Mixing types is what bloats documents. Every doc has ONE type:
+
+| Type | Question answered | Lives in |
+|------|-------------------|----------|
+| **Reference/explanation** — what exists here, how it's wired | "What is true now?" | CONTEXT.md, architecture.md, data_dictionary.md |
+| **How-to/procedure** — steps Claude or a human executes | "How do I do X?" | Skills, runbooks — never CONTEXT.md |
+| **Tool behavior** — how the stack behaves anywhere | "What will the tool do?" | `_practices/` |
+| **Record** — what happened / was decided | "What was true then?" | decision_log.md, change_log.md, bulk_ops, daily-outputs |
+| **Snapshot** — where an initiative or project stands right now | "Where are we?" | `state.md` (initiative + project) — rewritten in place under a word budget, never appended |
+
+A CONTEXT.md that starts accumulating procedures or tool gotchas is mis-typed content — move it, don't grow it. A snapshot that starts accumulating dated bullets is history in the wrong home — move it to the log, don't grow it.
+
+## 4. The graduated doc sets
+
+Choose the weight at project creation; graduate up when reality demands it (real users, real data, teammates, money).
+
+### Light — tool, exploration, static site
+```
+project/
+└── CONTEXT.md          # what this is, status, file table, practices pointers
+```
+
+### Standard — a product with real users or data
+```
+project/
+├── CONTEXT.md          # overview + local index + practices pointers
+├── architecture.md     # how it's wired (C4 L2)
+├── decision_log.md     # append-only, dated
+├── change_log.md       # Keep a Changelog format
+├── kpis.md             # only when metrics exist
+├── data_dictionary.md  # only when it owns a schema
+└── _admin/             # memos/, prds/, _archive/ (+ backlog lives in the task manager, NOT here)
+```
+
+### Full — multi-system program (team, money, cross-system contracts)
+Standard, plus:
+```
+program/
+├── system_contracts.md # cross-system field mappings, handoffs, status lifecycle
+├── bulk_ops/           # INDEX.md + one folder per bulk write (prestate scoped to affected rows)
+└── {system}/           # one folder per bounded context, flat at the same depth
+    ├── CONTEXT.md      # required — the system's local index
+    └── flow.html       # required for processes (not for pure web apps)
+```
+
+A Full-tier program is a **system of systems** (`glossary.md`): several systems that share a data core or exchange data, and will drift apart unless eight things hold. Each has a home in this tier already, or in a procedure beside it: (1) **one data core, or explicit contracts between stores** — `system_contracts.md`; (2) **a writer registry, one writer per object** — the "source of truth" line of every boundary in `system_contracts.md`; (3) **a contract at every boundary**, with canonical names and status lifecycles — `system_contracts.md`; (4) **a decision log and a change log at the root** — `decision_log.md`, `change_log.md`; (5) **drift detection and repair** — a reconcile lane, one procedure per pair of stores that can disagree; (6) **a noticer that sees across systems** — a digest with an owner and a next action on every line; (7) **an index that routes** — the workspace `CONTEXT.md`; (8) **cutover rules for moving a behaviour between systems** — the initiative's `north_star.md` §6, or `decision_log.md` when there is no initiative. A program missing one of the eight names the gap in its `CONTEXT.md` rather than leaving it silent.
+
+### The third axis: kind
+
+Scale (quick fix · project · initiative) says how much process a piece of work gets, and blast radius says whether Gate 3 runs. **Kind** says what a built thing is made of, and it decides three things a tier cannot: which documents the thing adds beyond its tier, the proof it must pass before it counts as working, and the method practices it depends on. The six kinds are defined in `glossary.md` ("The kinds"); this table only assigns. `/new-workspace` asks the kind at intake; `/build` and `/quick-fix` read it from the system's `CONTEXT.md` at verification time.
+
+| Kind | Adds to the doc set | Proof it must pass | Method practices it depends on |
+|---|---|---|---|
+| **Automation** | `flow.html` beside its `CONTEXT.md`, because it is a process with handoffs | Replay through its real entry point (the form or webhook that starts it); its reconcile lanes are its regression suite | `_practices/integration-audit.md`; `llm-workflows.md` when a step is an LLM judgment; the practice file of every rented tool it wires (the practices gate loads these on first touch) |
+| **Service** | `data_dictionary.md` when it owns a schema; no `flow.html` | Tests on every change, a live probe of the deployed service, and its noticer firing on a forced failure (`testing_standard.md`) | `deploying.md`; the host's practice (`railway.md`, `vercel.md`) |
+| **Application** | `data_dictionary.md` when it owns a schema; never `flow.html` (an application is not a process) | Browser smoke through the real login with a disposable identity, plus live invariants over its views (`testing_standard.md`) | `deploying.md`; the host's practice; the stack's testing practice (`testing-js.md` for JavaScript) |
+| **Tool** | Nothing beyond `CONTEXT.md` (the Light tier) | Tests on fixtures for its logic, and one check of its output against real data (`testing_standard.md`) | None beyond the tool practices of its stack |
+| **Procedure** | Its `SKILL.md` is the document, with a row in `SKILLS.md`; a ritual also names its ledger | A cold read: a fresh session with no memory runs it from the file alone | `claude-code.md`; `subagents.md` when it fans out |
+| **Knowledge** | `CONTEXT.md` header only (a leaf) | Review against a verification table: one row per claim, beside the source that confirms it | None |
+
+**How kinds combine.** *Inside one system*, a **composite system** ships several kinds as one unit and owns one set of data. Its `CONTEXT.md` names each part's kind and where that part's code lives, each part is proved as its kind is proved, and every object still has one writer. When another folder's code runs inside the unit, the unit's index names that folder and its kind, and that folder's index says where its code lives, so the two point at each other. Read one composite system's index in the workspace before writing another; it is the worked case. *Across systems*, several systems sharing a data core are a **system of systems** and need the eight things the Full tier lists above.
+
+**Existing indexes.** A `CONTEXT.md` written before 2026-09-20 gains its **Kind** and **Proved by** lines the next time a build or a quick fix changes it (`/build` Phase 2 Step 3, `/quick-fix` Phase 4). Until then the missing lines are a gap to fill, not a defect to report.
+
+### Planning folder — initiatives (Full tier; sits above `/memo`)
+Work too big for one memo (a rebuild, a platform, a multi-project initiative) gets `_admin/<initiative>/` **before** its first `/memo`. Decided 2026-09-02 after an initiative's Phase 0 ran with no lifecycle home. **State split from history 2026-09-20** after measured build sessions each rebuilt their position from six to ten history-shaped documents (27k–237k tokens of orientation per session; the same files re-read 15–29 times inside one session).
+```
+_admin/<initiative>/
+├── CONTEXT.md        # INDEX — what this is, what lives here, how to resume (three lines pointing at state.md)
+├── state.md          # SNAPSHOT — project in flight · milestone table · handed-forward tray · ≤600 words, rewritten in place
+├── north_star.md     # COMPASS — thesis, principles, journeys, objects, architecture, cutover rules, roadmap, non-goals; decisions edited in, never progress
+├── research_*.md     # inputs — disposable once folded into decisions
+└── <spec>.md         # specification appendices the PRDs verify (an event catalogue, a screen inventory)
+```
+The roadmap (the ordered milestones, each with what it kills and what it depends on) is a section of `north_star.md` or its own `roadmap.md`; either way it holds order and rationale, **never status**. Status is the milestone table in `state.md`.
+
+**Three levels, one snapshot each:**
+
+| Level | Snapshot (rewritten in place) | Record (appended) | Contract |
+|---|---|---|---|
+| Initiative | `_admin/<initiative>/state.md` (≤600 words) | the archived project logs | `north_star.md` |
+| Project | `_admin/prds/<project>/state.md` (≤400 words) | `_admin/prds/<project>/project_log.md` | the memo + the PRD |
+| Session | rewrites the project `state.md` | `daily-outputs/YYYY-MM/YYYY-MM-DD.md` | — |
+
+**Where an initiative fact lives:**
+
+| To record… | Home | Written |
+|---|---|---|
+| The idea, the why, what "solved" looks like | `north_star.md` — thesis, principles, journeys | at ideation; edited when a decision changes it |
+| Requirements | journeys and objects in `north_star.md`; field level in the spec appendices | at ideation; verified by each PRD |
+| Milestones | the roadmap: the ordered milestones — a milestone is reached when its project ships | once; reordered by decision |
+| Where each milestone stands | the milestone table in the initiative `state.md` | at every project open and close |
+| What a project inherits | the handed-forward tray in the initiative `state.md` | at every project close; an item leaves when decided, homed, or done |
+| A project's intent / design | `_admin/memos/<project>.md` / `_admin/prds/<project>/<project>_prd.md` | `/memo` / `/prd`; the PRD is amended in `/build` on scope change |
+| Where a project stands | the project `state.md` | every work-item boundary and session end |
+| What happened | `project_log.md`, `daily-outputs/` | as it happens, append-only |
+| Decisions | product → `north_star.md`; architecture and cross-system → `decision_log.md` | the session they are made |
+| Dates, blockers, open questions | the task manager | at occurrence |
+| What is true about a system now | the system's `CONTEXT.md`, `system_contracts.md`, `data_dictionary.md` — **never build progress** | at the moment of change |
+| Whether a milestone was actually reached | the milestone row → `reached`, and an Outcome section in the archived project log — the memo's success definition verified against real use | the outcome check, on its date (`_shared/project_close.md` §5) |
+
+**Contract:** intake is one door — every build intent starts at `/memo`, which routes down to `/quick-fix`, through to a project memo, or up to `/new-workspace --initiative` when two of its three initiative signals fire (several ships that build on each other; systems replaced or killed over months; a boundary that will not fit a paragraph). Docs are created when their phase starts, never before. Each project runs `/memo` → `/prd` → `/build` → `/ship`, reads the initiative `state.md` first, then the sections of `north_star.md` and of the archive that its tray points at — never the archive whole. **The north star is the initiative's memo:** a project on the roadmap gets the short memo (the milestone in one sentence, what it is NOT, why now, success; the proposition by pointer), and a project that departs from the north star or is not on the roadmap gets the full memo with the north star amended first (`/memo`, "Two forms"). Every stop prints the handoff card (template §4.10). **A milestone's states:** queued → memo cleared → PRD approved → building → shipped → **reached**, with paused and killed as side exits; `shipped` means the code is live, `reached` means the memo's success definition was verified against real use by the outcome check, and only the second closes the loop that Gate 1 opened. The close itself is one shared procedure for `/build` and `/ship` (`~/.claude/skills/_shared/project_close.md`), and `/quick-fix` ends with the same blast-radius exit gate as `/build`. A session inside a project ends at a work-item boundary with the project `state.md` rewritten (the handoff protocol is `/build` Phase 2 Step 5). **Close condition:** the folder moves to `_admin/_archive/<initiative>/` when every milestone on the roadmap has been reached or killed. `/doc-audit` treats a planning folder with a milestone table as legitimate, not as unfiled work.
+
+**Governance docs live at the workspace root** (not in `docs/`) — findable in one `ls`, two clicks from anywhere.
+
+## 5. CONTEXT.md — the required local index
+
+Every CONTEXT.md at every level answers, in this order, briefly:
+
+1. **What this is** — one paragraph: current status, and its **kind** in one sentence (one of the six kinds, or a composite naming its parts — `glossary.md`, and §4 "The third axis"). A composite system adds a parts table: part · kind · where its code lives · what it writes.
+2. **What lives here** — file/folder table; each entry marked living or disposable.
+3. **Practices this depends on** — links to the `_practices/` files for its stack ("deploys via a host → read that host's practice file first") + its own parameters (service names, project IDs, deploy commands). The kinds table (§4) names the method practices its kind depends on; they go here too.
+4. **Proved by** — the proof its kind requires (§4, the kinds table), as it actually exists for this system: the suite, the probe, the smoke, the cold read. "Not yet stated" is allowed, and is a gap on the record.
+5. **Points up** — the cross-system contracts it participates in (Full tier only).
+6. **Points down** — sub-areas, where implementation lives.
+7. **Don't load** (optional) — nearby files commonly loaded by mistake.
+
+A planning folder's CONTEXT.md keeps items 1–3 and a three-line *How to resume* that points at `state.md`; position never lives in an index.
+
+**The handoff test:** copy the folder, hand it to a fresh session with no memory — work continues from the files alone. Memory is a convenience cache, never load-bearing.
+
+**The 30-second test:** "how does X work?" is answerable from inside the folder in under 30 seconds.
+
+## 6. Structural principles
+
+- **Bounded contexts:** systems organized by what they do, not where work happens. A light system still gets a folder.
+- **Flat at each level:** systems sit at the same depth; discovery is one `ls` away.
+- **C4 zoom levels:** L1 root CONTEXT → L2 architecture.md → L3 system CONTEXT.md → L4 code.
+- **Planning separate from operations:** memos/PRDs/archives and planning folders in `_admin/`; operational docs in system folders.
+- **State lives in systems:** tasks → the task manager; pipeline state → the systems that own it; markdown holds only what's stable. **No backlog.md files** — a backlog in markdown is state parked where it drifts.
+- **Living or disposable — label it:** living docs get maintained at the moment of change; disposable files get deleted when their job ends. Nothing sits in the middle.
+- **Plain language, fully said.** Anything a person reads — an index, a state file, a handoff card, a memo, a north star, a table cell — is written in complete sentences a non-technical teammate can follow. Arrows and dots are notation for state sequences, file paths and trees, never the connective tissue between ideas; colon-labels and telegraphic fragments are not allowed. Every lifecycle term is used exactly as `glossary.md` defines it; a new term is defined where it first appears and added to the glossary the same session.
+- **State is a snapshot, history is a log.** `state.md` is rewritten in place under a word budget (initiative 600, project 400) and never appended; `project_log.md` and `daily-outputs/` are appended and never read for position. A date-led bullet in a snapshot is history in the wrong home. The PostToolUse state gate (`.claude/hooks/state_budget_gate.py`) warns when a snapshot grows past its budget or starts collecting dated bullets.
+- **Build progress never lives in system docs.** A system's CONTEXT.md says what is deployed and how it is wired; where a build stands is the project's `state.md`. One project wrote its progress into six homes and then had to correct one fact in all six.
+- **Files (filing) as enforcement:** `/build`/`/ship` do not close until memos/PRDs are physically **moved** (never copied) to `_done`/`_archive`.
+
+## 7. Living-document rule
+
+Living docs answer "what is true now?" and are updated **at the moment of change**, not at session end. If you change the territory, update the map; if the territory no longer exists, delete the map. Any structural change → check which living docs reference the changed entity → flag proposed updates → apply on approval.
+
+## 8. Templates
+
+New workspace/system scaffolding is generated by `/new-workspace` (greenfield or brownfield) from the **template library** at `~/.claude/skills/_shared/documentation_standard.md` — one canonical template per doc type, implementing this standard. Principles live here; templates live there; never copy a template into a skill.

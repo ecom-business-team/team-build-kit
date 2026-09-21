@@ -18,14 +18,14 @@ Why the bar is this high: if anything is discovered mid-build that forces a cour
 - **Zero assumptions about the beginning state.** Any variance in the start state corrupts the entire downstream build. The current-state picture must be at 100% resolution, observed from live systems — never inferred from docs or memory alone.
 - **Reuse over rebuild.** The most common failure: a session doesn't fully understand what already exists, so it builds redundant new tables/workflows instead of small additions to existing infrastructure. Every new artifact must justify why an existing one couldn't be extended.
 - **Reduce, don't merge.** Find the *smallest* change that bridges the gap. Do not incorporate every piece of context the agents return. Synthesis-by-merge is the enemy.
-- **Agents explore, one mind designs.** Agents gather ground truth and propose whole-solution candidates. They never each own a *slice* of the build and scope it independently — that fragments the design and forces reconciliation after. The main session is the single designer.
+- **Agents explore, one mind designs.** Agents gather ground truth and propose whole-solution candidates. They never each own a *project* of the build and scope it independently — that fragments the design and forces reconciliation after. The main session is the single designer.
 
 ## Usage
 
 ```
 /prd [link to memo or description of what to design]
-/prd design the auto-categorizer (see _admin/memos/auto_categorize.md)
-/prd scope the new monthly spending dashboard
+/prd design the payout dispute system (see _admin/memos/payout_disputes.md)
+/prd scope the new brand analytics dashboard
 ```
 
 ## When to Use
@@ -57,7 +57,7 @@ Generalize the agents to the actual systems involved. Common areas (assign which
 | **App / frontend** | Routes, API handlers, env config, deploy state. |
 | **Code / scripts** | Modules, entry points, dependencies, current behavior. |
 | **External services / APIs** | What endpoints exist, auth, request/response shapes actually returned. |
-| **Context & contracts** | CONTEXT.md, `system_contracts.md`, decision log, the triggering memo, memory, and `_admin/_archive/` for prior projects that touched these systems (read the archived PRD — original design decisions and lessons live there). **If the workspace has no standard living docs to read, stop and run `/new-workspace` (brownfield) first** — a PRD can't resolve the beginning state against a documentation substrate that doesn't exist. |
+| **Context & contracts** | **Inside an initiative, the initiative `state.md` first** — its milestone table and handed-forward tray are the entry to the archived PRDs and logs, which are then read by section, never whole. Then CONTEXT.md, `system_contracts.md`, decision log, the triggering memo, memory, and `_admin/_archive/` for prior projects that touched these systems (read the archived PRD's relevant sections — original design decisions and lessons live there). **If the workspace has no standard living docs to read, stop and run `/new-workspace` (brownfield) first** — a PRD can't resolve the beginning state against a documentation substrate that doesn't exist. |
 
 Use the right observation tool for the workspace's declared stack — load its tool-skill where one exists. Observe live state; never infer.
 
@@ -127,7 +127,7 @@ There are a thousand ways to bridge a gap across systems with dependencies. When
 
 Spawn fresh-context agents, each handed the **same complete picture**: beginning state + reusable-assets inventory + desired state + the named failure mode that ruled out minimal.
 
-**Each agent designs the ENTIRE bridge, end-to-end, from a different angle. No agent owns a slice.** This is the explicit guard against fragmentation — every proposal is a complete path from start state to desired state, not a component someone else has to integrate.
+**Each agent designs the ENTIRE bridge, end-to-end, from a different angle. No agent owns a project.** This is the explicit guard against fragmentation — every proposal is a complete path from start state to desired state, not a component someone else has to integrate.
 
 Assign one angle per agent:
 
@@ -158,6 +158,9 @@ Present the candidates and the selected path to the user. Confirm before proceed
 
 1. **Enumerate every component** of the chosen path — every table/column to add or change, every workflow/node, every contract, every endpoint, every handoff.
 2. **Probe every cross-system dependency live.** For each webhook, service, endpoint, RPC, and external API the path depends on: actually call it / inspect it and confirm it responds exactly as the design assumes. Do not assume a response shape — observe it.
+   **Trace platform automations as consumers, not just workflows.** If the design changes any status/field value, enumerate every platform-native automation (board automations, DB triggers, scheduled rules) that fires ON that value — they are invisible consumers that never appear in workflow-to-workflow tracing. A status a build stops transiting silently starves every automation listening for it. (Lesson, 2026-07-24: an impact map declared a consumer unaffected; that consumer's board automation on `status→approved` was never traced, and the new one-step path would have silently dropped a grading step; caught only at build time, forcing a PRD amendment.)
+   **Verify the property you depend on, not the artifact's existence.** A key that exists may be the wrong tier; a tool that "works" is only verified on the code paths it has actually run. Probe the specific property the design rests on (key tier/scope, the exact branch, the exact response field) — existence checks pass while the design-breaking detail hides underneath. (Lesson, 2026-07: a push tool's INSERT path had never once executed because the key it held was the wrong tier; the artifact existed, the property did not.)
+   **If the design changes a filter, report, or count semantic: replay the producer end-to-end against CURRENT live data** (dry-run style), not just per-dependency probes. Per-dependency probes verify each piece in isolation; only a full replay reveals how the new semantic interacts with the data that already exists. (Lesson, 2026-07-14: every dependency of a daily report probed ✅, yet items already dispositioned would have re-reported forever; caught only by the /build dry run, forcing a mid-build PRD amendment.)
 3. **Record a validation log:**
 
 ```
@@ -197,7 +200,7 @@ Then the checks:
 | 8 | **Idempotency** | Every operation touching money or critical state can safely run twice. |
 | 9 | **Reuse over rebuild** | **Every new artifact carries a one-line reuse rejection: "Couldn't extend `existing_thing` because ___."** If you can't write it, extend the existing artifact instead. New tables/workflows are built minimum-viable and most-efficient. |
 | 10 | **Blast radius** | Affected systems listed; unaffected systems explicitly confirmed; the impact map is complete. |
-| 11 | **Pre-mortem** | "3 months out, this failed badly — what went wrong?" Top 3 failure scenarios with defenses. |
+| 11 | **Pre-mortem** | "3 months out, this failed badly — what went wrong?" Top 3 failure scenarios with defenses. **Time-window check:** if the design stretches the time between two steps that used to run back-to-back (a draft that persists, a queue that buffers, an approval that waits), explicitly ask "what can change in the world between step A and step B, and does step B re-verify it?" Guards written for a minutes-long window silently break at days. (Lesson, 2026-07-15: a design stretched assemble→push from minutes to days; push never re-checked that its inputs were still in the state assemble had seen; caught only at /ship.) |
 | 12 | **Expand-and-contract** | If modifying existing contracts, the migration path is defined (add new → migrate consumers → remove old). |
 
 If any check fails, fix the design before continuing.
@@ -228,7 +231,8 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 # PRD: [Project Name]
 
 **Constraint:** [One sentence — the bottleneck this addresses]
-**Memo:** [relative path to memo, e.g. ../memos/auto_categorize.md]
+**Memo:** [relative path to memo, e.g. ../memos/payout_disputes.md]
+**Initiative:** [relative path to the planning folder's state.md and the roadmap item, or "standalone"]
 **Date:** [Date]
 **Status:** Draft / Approved
 
@@ -310,6 +314,7 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 - Create the project directory if needed. Drafts may live in `_admin/prds/_drafts/` until approved.
 - Memos stay in `_admin/memos/` — link to the memo by relative path in the **Memo** field. One memo may spawn multiple PRDs.
 - Completed projects are archived to `_admin/_archive/{project-name}/` by `/build` at close.
+- **At approval, create the project's `state.md`** beside the PRD from template §4.8 of `~/.claude/skills/_shared/documentation_standard.md` (Position: Next = WI-1; Verify block = the branch head and test layer as they stand; Held; Needs {owner}; Pointers into this PRD and the contracts), and inside an initiative set the initiative `state.md` milestone row to "PRD approved YYYY-MM-DD; build not started" and its In-flight row to this project. `/build` Phase 1 resumes from it.
 
 ### Present for approval
 
@@ -327,7 +332,15 @@ The PRD must be approved before `/build`. Confirm with the user:
 
 The approved PRD at `{workspace}/_admin/prds/{project-name}/{project_name}_prd.md` is self-contained — it carries everything `/build` needs, with nothing load-bearing left in chat. Don't auto-advance. Ask the user explicitly:
 
-> **PRD cleared Gate 2 — one-shot ready.** Want to proceed to **`/build`** now — or pick it up in a new session? (A fresh session continues with `/build` against the PRD file alone.)
+Print the **handoff card** (template §4.10) and stop:
+```
+HANDOFF
+Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ✅ · build 0/N · ship ☐ · close ☐
+Done:   PRD approved, Gate 2 — one-shot ready; {N} work items; validation log all ✅
+Next:   build it — run: `/build {project-name}`, in a fresh session (Phase 1-B creates the log; state.md already exists)
+Needs {owner}: {keyboard steps or decisions the PRD names as theirs · task id} | none
+Written: {workspace}/_admin/prds/{project-name}/state.md (Next = WI-1) · initiative state.md (In flight → this project)
+```
 
 ---
 

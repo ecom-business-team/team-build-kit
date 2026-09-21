@@ -258,7 +258,7 @@ Print the **handoff card** (template §4.10 in `~/.claude/skills/_shared/documen
 HANDOFF
 Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ☐ · build ☐ · ship ☐ · close ☐      (or: standalone)
 Done:   memo cleared Gate 1 — {workspace}/_admin/memos/{slug}.md
-Next:   design it — run: `/prd {workspace}/_admin/memos/{slug}.md`, in a fresh session
+Next:   design it — run: `/prd {workspace}/_admin/memos/{slug}.md` — in a fresh session, or here if this session is light and has not compacted (`_practices/claude-code.md`, Context cost)
 Needs {owner}: {inputs the memo could not settle · task id} | none
 Written: {initiative state.md — milestone row → "memo cleared {date} → /prd"} | the memo file
 ```

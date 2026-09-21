@@ -102,7 +102,7 @@ At the end of each work item, update affected living docs **to the Documentation
 Flag proposed updates for approval before writing.
 
 ### Step 4: Record, then snapshot
-Two writes, in this order, committed together with the code:
+Two writes and a render, in this order, committed together with the code:
 1. **Append** to `project_log.md`:
 ```markdown
 ### Work Item N — [Name]
@@ -113,6 +113,7 @@ Two writes, in this order, committed together with the code:
 **Verified by:** [the check, and its result]
 ```
 2. **Rewrite** `state.md` in place: Done now includes WI-N; Next is WI-N+1 (or "end-of-build verification"); Blocked; Router; the **Verify before continuing** block updated to the new branch head, test counts and one live probe; Held; Needs {owner}; Pointers to the sections the next work item will need. Delete anything that reads as a dated event — that is history and it is already in the log. The PostToolUse state gate warns past 400 words or on a date-led bullet.
+3. **Render** the handoff: `python3 ~/.claude/skills/_shared/companion/render.py {workspace}/_admin/prds/{project-name}/state.md` writes `handoff.html` beside it (the stage ribbon, the position, what needs the owner, the work items and milestones); then open the page in the default browser when the machine has an opener (`open` on macOS, `xdg-open` on Linux; skip silently otherwise), so it is on screen the moment the document is written.
 
 ### Step 5: Session boundary — stop here
 A work item is the unit of a session. With WI-N verified, recorded and snapshotted, **stop and hand off**; do not begin WI-N+1 in this context:
@@ -123,7 +124,7 @@ Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ✅ · 
 Done:   WI-N — {name} — proved by {the check and its result}; committed {hash}
 Next:   WI-N+1 — {name} — run: any prompt in a fresh session (/clear or a new chat); the SessionStart gate points at state.md
 Needs {owner}: {decision or keyboard step · task id · due} | none
-Written: {workspace}/_admin/prds/{project-name}/state.md
+Written: {workspace}/_admin/prds/{project-name}/state.md · handoff.html
 ```
 Why: measured build sessions that ran a whole project in one context reached 500k–1M tokens and re-read the same documents 15–29 times each; a fresh session that orients from a 400-word snapshot in two minutes is cheaper and more reliable than a long one. Two exceptions, both said out loud: the owner says "continue here" (log the override in the project log), or the next work item is docs-only.
 
@@ -177,11 +178,11 @@ Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ✅ · 
 Done:   end-of-build verification passed; router FIRED ({which conditions})
 Next:   the Gate-3 review — run: `/ship {project-name}`, in a fresh session
 Needs {owner}: {keyboard steps the review will need · task id} | none
-Written: state.md (Router: fired → /ship) · project_log.md (router result)
+Written: state.md (Router: fired → /ship) · handoff.html · project_log.md (router result)
 ```
 - **If none fire → ship freely.** Proceed to Close.
 
-State the router result explicitly in the log **and in `state.md`** (Router: fired → `/ship` | clean) so it's auditable and so the next session knows which skill to run.
+State the router result explicitly in the log **and in `state.md`** (Router: fired → `/ship` | clean) so it's auditable and so the next session knows which skill to run; then render the handoff again and open it (Phase 2 Step 4, item 3), whichever way the router went.
 
 ---
 

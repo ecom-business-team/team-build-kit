@@ -243,6 +243,9 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 ---
 
 ## 1. Beginning State (verified)
+
+> **In plain words:** [one to three full sentences a non-technical reader can follow — what this section says, fully said, no fragments, and no section numbers, file names, commands or lifecycle jargon: a reader who never opens the technical body must be able to say back what the section claims. Every `##` section and every `### Work Item` opens with this line; the companion shows it first and folds the technical body beneath it.]
+
 [Reassembled current-state picture + reusable-assets inventory]
 
 ## 2. Desired State
@@ -316,6 +319,7 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 
 - `{workspace}/_admin/prds/{project-name}/{project_name}_prd.md` (snake_case file name matching the project).
 - Create the project directory if needed. Drafts may live in `_admin/prds/_drafts/` until approved.
+- Render the companion at Draft and again at Approved: `python3 ~/.claude/skills/_shared/companion/render.py {workspace}/_admin/prds/{project-name}/{project_name}_prd.md` writes `{project_name}_prd.html` beside it (the plain-words lines first, the technical body folded); then open the page in the default browser when the machine has an opener (`open` on macOS, `xdg-open` on Linux; skip silently otherwise), so it is on screen the moment the document is written. The reviewer approves from the page; the markdown stays the source.
 - Memos stay in `_admin/memos/` — link to the memo by relative path in the **Memo** field. One memo may spawn multiple PRDs.
 - Completed projects are archived to `_admin/_archive/{project-name}/` by `/build` at close.
 - **At approval, create the project's `state.md`** beside the PRD from template §4.8 of `~/.claude/skills/_shared/documentation_standard.md` (Position: Next = WI-1; Verify block = the branch head and test layer as they stand; Held; Needs {owner}; Pointers into this PRD and the contracts), and inside an initiative set the initiative `state.md` milestone row to "PRD approved YYYY-MM-DD; build not started" and its In-flight row to this project. `/build` Phase 1 resumes from it.
@@ -343,7 +347,7 @@ Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ✅ · 
 Done:   PRD approved, Gate 2 — one-shot ready; {N} work items; validation log all ✅
 Next:   build it — run: `/build {project-name}`, in a fresh session (Phase 1-B creates the log; state.md already exists)
 Needs {owner}: {keyboard steps or decisions the PRD names as theirs · task id} | none
-Written: {workspace}/_admin/prds/{project-name}/state.md (Next = WI-1) · initiative state.md (In flight → this project)
+Written: {workspace}/_admin/prds/{project-name}/state.md (Next = WI-1) · {project_name}_prd.html · initiative state.md (In flight → this project)
 ```
 
 ---

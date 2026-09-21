@@ -132,6 +132,8 @@ Append to `project_log.md`:
 **Go-live:** [date, cutover method, smoke-test result, monitoring confirmed]
 ```
 
+Then render the log's companion: `python3 ~/.claude/skills/_shared/companion/render.py {workspace}/_admin/prds/{project-name}/project_log.md` writes `ship_review.html` beside it (the last Ship Review section with its Go-live, the questions as fields, every hole with its disposition); then open the page in the default browser when the machine has an opener (`open` on macOS, `xdg-open` on Linux; skip silently otherwise), so it is on screen the moment the document is written. If the review is appended before the cutover and the Go-live line is filled in later, re-run the same command then, so the page carries the go-live.
+
 ### Step 2: The shared close
 Everything after the review is **one shared procedure**, `~/.claude/skills/_shared/project_close.md`, run top to bottom. It captures the lessons (provisional until real use), brings the living documents current including the register entries this build satisfied, archives the project folder and moves the memo to `_done/` (a blocking step), rewrites the initiative's state file (the milestone row becomes shipped and the tray is refilled), **schedules the outcome check** (the memo's success definition, verified against real use on the date it names or 14 days after go-live, after which the milestone reads `reached`), and prints the handoff card with the go-live state and the monitoring owners now in place.
 

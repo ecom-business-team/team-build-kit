@@ -228,7 +228,8 @@ We'll know this is solved when: [observable, checkable outcome]
 - Default: `{workspace}/_admin/memos/{topic-slug}.md`
 - Create `_admin/memos/` if it doesn't exist.
 - Name descriptively: `payout_disputes.md`, not `memo_001.md`.
-- When a memo's build ships and the project is archived, move the memo to `_admin/memos/_done/` (the PRD links to it by path until then).
+- After writing or amending the memo, render its companion: `python3 ~/.claude/skills/_shared/companion/render.py {workspace}/_admin/memos/{slug}.md` writes `{slug}.html` beside it; then open the page in the default browser when the machine has an opener (`open` on macOS, `xdg-open` on Linux; skip silently otherwise), so it is on screen the moment the document is written. The markdown stays the source; the page is regenerated on every write and never edited by hand.
+- When a memo's build ships and the project is archived, move the memo and its companion (`{slug}.md`, `{slug}.html`) to `_admin/memos/_done/` together (the PRD links to it by path until then).
 - One memo may spawn multiple PRDs/projects.
 - Inside an initiative: on approval, set the initiative `state.md` milestone row to "memo cleared YYYY-MM-DD → /prd".
 
@@ -260,7 +261,7 @@ Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ☐ · 
 Done:   memo cleared Gate 1 — {workspace}/_admin/memos/{slug}.md
 Next:   design it — run: `/prd {workspace}/_admin/memos/{slug}.md` — in a fresh session, or here if this session is light and has not compacted (`_practices/claude-code.md`, Context cost)
 Needs {owner}: {inputs the memo could not settle · task id} | none
-Written: {initiative state.md — milestone row → "memo cleared {date} → /prd"} | the memo file
+Written: {initiative state.md — milestone row → "memo cleared {date} → /prd"} | {slug}.md · {slug}.html
 ```
 
 ---

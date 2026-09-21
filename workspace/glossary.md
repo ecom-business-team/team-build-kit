@@ -37,6 +37,7 @@
 | **Contract** | The document that says what we are building and why: the PRD for a project, the north star for an initiative. |
 | **The tray** ("what the next project inherits") | The part of an initiative's state file that lists what the next project depends on: what is live, which switches are still held, what is undecided, which human steps are outstanding, and which facts were verified. An item leaves the tray when it is decided, given a home in a system document, or done. |
 | **Handoff card** | The five lines printed at every stop: where we are on the ladder, what just got done and how it was proved, exactly what to type next, what only the owner can do, and where all of this is written down. |
+| **Companion** | The HTML page generated beside a gate document (a memo, a PRD, a project log's ship review, a state file's handoff) so a person can approve from it without reading the markdown. The markdown stays the source; the skill that writes the document regenerates the page, and no one edits it by hand. |
 | **CONTEXT.md** | The index of a folder: what this is, what lives here, and how to pick the work up in a fresh session. It never holds position and never holds decisions. |
 | **system_contracts.md** | Every place where data crosses from one system to another: who writes it, who reads it, what each field means, and which single system owns it. |
 | **decision_log.md** | Why things were built the way they were, one numbered and dated entry per decision, never edited afterwards. |

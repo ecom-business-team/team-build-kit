@@ -58,6 +58,7 @@ Required docs scale with what exists. Never create a doc before it's earned — 
 | **planning-folder `CONTEXT.md`** | An initiative is declared | The planning folder — the index (template 4.9) |
 | **`state.md`** (initiative) | A planning folder exists (`documentation_standard.md` §4) | The planning folder — the snapshot: project in flight, milestone table, handed-forward tray; ≤600 words, rewritten in place |
 | **`state.md`** (project) | A PRD is approved | `_admin/prds/<project>/` — the snapshot: position, next, verify block, held, needs the owner; ≤400 words, rewritten in place; archived with the folder |
+| **companion `.html`** | Beside each of the four gate documents (memo, PRD, project log, state file), written by the skill that writes the document | The document's folder; generated, never edited; moved with its source |
 
 **Leaf** = `CONTEXT.md` header only (the opening paragraph with its Kind line, and Proved by). **Procedure** = its `SKILL.md` is the document, plus a row in `SKILLS.md`; it gets no `CONTEXT.md` of its own. **Standalone system** (its own workspace) = `CONTEXT.md` + `change_log.md` + `decision_log.md` as it earns them; contracts/architecture only after it graduates. **Mature workspace** = all of the above.
 

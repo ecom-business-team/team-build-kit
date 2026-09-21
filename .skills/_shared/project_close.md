@@ -16,7 +16,7 @@ Ask the owner: what worked · what was painful · what to do differently. Append
 ## 3. Archive — BLOCKING (filing is enforcement, not ceremony)
 Always **move**, never copy — a copy left in the live tray becomes a divergent fork (one audit found five of them).
 - `{workspace}/_admin/prds/{project}/` → `{workspace}/_admin/_archive/{project}/` — the PRD, `project_log.md` and the final `state.md` travel together.
-- `{workspace}/_admin/memos/{project}.md` → `{workspace}/_admin/memos/_done/`.
+- `{workspace}/_admin/memos/{project}.md` and its companion `{project}.html` → `{workspace}/_admin/memos/_done/`, together (the page moves with its source; if the memo has no companion yet, render it first with the command in §4).
 - Verify: `ls` both live trays — nothing of this project remains. If filing cannot happen, say so explicitly; never close silently unfiled.
 
 ## 4. Initiative state (skip for a standalone project)
@@ -25,6 +25,7 @@ Rewrite `{workspace}/_admin/{initiative}/state.md`:
 - In flight → none · Next to open → the roadmap's next milestone (→ `/memo`).
 - The handed-forward tray gains this project's **held switches**, **undecided** items (task ids), **human steps outstanding** (in order, dated), the **verified facts** later projects rest on (one line each, source in brackets), and an **Outcome checks pending** line (§5).
 Budget 600 words; the state gate warns past it. An item leaves the tray when decided, homed, or done.
+Then render its companion: `python3 ~/.claude/skills/_shared/companion/render.py {workspace}/_admin/{initiative}/state.md` writes `handoff.html` beside it (the milestones and the tray); then open the page in the default browser when the machine has an opener (`open` on macOS, `xdg-open` on Linux; skip silently otherwise), so it is on screen the moment the document is written.
 
 ## 5. Schedule the outcome check (the loop back to Gate 1)
 Ship proves the build is safe to rely on. It does not prove the memo's problem is solved, and nothing else in the lifecycle checks that, so this step does:
@@ -48,10 +49,10 @@ Only on the owner's explicit word, with the reason in their words.
 2. Anything live that the kill would orphan is removed or handed to a named owner **before** archiving. Nothing is left running unowned.
 3. Project `state.md`: Position → killed; ribbon ends `· killed`.
 4. Archive exactly as §3; the memo moves to `_done/` with one line prepended: *killed {date}: {reason}*.
-5. Initiative `state.md`: milestone row → `killed {date} — {reason}`; its tray items removed or re-homed; Next to open reconsidered, and if the roadmap changes, edit `north_star.md` in the same session.
+5. Initiative `state.md`: milestone row → `killed {date} — {reason}`; its tray items removed or re-homed; Next to open reconsidered, and if the roadmap changes, edit `north_star.md` in the same session. Render its companion as in §4.
 6. Handoff card: Next = the decision the kill leaves open, or the next milestone.
 
 ## P. Pausing a project (not a close)
 1. Project `state.md`: Position → `Paused {date} — waiting on {who or what} · task id · resume when {condition}`; Stage ribbon unchanged; Next = `resume: {the first thing to do}`.
-2. Initiative `state.md`: milestone row → `paused {date} (waiting on …)`.
+2. Initiative `state.md`: milestone row → `paused {date} (waiting on …)`. Render its companion as in §4.
 3. The project stays in `prds/` and the SessionStart gate keeps printing it, by design: a paused project is still in flight and should stay visible. If it will not resume, kill it (§K).

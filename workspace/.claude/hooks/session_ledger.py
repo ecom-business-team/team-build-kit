@@ -60,6 +60,29 @@ def is_log_write(name, inp):
     return False
 
 
+def human_text(d):
+    """The owner's own words in one transcript record, or None.
+
+    A human turn is a `user` record that is not meta, not a sidechain, whose text is not a
+    tool result or a slash-command wrapper (those start with `<`) and not an interruption.
+    Whitespace is collapsed. Shared with the gate-cost instrument (`tools/gate_cost.py`)."""
+    if d.get("type") != "user" or d.get("isMeta") or d.get("isSidechain"):
+        return None
+    msg = d.get("message") if isinstance(d.get("message"), dict) else None
+    if not msg:
+        return None
+    content = msg.get("content")
+    if isinstance(content, str):
+        text = content
+    else:
+        text = " ".join(x.get("text", "") for x in (content or [])
+                        if isinstance(x, dict) and x.get("type") == "text")
+    text = re.sub(r"\s+", " ", text or "").strip()
+    if not text or text.startswith("<") or text.startswith("[Request interrupted"):
+        return None
+    return text
+
+
 def parse_transcript(path):
     info = dict(started=None, ended=None, cwd=None, branch=None, title=None, first_prompt=None,
                 prompts=0, tool_calls=0, write_signal=False, logged=False)
@@ -88,14 +111,9 @@ def parse_transcript(path):
             if not msg:
                 continue
             content = msg.get("content")
-            if t == "user" and not d.get("isMeta"):
-                if isinstance(content, str):
-                    text = content
-                else:
-                    text = " ".join(x.get("text", "") for x in (content or [])
-                                    if isinstance(x, dict) and x.get("type") == "text")
-                text = re.sub(r"\s+", " ", text or "").strip()
-                if text and not text.startswith("<") and not text.startswith("[Request interrupted"):
+            if t == "user":
+                text = human_text(d)
+                if text:
                     info["prompts"] += 1
                     if info["first_prompt"] is None:
                         info["first_prompt"] = text[:160]

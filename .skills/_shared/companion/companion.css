@@ -1,0 +1,229 @@
+/* companion.css — the block library for gate-document companions.
+   Inlined by render.py; read unchanged by the explainer.
+   Greyscale tokens (chroma 0 except --destructive), three-state theme:
+   bare :root is light; the dark blocks only redefine tokens. No script, no request. */
+
+:root {
+  color-scheme: light;
+  --bg: oklch(0.985 0 0);
+  --fg: oklch(0.205 0 0);
+  --muted: oklch(0.515 0 0);
+  --card: oklch(1 0 0);
+  --border: oklch(0.908 0 0);
+  --primary: oklch(0.255 0 0);
+  --primary-fg: oklch(0.99 0 0);
+  --secondary: oklch(0.968 0 0);
+  --accent: oklch(0.955 0 0);
+  --destructive: oklch(0.55 0.205 27);
+  --ring: oklch(0.45 0 0);
+  --radius: 6px;
+  --font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: oklch(0.17 0 0);
+    --fg: oklch(0.96 0 0);
+    --muted: oklch(0.665 0 0);
+    --card: oklch(0.205 0 0);
+    --border: oklch(0.285 0 0);
+    --primary: oklch(0.92 0 0);
+    --primary-fg: oklch(0.2 0 0);
+    --secondary: oklch(0.248 0 0);
+    --accent: oklch(0.265 0 0);
+    --destructive: oklch(0.66 0.19 25);
+    --ring: oklch(0.56 0 0);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: oklch(0.17 0 0);
+  --fg: oklch(0.96 0 0);
+  --muted: oklch(0.665 0 0);
+  --card: oklch(0.205 0 0);
+  --border: oklch(0.285 0 0);
+  --primary: oklch(0.92 0 0);
+  --primary-fg: oklch(0.2 0 0);
+  --secondary: oklch(0.248 0 0);
+  --accent: oklch(0.265 0 0);
+  --destructive: oklch(0.66 0.19 25);
+  --ring: oklch(0.56 0 0);
+}
+
+/* ---- ground ---- */
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.55 var(--font);
+  letter-spacing: -0.011em;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+main.companion { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
+h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 600; line-height: 1.25; margin: 0; }
+h1 { font-size: 22px; }
+h2 { font-size: 16px; }
+h3 { font-size: 14px; }
+h4 { font-size: 13px; color: var(--muted); }
+p { margin: 8px 0; }
+a { color: inherit; text-decoration: underline; text-decoration-color: var(--muted); text-underline-offset: 2px; }
+a:hover { text-decoration-color: var(--fg); }
+code { font: 12.5px var(--mono); background: var(--secondary); padding: 1px 4px; border-radius: 4px; letter-spacing: 0; }
+pre { background: var(--secondary); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; overflow-x: auto; font: 12.5px/1.5 var(--mono); margin: 12px 0; }
+pre code { background: none; padding: 0; }
+blockquote { margin: 12px 0; padding-left: 12px; border-left: 2px solid var(--border); color: var(--muted); }
+hr { border: 0; border-top: 1px solid var(--border); margin: 24px 0; }
+ul, ol { margin: 8px 0; padding-left: 22px; }
+li { margin: 4px 0; }
+li > ul, li > ol { margin: 4px 0; }
+strong { font-weight: 600; }
+.muted { color: var(--muted); }
+.count { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 8px; }
+
+/* ---- header ---- */
+.doc-head { padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.eyebrow { margin: 0 0 8px; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.subtitle { margin: 6px 0 0; color: var(--muted); }
+.lede { margin: 16px 0; padding-left: 12px; border-left: 2px solid var(--primary); font-size: 15px; }
+.note { margin: 12px 0 0; font-size: 13px; color: var(--muted); }
+.doc-foot { margin-top: 48px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+
+/* ---- section (open, or folded as <details>) ---- */
+.section { margin-top: 32px; }
+.section > h2 { padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.section .sub { margin-top: 20px; }
+details.section > summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+details.section > summary::-webkit-details-marker { display: none; }
+details.section > summary::before { content: "▸"; color: var(--muted); font-size: 12px; flex: none; transition: transform 120ms; }
+details.section[open] > summary::before { transform: rotate(90deg); }
+details.section > summary h2 { flex: 1; }
+details.section > summary .count::after { content: " · folded"; }
+details.section[open] > summary .count::after { content: ""; }
+details.section > summary:hover h2 { color: var(--muted); }
+
+/* ---- fields: dense hairline label/value rows ---- */
+dl.fields { display: grid; grid-template-columns: max-content minmax(0, 1fr); margin: 12px 0 0; border-top: 1px solid var(--border); }
+dl.fields dt, dl.fields dd { margin: 0; padding: 6px 0; border-bottom: 1px solid var(--border); }
+dl.fields dt { color: var(--muted); padding-right: 20px; white-space: nowrap; font-size: 13px; }
+dl.fields dd { min-width: 0; overflow-wrap: anywhere; }
+dl.fields dd p { margin: 0; }
+dl.fields dd p + p { margin-top: 6px; }
+dl.fields dd ul, dl.fields dd ol { margin: 4px 0; }
+
+/* ---- ribbon: the stage marks ---- */
+.ribbon { display: flex; margin: 16px 0 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.ribbon span { flex: 1; padding: 8px 10px; border-right: 1px solid var(--border); font-size: 12px; text-align: center; white-space: nowrap; }
+.ribbon span:last-child { border-right: 0; }
+.ribbon .done { background: var(--secondary); }
+.ribbon .active { background: var(--primary); color: var(--primary-fg); font-weight: 600; }
+.ribbon .todo { color: var(--muted); }
+
+/* ---- verdict: the Ask, the go / no-go ---- */
+.verdict { margin-top: 16px; padding: 16px 20px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); }
+.verdict-word { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 6px; }
+.verdict p:first-child { margin-top: 0; }
+.verdict p:last-child { margin-bottom: 0; }
+
+/* ---- boundary: what it is / in / what it is not ---- */
+.boundary { margin-top: 8px; }
+.boundary .panel { padding: 14px 0; border-top: 1px solid var(--border); }
+.boundary .panel:first-child { border-top: 0; }
+.boundary .panel h3 { font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.boundary .panel.not h3::before { content: "✕ "; }
+.boundary .panel p:first-of-type { margin-top: 0; }
+
+/* ---- checklist ---- */
+ul.checklist, ol.checklist { list-style: none; padding: 0; margin: 8px 0 0; }
+.checklist li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 8px; margin: 0; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.checklist li > div { min-width: 0; }
+.checklist li p { margin: 0; }
+.checklist li p + p { margin-top: 4px; }
+.mark { font-variant-numeric: tabular-nums; text-align: center; line-height: 1.55; }
+.mark.done { color: var(--fg); }
+.mark.todo { color: var(--muted); }
+.mark.fail { color: var(--destructive); }
+.mark.active { color: var(--fg); font-weight: 600; }
+
+/* ---- table, with status pills ---- */
+.table { overflow-x: auto; margin: 12px 0 0; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th { text-align: left; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); padding: 6px 8px; white-space: nowrap; }
+td { border-bottom: 1px solid var(--border); padding: 6px 8px; vertical-align: top; }
+th:first-child, td:first-child { padding-left: 0; }
+th:last-child, td:last-child { padding-right: 0; }
+.pill { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; line-height: 1.4; padding: 1px 7px; border: 1px solid var(--border); border-radius: 999px; white-space: nowrap; vertical-align: middle; }
+.pill.ok { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
+.pill.fail { color: var(--destructive); border-color: var(--destructive); }
+.pill.pending { color: var(--muted); }
+.pill + span { margin-left: 6px; }
+
+/* ---- callout: needs the owner ---- */
+.callout { margin-top: 16px; padding: 12px 16px; border: 1px solid var(--border); border-left: 3px solid var(--fg); border-radius: var(--radius); background: var(--card); }
+.callout h3 { font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.callout ul { margin: 0; padding-left: 18px; }
+.callout p { margin: 0; }
+.callout .empty { color: var(--muted); }
+
+/* ---- progress: milestones and work items ---- */
+ol.progress { list-style: none; padding: 0; margin: 8px 0 0; }
+.progress li { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 8px; margin: 0; padding: 6px 0; border-bottom: 1px solid var(--border); align-items: baseline; }
+.progress .status { color: var(--muted); font-size: 12px; text-align: right; }
+.progress .num { color: var(--muted); font-size: 12px; margin-right: 6px; }
+.progress li.active .name { font-weight: 600; }
+.progress li.todo .name { color: var(--muted); }
+
+/* ---- tag: provenance labels ---- */
+.tag { display: inline-block; font-size: 11px; font-weight: 500; line-height: 1.4; padding: 0 5px; border: 1px solid var(--border); border-radius: 4px; background: var(--secondary); color: var(--muted); vertical-align: baseline; white-space: nowrap; }
+
+/* ---- kind: name · definition · proof ---- */
+.kind { margin-top: 16px; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); }
+.kind .label { font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.kind .name { font-weight: 600; }
+.kind .definition { margin-top: 4px; }
+.kind .proof { margin-top: 4px; color: var(--muted); }
+.kind .proof::before { content: "Proved by · "; }
+
+/* ---- work-item card (fields inside a bordered card) ---- */
+article.wi { margin-top: 12px; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); }
+article.wi h3 { display: flex; gap: 10px; align-items: baseline; }
+.wi-num { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+article.wi dl.fields { margin-top: 8px; border-top: 0; }
+article.wi dl.fields dt:last-of-type, article.wi dl.fields dd:last-of-type { border-bottom: 0; }
+
+/* ---- plain layer: the plain-words line first, the technical body folded beneath ---- */
+.plain { margin: 8px 0 0; font-size: 16px; line-height: 1.5; }
+details.section > summary { flex-wrap: wrap; }
+details.section > summary .plain { flex-basis: 100%; margin: 4px 0 0 20px; font-weight: 400; }
+details.details { margin-top: 10px; }
+details.details > summary { cursor: pointer; list-style: none; font-size: 12px; color: var(--muted); }
+details.details > summary::-webkit-details-marker { display: none; }
+details.details > summary::before { content: "▸ "; }
+details.details[open] > summary::before { content: "▾ "; }
+details.details > :not(summary) { margin-top: 8px; }
+.kind .statement { margin-top: 4px; }
+.kind .part { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); }
+
+/* ---- ship review: holes with a disposition pill; handoff residuals ---- */
+ul.holes, ul.residuals { margin: 8px 0 0; padding-left: 0; list-style: none; }
+ul.holes li, ul.residuals li { padding: 6px 0; border-bottom: 1px solid var(--border); }
+ul.holes .pill { margin-right: 6px; }
+.progress .name { min-width: 0; overflow-wrap: anywhere; }
+.progress li { grid-template-columns: 20px minmax(0, 1fr) fit-content(38%); }
+.progress .status { white-space: normal; }
+h3.sub { margin-top: 20px; }
+
+@media (max-width: 540px) {
+  main.companion { padding: 24px 16px 60px; }
+  dl.fields { grid-template-columns: 1fr; }
+  dl.fields dt { border-bottom: 0; padding-bottom: 0; }
+  .ribbon { flex-wrap: wrap; }
+  .ribbon span { flex: 1 1 33%; border-bottom: 1px solid var(--border); }
+}
+@media print {
+  main.companion { max-width: none; padding: 0; }
+  a { text-decoration: none; }
+}

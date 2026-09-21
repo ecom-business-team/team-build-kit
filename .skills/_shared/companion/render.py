@@ -5,13 +5,14 @@ Usage:
   python3 render.py <path> [<path> ...]   render each markdown file; print the written path
   python3 render.py --stale <dir>         list companions older than their source
 
-Recognises four documents by file name and header — a build-intent memo, a PRD,
-a project log (its last ship review) and a state file (the handoff) — and lays
+Recognises five documents by file name and header — a build-intent memo, a PRD,
+a project log (its last ship review), a state file (the handoff) and the explainer
+(`why_we_build.md`) — and lays
 each out in a fixed plan that foregrounds what its reader must decide and folds
 the rest into native <details>. Standard library only. Idempotent: the same input
 gives the same bytes. Writes only the .html beside the source, never the markdown.
 Exit 0 with the written path on stdout; exit 1 with one line on stderr when a
-file is none of the four.
+file is none of the five. A ```chain fence draws as a strip in any of them.
 """
 from __future__ import annotations
 
@@ -349,6 +350,8 @@ def html_block(b: Block, **opts) -> str:
         return html_table(b)
     if b.kind == "quote":
         return f"<blockquote>{inline(b.text)}</blockquote>"
+    if b.kind == "code" and (b.lang or "").strip().lower() == "chain":
+        return html_chain(b.text)
     if b.kind == "code":
         return f"<pre><code>{esc(b.text)}</code></pre>"
     if b.kind == "hr":
@@ -992,6 +995,27 @@ def ribbon(stage: str) -> str:
     return f'<div class="ribbon">{"".join(spans)}</div>' if spans else ""
 
 
+CHAIN_LABEL_RE = re.compile(r"^([^→:]{1,60}):\s*(.*→.*)$")
+
+
+def html_chain(text: str) -> str:
+    """Each non-blank line of a ```chain fence is one strip: `Label: A → B → C` or `A → B → C`."""
+    rows = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        label = None
+        m = CHAIN_LABEL_RE.match(line)
+        if m:
+            label, line = m.group(1).strip(), m.group(2)
+        segs = [seg.strip() for seg in line.split("→") if seg.strip()]
+        lab = f'<span class="label">{inline(label)}</span>' if label else ""
+        items = "".join(f"<li><span>{inline(seg)}</span></li>" for seg in segs)
+        rows.append(f'<div class="chain">{lab}<ol>{items}</ol></div>')
+    return f'<div class="chains">{"".join(rows)}</div>' if rows else ""
+
+
 def progress_list(rows: list[tuple[str, str, str, str]]) -> str:
     """rows of (number, name, status text, mark) → an ordered progress list."""
     out = ['<ol class="progress">']
@@ -1128,7 +1152,32 @@ def plan_handoff(blocks, src: Path) -> tuple[str, str]:
     return title, "".join(out)
 
 
-PLANS = {"memo": plan_memo, "prd": plan_prd, "ship": plan_ship, "handoff": plan_handoff}
+# ----------------------------------------------------------------------------
+# The explainer: every section open in document order, the verification table folded
+# ----------------------------------------------------------------------------
+
+EXPLAINER_NAME = "why_we_build.md"
+VERIFY_RE = re.compile(r"where each|comes from|verification|sources", re.I)
+
+
+def plan_explainer(blocks, src: Path) -> tuple[str, str]:
+    pre, secs = split_sections(blocks, 2)
+    title, subtitle, fields, order, notes = header_parts(pre)
+    title = title or src.stem.replace("_", " ")
+    out = ['<header class="doc-head">', '<p class="eyebrow">The explainer</p>', f"<h1>{inline(title)}</h1>"]
+    if subtitle:
+        out.append(f'<p class="subtitle">{inline(subtitle)}</p>')
+    out.append(html_blocks(notes))
+    out.append("</header>")
+    for h, body in secs:
+        if VERIFY_RE.search(plain(h.text)):
+            out.append(folded_section(inline(h.text), body, "verification"))
+        else:
+            out.append(open_section(inline(h.text), html_blocks(body)))
+    return plain(title), "".join(out)
+
+
+PLANS = {"memo": plan_memo, "prd": plan_prd, "ship": plan_ship, "handoff": plan_handoff, "explainer": plan_explainer}
 OUTPUT_NAME = {"ship": "ship_review.html", "handoff": "handoff.html"}
 
 
@@ -1144,6 +1193,8 @@ def detect(path: Path, text: str) -> str | None:
         return "ship"
     if name == "state.md":
         return "handoff"
+    if name == EXPLAINER_NAME:
+        return "explainer"
     head = text[:3000]
     if re.search(r"^_.*build-intent memo", head, re.I | re.M) or "/memos/" in path.resolve().as_posix():
         return "memo"
@@ -1171,7 +1222,7 @@ def render(path: Path) -> Path:
     text = path.read_text(encoding="utf-8")
     kind = detect(path, text)
     if kind is None:
-        raise ValueError(f"{path}: not a memo, PRD, project log or state file")
+        raise ValueError(f"{path}: not a memo, PRD, project log, state file or the explainer")
     plan = PLANS[kind]
     blocks = parse(text)
     title, body = plan(blocks, path)

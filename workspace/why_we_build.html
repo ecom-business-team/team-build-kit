@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why we build this way</title>
+<style>
+/* companion.css — the block library for gate-document companions.
+   Inlined by render.py; read unchanged by the explainer.
+   Greyscale tokens (chroma 0 except --destructive), three-state theme:
+   bare :root is light; the dark blocks only redefine tokens. No script, no request. */
+
+:root {
+  color-scheme: light;
+  --bg: oklch(0.985 0 0);
+  --fg: oklch(0.205 0 0);
+  --muted: oklch(0.515 0 0);
+  --card: oklch(1 0 0);
+  --border: oklch(0.908 0 0);
+  --primary: oklch(0.255 0 0);
+  --primary-fg: oklch(0.99 0 0);
+  --secondary: oklch(0.968 0 0);
+  --accent: oklch(0.955 0 0);
+  --destructive: oklch(0.55 0.205 27);
+  --ring: oklch(0.45 0 0);
+  --radius: 6px;
+  --font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: oklch(0.17 0 0);
+    --fg: oklch(0.96 0 0);
+    --muted: oklch(0.665 0 0);
+    --card: oklch(0.205 0 0);
+    --border: oklch(0.285 0 0);
+    --primary: oklch(0.92 0 0);
+    --primary-fg: oklch(0.2 0 0);
+    --secondary: oklch(0.248 0 0);
+    --accent: oklch(0.265 0 0);
+    --destructive: oklch(0.66 0.19 25);
+    --ring: oklch(0.56 0 0);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: oklch(0.17 0 0);
+  --fg: oklch(0.96 0 0);
+  --muted: oklch(0.665 0 0);
+  --card: oklch(0.205 0 0);
+  --border: oklch(0.285 0 0);
+  --primary: oklch(0.92 0 0);
+  --primary-fg: oklch(0.2 0 0);
+  --secondary: oklch(0.248 0 0);
+  --accent: oklch(0.265 0 0);
+  --destructive: oklch(0.66 0.19 25);
+  --ring: oklch(0.56 0 0);
+}
+
+/* ---- ground ---- */
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.55 var(--font);
+  letter-spacing: -0.011em;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+main.companion { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
+h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 600; line-height: 1.25; margin: 0; }
+h1 { font-size: 22px; }
+h2 { font-size: 16px; }
+h3 { font-size: 14px; }
+h4 { font-size: 13px; color: var(--muted); }
+p { margin: 8px 0; }
+a { color: inherit; text-decoration: underline; text-decoration-color: var(--muted); text-underline-offset: 2px; }
+a:hover { text-decoration-color: var(--fg); }
+code { font: 12.5px var(--mono); background: var(--secondary); padding: 1px 4px; border-radius: 4px; letter-spacing: 0; }
+pre { background: var(--secondary); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; overflow-x: auto; font: 12.5px/1.5 var(--mono); margin: 12px 0; }
+pre code { background: none; padding: 0; }
+blockquote { margin: 12px 0; padding-left: 12px; border-left: 2px solid var(--border); color: var(--muted); }
+hr { border: 0; border-top: 1px solid var(--border); margin: 24px 0; }
+ul, ol { margin: 8px 0; padding-left: 22px; }
+li { margin: 4px 0; }
+li > ul, li > ol { margin: 4px 0; }
+strong { font-weight: 600; }
+.muted { color: var(--muted); }
+.count { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 8px; }
+
+/* ---- header ---- */
+.doc-head { padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.eyebrow { margin: 0 0 8px; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.subtitle { margin: 6px 0 0; color: var(--muted); }
+.lede { margin: 16px 0; padding-left: 12px; border-left: 2px solid var(--primary); font-size: 15px; }
+.note { margin: 12px 0 0; font-size: 13px; color: var(--muted); }
+.doc-foot { margin-top: 48px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+
+/* ---- section (open, or folded as <details>) ---- */
+.section { margin-top: 32px; }
+.section > h2 { padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.section .sub { margin-top: 20px; }
+details.section > summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+details.section > summary::-webkit-details-marker { display: none; }
+details.section > summary::before { content: "▸"; color: var(--muted); font-size: 12px; flex: none; transition: transform 120ms; }
+details.section[open] > summary::before { transform: rotate(90deg); }
+details.section > summary h2 { flex: 1; }
+details.section > summary .count::after { content: " · folded"; }
+details.section[open] > summary .count::after { content: ""; }
+details.section > summary:hover h2 { color: var(--muted); }
+
+/* ---- fields: dense hairline label/value rows ---- */
+dl.fields { display: grid; grid-template-columns: max-content minmax(0, 1fr); margin: 12px 0 0; border-top: 1px solid var(--border); }
+dl.fields dt, dl.fields dd { margin: 0; padding: 6px 0; border-bottom: 1px solid var(--border); }
+dl.fields dt { color: var(--muted); padding-right: 20px; white-space: nowrap; font-size: 13px; }
+dl.fields dd { min-width: 0; overflow-wrap: anywhere; }
+dl.fields dd p { margin: 0; }
+dl.fields dd p + p { margin-top: 6px; }
+dl.fields dd ul, dl.fields dd ol { margin: 4px 0; }
+
+/* ---- ribbon: the stage marks ---- */
+.ribbon { display: flex; margin: 16px 0 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.ribbon span { flex: 1; padding: 8px 10px; border-right: 1px solid var(--border); font-size: 12px; text-align: center; white-space: nowrap; }
+.ribbon span:last-child { border-right: 0; }
+.ribbon .done { background: var(--secondary); }
+.ribbon .active { background: var(--primary); color: var(--primary-fg); font-weight: 600; }
+.ribbon .todo { color: var(--muted); }
+
+/* ---- chain: a drawn sequence from a ```chain fence ---- */
+.chains { display: grid; gap: 12px; margin: 12px 0 4px; }
+.chain .label { display: block; font-size: 12px; color: var(--muted); margin: 0 0 5px; }
+.chain ol { list-style: none; display: flex; flex-wrap: wrap; align-items: center; padding: 0; margin: 0; row-gap: 6px; }
+.chain li { display: flex; align-items: center; margin: 0; }
+.chain li > span { padding: 7px 11px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); font-size: 13px; line-height: 1.3; white-space: nowrap; }
+.chain li > span strong { font-weight: 600; }
+.chain li + li::before { content: "→"; color: var(--muted); padding: 0 8px; }
+
+/* ---- verdict: the Ask, the go / no-go ---- */
+.verdict { margin-top: 16px; padding: 16px 20px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); }
+.verdict-word { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 6px; }
+.verdict p:first-child { margin-top: 0; }
+.verdict p:last-child { margin-bottom: 0; }
+
+/* ---- boundary: what it is / in / what it is not ---- */
+.boundary { margin-top: 8px; }
+.boundary .panel { padding: 14px 0; border-top: 1px solid var(--border); }
+.boundary .panel:first-child { border-top: 0; }
+.boundary .panel h3 { font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.boundary .panel.not h3::before { content: "✕ "; }
+.boundary .panel p:first-of-type { margin-top: 0; }
+
+/* ---- checklist ---- */
+ul.checklist, ol.checklist { list-style: none; padding: 0; margin: 8px 0 0; }
+.checklist li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 8px; margin: 0; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.checklist li > div { min-width: 0; }
+.checklist li p { margin: 0; }
+.checklist li p + p { margin-top: 4px; }
+.mark { font-variant-numeric: tabular-nums; text-align: center; line-height: 1.55; }
+.mark.done { color: var(--fg); }
+.mark.todo { color: var(--muted); }
+.mark.fail { color: var(--destructive); }
+.mark.active { color: var(--fg); font-weight: 600; }
+
+/* ---- table, with status pills ---- */
+.table { overflow-x: auto; margin: 12px 0 0; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th { text-align: left; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); padding: 6px 8px; white-space: nowrap; }
+td { border-bottom: 1px solid var(--border); padding: 6px 8px; vertical-align: top; }
+th:first-child, td:first-child { padding-left: 0; }
+th:last-child, td:last-child { padding-right: 0; }
+.pill { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; line-height: 1.4; padding: 1px 7px; border: 1px solid var(--border); border-radius: 999px; white-space: nowrap; vertical-align: middle; }
+.pill.ok { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
+.pill.fail { color: var(--destructive); border-color: var(--destructive); }
+.pill.pending { color: var(--muted); }
+.pill + span { margin-left: 6px; }
+
+/* ---- callout: needs the owner ---- */
+.callout { margin-top: 16px; padding: 12px 16px; border: 1px solid var(--border); border-left: 3px solid var(--fg); border-radius: var(--radius); background: var(--card); }
+.callout h3 { font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.callout ul { margin: 0; padding-left: 18px; }
+.callout p { margin: 0; }
+.callout .empty { color: var(--muted); }
+
+/* ---- progress: milestones and work items ---- */
+ol.progress { list-style: none; padding: 0; margin: 8px 0 0; }
+.progress li { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 8px; margin: 0; padding: 6px 0; border-bottom: 1px solid var(--border); align-items: baseline; }
+.progress .status { color: var(--muted); font-size: 12px; text-align: right; }
+.progress .num { color: var(--muted); font-size: 12px; margin-right: 6px; }
+.progress li.active .name { font-weight: 600; }
+.progress li.todo .name { color: var(--muted); }
+
+/* ---- tag: provenance labels ---- */
+.tag { display: inline-block; font-size: 11px; font-weight: 500; line-height: 1.4; padding: 0 5px; border: 1px solid var(--border); border-radius: 4px; background: var(--secondary); color: var(--muted); vertical-align: baseline; white-space: nowrap; }
+
+/* ---- kind: name · definition · proof ---- */
+.kind { margin-top: 16px; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); }
+.kind .label { font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.kind .name { font-weight: 600; }
+.kind .definition { margin-top: 4px; }
+.kind .proof { margin-top: 4px; color: var(--muted); }
+.kind .proof::before { content: "Proved by · "; }
+
+/* ---- work-item card (fields inside a bordered card) ---- */
+article.wi { margin-top: 12px; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); }
+article.wi h3 { display: flex; gap: 10px; align-items: baseline; }
+.wi-num { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+article.wi dl.fields { margin-top: 8px; border-top: 0; }
+article.wi dl.fields dt:last-of-type, article.wi dl.fields dd:last-of-type { border-bottom: 0; }
+
+/* ---- plain layer: the plain-words line first, the technical body folded beneath ---- */
+.plain { margin: 8px 0 0; font-size: 16px; line-height: 1.5; }
+details.section > summary { flex-wrap: wrap; }
+details.section > summary .plain { flex-basis: 100%; margin: 4px 0 0 20px; font-weight: 400; }
+details.details { margin-top: 10px; }
+details.details > summary { cursor: pointer; list-style: none; font-size: 12px; color: var(--muted); }
+details.details > summary::-webkit-details-marker { display: none; }
+details.details > summary::before { content: "▸ "; }
+details.details[open] > summary::before { content: "▾ "; }
+details.details > :not(summary) { margin-top: 8px; }
+.kind .statement { margin-top: 4px; }
+.kind .part { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); }
+
+/* ---- ship review: holes with a disposition pill; handoff residuals ---- */
+ul.holes, ul.residuals { margin: 8px 0 0; padding-left: 0; list-style: none; }
+ul.holes li, ul.residuals li { padding: 6px 0; border-bottom: 1px solid var(--border); }
+ul.holes .pill { margin-right: 6px; }
+.progress .name { min-width: 0; overflow-wrap: anywhere; }
+.progress li { grid-template-columns: 20px minmax(0, 1fr) fit-content(38%); }
+.progress .status { white-space: normal; }
+h3.sub { margin-top: 20px; }
+
+@media (max-width: 540px) {
+  main.companion { padding: 24px 16px 60px; }
+  dl.fields { grid-template-columns: 1fr; }
+  dl.fields dt { border-bottom: 0; padding-bottom: 0; }
+  .ribbon { flex-wrap: wrap; }
+  .ribbon span { flex: 1 1 33%; border-bottom: 1px solid var(--border); }
+}
+@media print {
+  main.companion { max-width: none; padding: 0; }
+  a { text-decoration: none; }
+}
+
+</style>
+</head>
+<body>
+<main class="companion">
+<header class="doc-head"><p class="eyebrow">The explainer</p><h1>Why we build this way</h1><p class="subtitle">Two ladders, six kinds, three gates, one state layer, and the reason for each.</p><p>You describe a thing you want in plain words. The kit tells you what kind of thing it is and what it needs. Three gates then decide, in order, whether it should exist, whether it is designed right, and whether other people can rely on it. While it is being built, where we are is kept apart from what happened, so any session picks up in minutes. And after it ships, we go back and check whether the problem was actually solved. Everything below is the reason for one of those sentences.</p></header><section class="section"><h2>The one idea, if you remember nothing else</h2><p><strong>Complexity is the enemy. If you can't explain it simply, it's probably too complicated — or built poorly.</strong></p><p>Nearly every build that goes wrong goes wrong the same way: it tried to do too much, too soon, and the person was in over their head before they noticed. Nothing in the kit exists to make building slower or more formal. Every gate, ladder and file is there to catch that one mistake while it is still cheap to fix, instead of later, when it has become a mess that nobody can explain. A simple system is not a small one. It is one that a person can say out loud in a paragraph, and the second gate asks exactly that.</p></section><section class="section"><h2>Why gates, and why they check themselves</h2><p>A gate is a checkpoint you clear before moving on. Nobody grants passage. The gate asks a question, and if you cannot answer it, you have not passed, and you will know it yourself. There are three, and they fire at different moments, because some questions are only worth asking after the earlier ones.</p><p>The first gate is the memo, and it asks whether this should exist at all. Before anything real is built, you say what problem it solves, what doing nothing costs, what solving it is worth, why now, and what the thing is, in one sentence. Most important of all, you say what it is <em>not</em>. A memo whose honest answer is "do not build this" is a win, because it just saved a build that was not worth making.</p><p>The second gate is the PRD, and it asks whether the thing is designed right. It works out on paper how the thing will work, checks that everything the design assumes is true in the live system, and reuses what exists instead of inventing more. The test is whether you can explain it in a short paragraph or draw it. If you cannot, you do not understand it yet, and building something you do not understand is how you end up unable to fix it when it breaks.</p><p>The third gate is ship, and it asks whether other people can safely rely on the thing. It fires only when the stakes are real, and the kit measures that with four questions it calls blast radius. Does someone other than you depend on it? Does it change real data? Is its output used to make decisions? Does it touch money or anyone outside? If every answer is no, the thing is a toy and you may play freely. If any answer is yes, it does not go live until the ship review has answered what happens when it breaks, who notices, what the fallback is, and three more questions like them. You never decide that yourself. The router asks the four questions at the end of every build and every quick fix, so the most important gate is the one you cannot skip by accident.</p><div class="chains"><div class="chain"><ol><li><span>memo</span></li><li><span>PRD</span></li><li><span>build</span></li><li><span>ship</span></li><li><span><strong>outcome check</strong></span></li></ol></div></div><p>Skipping the gates goes wrong in one of two ways. Without the first gate, "while I'm at it" turns a weekend idea into a month-long swamp. Without the third, something other people lean on goes live with nobody able to say how it fails or how to fix it.</p></section><section class="section"><h2>Why two ladders, and why a door</h2><p>Two questions sound alike and are not. One is how big a piece of <em>work</em> is. The other is how big the <em>thing being built</em> is. The kit keeps a ladder for each, and one door, <code>/memo</code>, that places work on the first.</p><div class="chains"><div class="chain"><span class="label">The ladder of work</span><ol><li><span>session</span></li><li><span>work item</span></li><li><span>project</span></li><li><span>milestone</span></li><li><span>initiative</span></li></ol></div><div class="chain"><span class="label">The ladder of what exists</span><ol><li><span>part</span></li><li><span>system</span></li><li><span>workspace</span></li></ol></div></div><p>On the ladder of work, a session, one conversation with Claude from opening the chat to closing it, does one work item and stops. Work items make a project. A project reaches one milestone. Milestones that build on each other make an initiative. On the ladder of what exists, a workspace holds several systems, and a system holds its parts. Every built thing sits somewhere on the second ladder, and its index says what it is, what lives in it, and how to pick it up in a fresh session.</p><p>The door is where the ladder of work meets the person. Every build intent, from a one-line fix to a rebuild that takes months, starts at <code>/memo</code>. The door places the work on the ladder of work for you, sending it down to a quick fix, on to a project, or up to an initiative. Nobody has to decide the size themselves.</p><p>Without the ladders you get the month-long "quick fix" that was never small, and the thing built with no system to belong to, so that six weeks later nobody knows where its documents are or who may change its data.</p></section><section class="section"><h2>Why six kinds</h2><p>A form wired to a board is not proved the way an app is, and neither is proved the way a document is. So proof is by kind, not by size. The kit knows six kinds of built thing, and each one has its own way of being shown to work.</p><ul><li>An <strong>automation</strong> is rented tools wired together. It is proved by replaying it through its real entry point, the form or the trigger that really starts it.</li><li>A <strong>service</strong> is your own code that runs on its own with no screen. It is proved by tests, a live probe of the running thing, and a forced failure that its noticer, whatever tells a person that something broke, actually reports.</li><li>An <strong>application</strong> is your own code with a screen that people sign into. It is proved by a real browser walking the real screens through the real login, plus checks that read its live data.</li><li>A <strong>tool</strong> is your own code that a person runs by hand to produce an output. It is proved by tests on fixtures and one check of its output against real data.</li><li>A <strong>procedure</strong> is instructions that Claude, the assistant doing the building, follows. It is proved by a cold read, a fresh session with no memory running it from the file alone.</li><li><strong>Knowledge</strong> is something people read. It is proved by review against a verification table, one row per claim beside the source that confirms it. This document is knowledge, and its table is the last section.</li></ul><p>Because the kit asks the kind first, it can provision exactly the documents that kind needs and reach for exactly that kind's proof, without the person knowing the taxonomy. What goes wrong when kind is ignored is a checklist written for one kind applied to another. Every box gets ticked, and nothing has been proved.</p></section><section class="section"><h2>Why one state layer, and why position is kept apart from history</h2><p>Every project and every initiative has one state file, and it is the only place where position is written. It is rewritten in place at every stop, under a word budget, and it is never appended. Everything that happened goes into the record, the project's log, which is appended and never edited, and never read to find out where we are. At every stop the handoff card says the same five things:</p><ul><li>where we are on the ladder of work;</li><li>what just got done, and how it was proved;</li><li>exactly what to type next;</li><li>what only the owner can do;</li><li>where all of this is written down.</li></ul><div class="chains"><div class="chain"><ol><li><span>a session ends</span></li><li><span>the state file is rewritten</span></li><li><span>the next session reads only the state file</span></li></ol></div></div><p>The reason is measured. Before the split, a session that had to work out where a build stood rebuilt that picture from six to ten history-shaped documents, spending anywhere from tens of thousands to well over a hundred thousand words of reading, and re-reading the same files fifteen to thirty times inside one conversation. A snapshot of a few hundred words, checked against the live files in minutes, orients a fresh session and costs almost nothing.</p><p>What goes wrong is either of the two habits the split forbids. Appending to the state file turns the snapshot back into a history, and reading the record to find your place costs the very time the snapshot was made to save.</p></section><section class="section"><h2>Why shipped is not reached</h2><p>Ship proves the build is safe to rely on. It does not prove that the problem in the memo was solved, and nothing else in the lifecycle checks that. So the outcome check does. On a set date after go-live, the memo's success definition is checked against real people using the thing, and only then does the milestone read <em>reached</em>.</p><div class="chains"><div class="chain"><ol><li><span>queued</span></li><li><span>memo cleared</span></li><li><span>PRD approved</span></li><li><span>building</span></li><li><span>shipped</span></li><li><span><strong>reached</strong></span></li></ol></div></div><p>Without it, "done" gets called at ship. The loop back to the memo never closes, and a thing can be live, stable and unused for months while everyone believes the problem is behind them.</p></section><section class="section"><h2>What you bring, and what the skills carry</h2><p>You are not expected to know how to build anything technically. The skills carry that load. Your part is the part no tool can do for you.</p><div class="table"><table><thead><tr><th>You decide</th><th>The skills handle</th></tr></thead><tbody><tr><td>What is worth building.</td><td>Designing the pieces.</td></tr><tr><td>What "done" means.</td><td>Checking the technical assumptions against the live system.</td></tr><tr><td>What it is <em>not</em>.</td><td>Writing the actual thing.</td></tr><tr><td>Whether the stakes are acceptable.</td><td>Keeping the documents current.</td></tr></tbody></table></div><p>Say what you are trying to do, answer the gates honestly, and the kit does the rest. If partway through something turns out bigger or harder than expected, a skill stops and tells you, and points you back to the door. That is not failure. It is the system catching the problem while it is cheap to fix.</p></section><details class="section verification"><summary><h2>Where each why comes from</h2><span class="count">952 words</span></summary><div class="table"><table><thead><tr><th>Claim</th><th>Source that confirms it</th></tr></thead><tbody><tr><td>The one-breath sentence: describe the thing, the kit names its kind, three gates, position apart from history, a check afterwards</td><td>the initiative's north star, §1</td></tr><tr><td>"Complexity is the enemy" is the kit's one idea, kept word for word</td><td>the June explainer, "The one idea"; the initiative's north star, §2 principle 6</td></tr><tr><td>Builds go wrong by doing too much too soon; the kit catches it while it is cheap</td><td>the June explainer, "The one idea"</td></tr><tr><td>A gate checks itself; nobody grants passage</td><td>the June explainer, "Why gates?"</td></tr><tr><td>Gate 1 asks "should this exist?" and covers problem, cost of inaction, value, why now, what it is and is not, and the success definition</td><td><code>glossary.md</code>, "Gate 1, the memo"</td></tr><tr><td>Gate 2 asks "is it designed right?" and checks every dependency against the live system</td><td><code>glossary.md</code>, "Gate 2, the PRD"</td></tr><tr><td>Gate 3 asks "is it safe for other people to rely on?" and runs only when blast radius crosses the line</td><td><code>glossary.md</code>, "Gate 3, ship"</td></tr><tr><td>Blast radius is four questions, and one yes means Gate 3</td><td><code>glossary.md</code>, "Blast radius"</td></tr><tr><td>The router asks the four questions at the end of every build and quick fix</td><td><code>glossary.md</code>, "Router"</td></tr><tr><td>The gates fire at different moments because some questions are only worth asking after earlier ones</td><td>the June explainer, "Why gates?"</td></tr><tr><td>Gate 1 asks what the thing is in one sentence; a memo that says "do not build this" is a win; skipping it turns a weekend idea into a month-long swamp</td><td>the June explainer, "Gate 1"</td></tr><tr><td>Gate 2 reuses what exists, and its test is whether you can explain the thing in a short paragraph or draw it</td><td>the June explainer, "Gate 2"</td></tr><tr><td>If no blast-radius answer is yes the thing is a toy; if any is yes it does not go live until the failure questions are answered</td><td>the June explainer, "Gate 3"</td></tr><tr><td>The ship review asks six things, of which what breaks, who notices and the fallback are three</td><td><code>glossary.md</code>, "Gate 3, ship"</td></tr><tr><td>The lifecycle runs memo, PRD, build, ship, outcome check</td><td><code>documentation_standard.md</code>, §4 (the planning-folder contract, and the milestone states)</td></tr><tr><td>The ladder of work is session, work item, project, milestone, initiative</td><td><code>glossary.md</code>, "The ladder of work"</td></tr><tr><td>The ladder of what exists is part, system, workspace</td><td><code>glossary.md</code>, "Part, system, workspace"</td></tr><tr><td>A session is one conversation from opening the chat to closing it, and it does one work item, then stops</td><td><code>glossary.md</code>, "Session"; "Work item"; "Session boundary"</td></tr><tr><td>Work items make a project, a project reaches one milestone, and milestones that build on each other make an initiative</td><td><code>glossary.md</code>, "Project", "Milestone", "Initiative"</td></tr><tr><td>Every built thing has an index that says what it is, what lives in it, and how to pick it up in a fresh session</td><td><code>glossary.md</code>, "CONTEXT.md"; <code>documentation_standard.md</code>, §5 (the required local index)</td></tr><tr><td>Every build intent starts at the door, which sizes the work so nobody sizes their own</td><td><code>glossary.md</code>, "The door"; <code>documentation_standard.md</code>, §4 (the planning-folder contract)</td></tr><tr><td>Proof is by kind, not by size</td><td>the initiative's north star, §2 principle 7</td></tr><tr><td>The six kinds and what each one is</td><td><code>glossary.md</code>, "The kinds" (six rows)</td></tr><tr><td>The proof each kind must pass</td><td><code>documentation_standard.md</code>, §4 (the kinds table); <code>glossary.md</code>, "Real entry point", "Cold read", "Verification table", "Live invariant", "Smoke test", "Noticer"</td></tr><tr><td>The kit asks the kind at intake and provisions and proves by it, without the person knowing the taxonomy</td><td>the initiative's north star, §5 ("Kinds decide the document set, the proof and the practices"); §7, milestone 1's "reached when"</td></tr><tr><td>Every project and every initiative has one state file; it is the only place position lives; rewritten, never appended, under a budget</td><td><code>glossary.md</code>, "State file"; <code>documentation_standard.md</code>, §4 ("Three levels, one snapshot each") and §6 ("State is a snapshot, history is a log")</td></tr><tr><td>A fresh session orients from the state file and its checks in minutes</td><td><code>glossary.md</code>, "Orient"; the initiative's north star, §1</td></tr><tr><td>The record is the project's log, appended, never edited, and never read for position</td><td><code>glossary.md</code>, "Record"</td></tr><tr><td>The handoff card says the same five things at every stop</td><td><code>glossary.md</code>, "Handoff card"</td></tr><tr><td>Sessions rebuilt their position from six to ten history-shaped documents, at a cost between tens of thousands and well over a hundred thousand words of reading, re-reading the same files fifteen to thirty times</td><td><code>documentation_standard.md</code>, §4 ("State split from history 2026-09-20": 27k–237k tokens of orientation per session, the same files re-read 15–29 times)</td></tr><tr><td>Ship proves safe to rely on, not that the problem was solved; the outcome check is the only step that checks that</td><td>the shared close procedure (<code>project_close.md</code>), §5; <code>glossary.md</code>, "Outcome check"</td></tr><tr><td>A milestone is shipped when live and reached only when the outcome check confirms the success definition</td><td><code>glossary.md</code>, "Milestone"; <code>documentation_standard.md</code>, §4 (the milestone states)</td></tr><tr><td>You decide what is worth building, what done means, what it is not, whether the stakes are acceptable; the skills design, check, write and keep the documents</td><td>the June explainer, "What you bring vs. what the skills handle"</td></tr><tr><td>When something turns out too big, a skill stops and points back to the starting place, which is the door</td><td>the June explainer, "When it gets too big"; <code>glossary.md</code>, "The door"</td></tr></tbody></table></div></details>
+<footer class="doc-foot">Companion of <code>why_we_build.md</code>. Generated from the markdown, which stays the source; regenerated by the skill step that writes the document, never edited by hand.</footer>
+</main>
+</body>
+</html>

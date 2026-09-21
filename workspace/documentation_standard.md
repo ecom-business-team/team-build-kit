@@ -126,7 +126,7 @@ The roadmap (the ordered milestones, each with what it kills and what it depends
 |---|---|---|
 | The idea, the why, what "solved" looks like | `north_star.md` — thesis, principles, journeys | at ideation; edited when a decision changes it |
 | Requirements | journeys and objects in `north_star.md`; field level in the spec appendices | at ideation; verified by each PRD |
-| Milestones | the roadmap: the ordered milestones — a milestone is reached when its project ships | once; reordered by decision |
+| Milestones | the roadmap: the ordered milestones — a milestone is shipped when its project ships and reached when the outcome check confirms the memo's success definition | once; reordered by decision |
 | Where each milestone stands | the milestone table in the initiative `state.md` | at every project open and close |
 | What a project inherits | the handed-forward tray in the initiative `state.md` | at every project close; an item leaves when decided, homed, or done |
 | A project's intent / design | `_admin/memos/<project>.md` / `_admin/prds/<project>/<project>_prd.md` | `/memo` / `/prd`; the PRD is amended in `/build` on scope change |

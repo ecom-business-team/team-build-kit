@@ -263,9 +263,17 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 ## 6. State & Entity Lifecycles
 ### [Entity]
 [States (incl. skipped ones), transitions, triggers, validations, side effects, timestamp fields]
+```chain
+[Label]: [state] → [state] → [terminal state]
+```
+[One line per lifecycle; the companion draws each line as a strip; write states as short names, not clauses.]
 
 ## 7. Value Stream
 [Trigger → outcome, with handoff points marked]
+```chain
+[trigger] → [step] → **[handoff]** → [outcome]
+```
+[One line per stream; bold the handoffs; the prose below keeps the full sentences.]
 
 ## 8. Domain Boundaries
 ### [System]

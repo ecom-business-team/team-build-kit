@@ -13,7 +13,7 @@ A way of building you can hold in one breath: six kinds of thing you might build
 Paste this line into a terminal or into Claude Code. It installs the commands and changes nothing else:
 
 ```
-K=https://raw.githubusercontent.com/zjamesblake/team-build-kit; curl -fsSL $K/main/install.sh | bash
+K=https://raw.githubusercontent.com/ecom-business-team/team-build-kit; curl -fsSL $K/main/install.sh | bash
 ```
 
 Then type **`/onboard`** to create your workspace.

@@ -22,8 +22,8 @@ Refresh the Team Build Kit to its latest published version. This runs the kit's 
 
 The kit lives at a public GitHub repo. This skill runs the kit's `install.sh` straight from there, so it works whether the user cloned the repo or just downloaded the ZIP. One script is the source of truth for what gets installed and where; this skill only decides whether to tell it about a workspace.
 
-**Repo:** `https://github.com/zjamesblake/team-build-kit`
-**Raw base:** `https://raw.githubusercontent.com/zjamesblake/team-build-kit/main` — `TBK_BASE` overrides it (a local clone: `TBK_BASE="file://$PWD"`).
+**Repo:** `https://github.com/ecom-business-team/team-build-kit`
+**Raw base:** `https://raw.githubusercontent.com/ecom-business-team/team-build-kit/main` — `TBK_BASE` overrides it (a local clone: `TBK_BASE="file://$PWD"`).
 **What ships:** every `.skills/` line in the kit's `MANIFEST` goes to `~/.claude/skills/`; every `workspace/` line goes to the workspace, when one is named. The installer installs exactly those and nothing else.
 
 ### Step 1: Run the installer from GitHub
@@ -32,7 +32,7 @@ The kit lives at a public GitHub repo. This skill runs the kit's `install.sh` st
 
 ```bash
 W=""; [ -f "$PWD/.claude/kit_receipt" ] && [ ! -f "$PWD/MANIFEST" ] && W="$PWD"
-curl -fsSL "${TBK_BASE:-https://raw.githubusercontent.com/zjamesblake/team-build-kit/main}/install.sh" | TBK_WORKSPACE="$W" bash
+curl -fsSL "${TBK_BASE:-https://raw.githubusercontent.com/ecom-business-team/team-build-kit/main}/install.sh" | TBK_WORKSPACE="$W" bash
 ```
 
 The rule the first line applies: the current folder is treated as a kit-provisioned workspace when the installer's receipt is present in it (`.claude/kit_receipt`, written when the kit's files were placed there) and it is not the kit folder itself. A folder that merely holds kit-looking files, with no receipt, is left alone. In that case the installer refreshes the kit-owned files in the workspace too — by the package-manager rule: a file whose bytes still match the receipt is refreshed; a file the person changed is **kept**, and the kit's new version is written beside it as `<file>.kit-new`. Those files are every `workspace/` line of the `MANIFEST` — the one list, read it for what ships today rather than trusting any sentence here — plus `.claude/settings.json`, which is **merged** (the kit's hook registrations are added if missing; the person's own hooks and permissions are kept). `CLAUDE.md`, `SKILLS.md`, and every folder the person made are never read or written.

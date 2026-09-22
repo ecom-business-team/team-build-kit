@@ -12,7 +12,7 @@
 # Atomic: downloads everything to a temp folder first; installs only if every listed file arrives.
 # TBK_BASE overrides where the kit is fetched from (default: GitHub main; a local clone is TBK_BASE="file://$PWD").
 set -u
-BASE="${TBK_BASE:-https://raw.githubusercontent.com/zjamesblake/team-build-kit/main}"
+BASE="${TBK_BASE:-https://raw.githubusercontent.com/ecom-business-team/team-build-kit/main}"
 TMP=$(mktemp -d); ok=1; W=""
 if command -v sha256sum >/dev/null 2>&1; then hsum() { sha256sum "$1" | cut -d' ' -f1; }
 elif command -v shasum >/dev/null 2>&1; then hsum() { shasum -a 256 "$1" | cut -d' ' -f1; }

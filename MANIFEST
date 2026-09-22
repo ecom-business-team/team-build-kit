@@ -25,6 +25,7 @@
 workspace/.claude/hooks/session_ledger.py
 workspace/.claude/hooks/session_start_gate.py
 workspace/.claude/hooks/practices_gate.py
+workspace/.claude/hooks/skill_additions.py
 workspace/.claude/hooks/state_budget_gate.py
 workspace/.claude/tools/orientation_cost.py
 workspace/.claude/tools/gate_cost.py

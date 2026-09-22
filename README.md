@@ -77,7 +77,8 @@ The one idea: **complexity is the enemy. If you can't explain it simply, it's pr
 ## What lands where
 
 - **Your Claude Code's skills folder** gets the commands above; the quick install touches nothing else.
-- **Your workspace** (created by `/onboard`) gets the kit-owned files: the three standards, the glossary, the explainer and worked example, the practice notes, and four small hooks with their registration. These refresh when you update the kit. A small receipt in `.claude/` records what the kit placed, so an update can tell its own files from your edits: a file you changed is kept, and the kit's new version is put beside it as `.kit-new` with a note.
+- **Your workspace** (created by `/onboard`) gets the kit-owned files: the three standards, the glossary, the explainer and worked example, the practice notes, and five small hooks with their registration. These refresh when you update the kit. A small receipt in `.claude/` records what the kit placed, so an update can tell its own files from your edits: a file you changed is kept, and the kit's new version is put beside it as `.kit-new` with a note. The same holds for the commands in your skills folder.
+- **Your own rules for a kit command** go in `.claude/skills.d/<command>.md` in your workspace (for example `.claude/skills.d/prd.md`). Claude reads that file whenever you run the command; the kit never writes there, so your rules survive every update.
 - **Your map (`CLAUDE.md`), your skills list and every folder you make are yours.** The kit never touches them after the interview.
 - **One question, once.** The first time Claude Code opens your workspace it asks whether to trust the folder's hooks. Say yes; they are the kit's and only write notes inside that folder.
 

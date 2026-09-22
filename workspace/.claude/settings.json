@@ -34,6 +34,16 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/skill_additions.py\"",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "PostToolUse": [

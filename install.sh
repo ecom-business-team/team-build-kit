@@ -3,9 +3,11 @@
 #   Always: installs every .skills/ line the MANIFEST lists into ~/.claude/skills/.
 #   With TBK_WORKSPACE=<folder>: also places every workspace/ line into that folder (kit-owned files,
 #   refreshed by /update-build-kit; your CLAUDE.md is never touched). settings.json is merged, not replaced.
-#   A receipt at <folder>/.claude/kit_receipt records the sha256 of every file placed. On a later run, a file whose
-#   bytes still match its receipt entry is refreshed; a file you changed (or one present with no entry) is kept, and
-#   the kit's new version is written beside it as <file>.kit-new with a ⚠️ line — the package-manager rule.
+#   Receipts record the sha256 of every file placed: ~/.claude/skills/.kit_receipt for the skills, <folder>/.claude/kit_receipt
+#   for the workspace. On a later run, a file whose bytes still match its receipt entry is refreshed; a file you changed is
+#   kept, and the kit's new version is written beside it as <file>.kit-new with a ⚠️ line — the package-manager rule.
+#   First run with no skills receipt: a plain skills folder is refreshed as before and receipted; one under git is treated
+#   as yours (nothing overwritten). Workspace files with no entry are always treated as yours.
 #   Refuses three targets and changes nothing: a path that is not a folder, your home folder, the kit folder itself.
 # Atomic: downloads everything to a temp folder first; installs only if every listed file arrives.
 # TBK_BASE overrides where the kit is fetched from (default: GitHub main; a local clone is TBK_BASE="file://$PWD").
@@ -38,17 +40,48 @@ done
 got=$(find "$TMP" -type f -not -name MANIFEST 2>/dev/null | wc -l | tr -d ' ')
 # 3) only install if every listed file downloaded cleanly (atomic — never leave a half-updated kit)
 if [ "$ok" = 1 ] && [ "$want" -gt 0 ] && [ "$got" = "$want" ]; then
-  RECEIPT="$W/.claude/kit_receipt"; RNEW="$TMP/kit_receipt.new"
-  recorded() { [ -f "$RECEIPT" ] && awk -v p="$1" '$1 !~ /^#/ && $2 == p { print $1 }' "$RECEIPT"; }
+  SDIR="$HOME/.claude/skills"; SRECEIPT="$SDIR/.kit_receipt"; SNEW="$TMP/skills_receipt.new"
+  WRECEIPT="$W/.claude/kit_receipt"; WNEW="$TMP/workspace_receipt.new"
+  # one rule per file: absent → placed; bytes match the receipt → refreshed; anything else → kept, kit version beside it.
+  # $6 = 1 only on the first skills run with no receipt in a folder not under git: refresh as before, then receipt.
+  place() {
+    local src="$TMP/$1" dest="$2" rel="$3" old_r="$4" new_r="$5" boot="$6" new cur old entry
+    new=$(hsum "$src"); entry="$new"
+    if [ ! -f "$dest" ]; then
+      mkdir -p "$(dirname "$dest")"; cp "$src" "$dest"; placed=$((placed+1))
+    else
+      cur=$(hsum "$dest"); old=""
+      [ -f "$old_r" ] && old=$(awk -v p="$rel" '$1 !~ /^#/ && $2 == p { print $1 }' "$old_r")
+      if [ "$cur" = "$new" ]; then current=$((current+1))
+      elif [ "$boot" = 1 ] || { [ -n "$old" ] && [ "$cur" = "$old" ]; }; then cp "$src" "$dest"; refreshed=$((refreshed+1))
+      else
+        cp "$src" "$dest.kit-new"; kept=$((kept+1)); entry="$old"
+        echo "⚠️  $dest was changed since the kit placed it — kept as it is; the kit's new version is beside it as $(basename "$dest").kit-new. To take the kit's version: mv \"$dest.kit-new\" \"$dest\". To keep yours, delete the .kit-new (this line returns at every update while the file differs). Your own additions belong in your workspace: .claude/skills.d/<command>.md for a command, a file of your own for a note."
+      fi
+    fi
+    [ -n "$entry" ] && printf '%s  %s\n' "$entry" "$rel" >> "$new_r"
+  }
+  write_receipt() { # $1 path, $2 new lines file
+    mkdir -p "$(dirname "$1")"
+    { echo "# Team Build Kit receipt — the sha256 of every kit-owned file as the installer placed it, one line each."
+      echo "# /update-build-kit reads it to tell your edits from the kit's files. Written by install.sh; do not edit."
+      [ -f "$2" ] && cat "$2"; } > "$1"
+  }
+  # skills
+  sboot=0; [ -f "$SRECEIPT" ] || [ -d "$SDIR/.git" ] || sboot=1
   placed=0; refreshed=0; current=0; kept=0
-  for p in $LIST; do
-    case "$p" in
-      .skills/*)   dest="$HOME/.claude/skills/${p#.skills/}" ;;
-      workspace/*) dest="$W/${p#workspace/}" ;;
-    esac
-    if [ "$p" = "workspace/.claude/settings.json" ] && [ -f "$dest" ]; then
-      # merge the kit's hook groups into the settings the person already has; theirs are kept
-      python3 - "$dest" "$TMP/$p" <<'PY' || echo "⚠️  $dest could not be merged and was left as it is (its JSON did not parse, or has an unexpected shape) — the kit's hooks are not registered there. Fix that file, then run the install again."
+  for p in $SLIST; do place "$p" "$SDIR/${p#.skills/}" "${p#.skills/}" "$SRECEIPT" "$SNEW" "$sboot"; done
+  write_receipt "$SRECEIPT" "$SNEW"
+  SSUM="placed $placed · refreshed $refreshed · already current $current · kept $kept"; SKEPT=$kept; SBOOT=$sboot; SREF=$refreshed
+  # workspace
+  placed=0; refreshed=0; current=0; kept=0
+  if [ -n "$W" ]; then
+    for p in $WLIST; do
+      dest="$W/${p#workspace/}"
+      if [ "$p" = "workspace/.claude/settings.json" ]; then
+        if [ -f "$dest" ]; then
+          # merge the kit's hook groups into the settings the person already has; theirs are kept
+          python3 - "$dest" "$TMP/$p" <<'PY' || echo "⚠️  $dest could not be merged and was left as it is (its JSON did not parse, or has an unexpected shape) — the kit's hooks are not registered there. Fix that file, then run the install again."
 import json, sys
 dest, kit = sys.argv[1], sys.argv[2]
 d = json.load(open(dest)); k = json.load(open(kit))
@@ -61,36 +94,23 @@ for event, groups in k.get("hooks", {}).items():
 json.dump(d, open(dest, "w"), indent=2); open(dest, "a").write("\n")
 print(f"   settings.json: merged {added} kit hook group(s) (yours kept)")
 PY
-    elif [ "${p#workspace/}" != "$p" ] && [ "$p" != "workspace/.claude/settings.json" ]; then
-      # a kit-owned workspace file: refresh only what still matches the receipt; never overwrite a changed file
-      rel="${p#workspace/}"; new=$(hsum "$TMP/$p"); entry="$new"
-      if [ ! -f "$dest" ]; then
-        mkdir -p "$(dirname "$dest")"; cp "$TMP/$p" "$dest"; placed=$((placed+1))
-      else
-        cur=$(hsum "$dest"); old=$(recorded "$rel")
-        if [ "$cur" = "$new" ]; then current=$((current+1))
-        elif [ -n "$old" ] && [ "$cur" = "$old" ]; then cp "$TMP/$p" "$dest"; refreshed=$((refreshed+1))
         else
-          cp "$TMP/$p" "$dest.kit-new"; kept=$((kept+1)); entry="$old"
-          echo "⚠️  $dest was changed since the kit placed it — kept as it is; the kit's new version is beside it as $(basename "$dest").kit-new. To take the kit's version: mv \"$dest.kit-new\" \"$dest\". To keep yours, delete the .kit-new (this line returns at every update while the file differs; your own rules belong in a file of your own)."
+          mkdir -p "$(dirname "$dest")"; cp "$TMP/$p" "$dest"
         fi
+      else
+        place "$p" "$dest" "${p#workspace/}" "$WRECEIPT" "$WNEW" 0
       fi
-      [ -n "$entry" ] && printf '%s  %s\n' "$entry" "$rel" >> "$RNEW"
-    else
-      mkdir -p "$(dirname "$dest")"; cp "$TMP/$p" "$dest"
-    fi
-  done
-  if [ -n "$W" ]; then
-    mkdir -p "$W/.claude"
-    { echo "# Team Build Kit receipt — the sha256 of every kit-owned file as the installer placed it, one line each."
-      echo "# /update-build-kit reads it to tell your edits from the kit's files. Written by install.sh; do not edit."
-      [ -f "$RNEW" ] && cat "$RNEW"; } > "$RECEIPT"
+    done
+    write_receipt "$WRECEIPT" "$WNEW"
   fi
   rm -rf "$TMP"
   echo "✅ Team Build Kit installed ($got files — every line the MANIFEST lists for this install)."
   echo "   In Claude Code you now have:$(printf '%s\n' "$SLIST" | grep -E '^\.skills/[^_][^/]*/SKILL\.md$' | sed -E 's#^\.skills/([^/]+)/SKILL\.md$# /\1#' | tr -d '\n')"
+  echo "   Skills: $(printf '%s\n' "$SLIST" | grep -c .) into $SDIR — $SSUM (receipt: .kit_receipt)."
+  [ "$SBOOT" = 1 ] && [ "$SREF" -gt 0 ] && echo "   First run under the receipt rule: $SREF kit skill(s) refreshed as before. From now on a kit skill you change is kept, with the kit's version beside it."
   if [ -n "$W" ]; then
     echo "   Workspace files: $(printf '%s\n' "$WLIST" | grep -c .) into $W — placed $placed · refreshed $refreshed · already current $current · kept $kept (receipt: .claude/kit_receipt; your CLAUDE.md is never touched)."
+    kept=$((kept+SKEPT))
     [ "$kept" -gt 0 ] && echo "   $kept kit-owned file(s) you had changed were kept — see the ⚠️ line(s) above."
     echo "   Next: open $W in Claude Code."
   else

@@ -43,7 +43,7 @@ When the folder is not a kit-provisioned workspace, only the skills are refreshe
 
 ### Step 2: Verify
 
-The installer prints the count of files it wrote and, when a workspace was named, a second line with the workspace count. The four core lifecycle skills (`prd`, `build`, `ship`, `new-workspace`) depend on `~/.claude/skills/_shared/documentation_standard.md` — make sure it's present. If the installer printed a ❌ line (no network, repo moved, a refused folder), say so plainly and stop: it changes nothing on failure, so the existing kit is intact.
+The installer prints the count of files it wrote and, when a workspace was named, a second line with the workspace count. The four core lifecycle skills (`prd`, `build`, `ship`, `new-workspace`) depend on `~/.claude/skills/_shared/documentation_standard.md` — make sure it's present. If the installer printed a ❌ line (no network, repo moved, a refused folder), say so plainly and stop: it changes nothing on failure, so the existing kit is intact. If it printed a ⚠️ line, the files did install but the workspace's `settings.json` could not be merged, so the kit's hooks are not registered there: show the person the line (the file is theirs to fix), then run the update again.
 
 ### Step 3: Confirm
 

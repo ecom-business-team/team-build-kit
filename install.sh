@@ -39,7 +39,7 @@ if [ "$ok" = 1 ] && [ "$want" -gt 0 ] && [ "$got" = "$want" ]; then
     esac
     if [ "$p" = "workspace/.claude/settings.json" ] && [ -f "$dest" ]; then
       # merge the kit's hook groups into the settings the person already has; theirs are kept
-      python3 - "$dest" "$TMP/$p" <<'PY'
+      python3 - "$dest" "$TMP/$p" <<'PY' || echo "⚠️  $dest could not be merged and was left as it is (its JSON did not parse, or has an unexpected shape) — the kit's hooks are not registered there. Fix that file, then run the install again."
 import json, sys
 dest, kit = sys.argv[1], sys.argv[2]
 d = json.load(open(dest)); k = json.load(open(kit))

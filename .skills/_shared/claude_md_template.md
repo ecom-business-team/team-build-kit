@@ -3,7 +3,7 @@
 Every workspace is entered through its CONTEXT.md — the local index: what this is, what lives here, which practices it depends on (contract: `documentation_standard.md` §5).
 
 **Canonical standards** (tier 2 — load when the activity starts):
-`documentation_standard.md` — how workspaces/docs are structured (MVA) · `workflow_design_standard.md` — how processes are designed · `testing_standard.md` — how quality is proven on code projects (the layer split; assert properties, not values) · `glossary.md` — every lifecycle term in one plain sentence · `_practices/` — per-tool knowledge: **load the files for whatever stack your task touches** (see `_practices/CONTEXT.md`) · `SKILLS.md` — skill reference.
+`documentation_standard.md` — how workspaces/docs are structured (MVA) · `workflow_design_standard.md` — how processes are designed · `testing_standard.md` — how quality is proven on code projects (the layer split; assert properties, not values) · `glossary.md` — every lifecycle term in one plain sentence · `why_we_build.md` — why the method is shaped this way · `worked_example.md` — one build walked through every gate · `_practices/` — per-tool knowledge: **load the files for whatever stack your task touches** (see `_practices/CONTEXT.md`) · `SKILLS.md` — skill reference.
 
 ## Routing
 
@@ -35,10 +35,10 @@ Every workspace is entered through its CONTEXT.md — the local index: what this
 
 - Investigating an issue → hypothesis + objective test, **run the test before discussing fixes** → `_practices/investigation.md`
 - Nothing is "done" without proof it works **through the real entry point** — a synthetic call to the consumer proves the consumer, not the wiring. Verifiable success criteria per task; would a staff engineer approve? **On a code project the proof is a test, not a one-off script** → `testing_standard.md` (a defect found by hand gets a test before it gets a fix; assert properties, not values, against live data)
-- Any bulk write (>10 rows / backfill / restore) → prestate snapshot (scoped to affected rows) FIRST → owning workspace `bulk_ops/` + the practice file of your data store
+- Any bulk write (>10 rows / backfill / restore) → prestate snapshot (scoped to affected rows) FIRST → the owning area's `bulk_ops/` (`documentation_standard.md` §4: `INDEX.md` + one folder per write holding the prestate scoped to the affected rows; the snapshot is the undo)
 - Before any deploy → `git status`; deploy-truth is the running system → `_practices/deploying.md`
 - Fanning out subagents → `_practices/subagents.md` (facts-agents vs simplest-solution agents; pick, never merge)
-- Session ending → run the `session-close` skill (log entry + living-docs check)
+- A true close — the session ending, a project archived, a batch done — → run the `session-close` skill (log entry + living-docs check); not after every step inside a larger flow
 - Corrected by the owner → capture the lesson (feedback memory or `_practices/`) and apply immediately
 
 ## Standing behaviors (every session)

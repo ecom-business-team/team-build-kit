@@ -37,8 +37,8 @@ Each process system gets an interactive `flow.html` in its own folder — the de
 - Color-coded by owner (automated=teal; manual by person=amber/blue/purple)
 - Resolved decisions = green notes; open decisions = yellow notes
 - Quality Review section at the bottom (the three questions)
-- Base styling on the workspace's `flow.html` base template, named in the root CLAUDE.md under "Words the skills use"
+- Base styling on the workspace's `flow.html` base template when the root CLAUDE.md names one under "Words the skills use"; until it does, a self-contained page with the same sections
 
-Hosting: the workspace's publish hook, named beside the base template in the root CLAUDE.md, deploys every `flow.html` edit — no manual push. New system: add it to that hook's mapping and to the index it publishes.
+Hosting: when the root CLAUDE.md names a publish hook beside the base template, that hook deploys every `flow.html` edit — no manual push — and a new system is added to the hook's mapping and to the index it publishes. Without one, the file is opened locally, like every other companion page.
 
 **Coupled update rule:** when a process changes, its flow.html (and any team-facing doc) updates in the same session. Pure web apps don't need a flow.html — they're not processes.

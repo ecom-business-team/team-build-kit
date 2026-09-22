@@ -131,6 +131,24 @@ dl.fields dd ul, dl.fields dd ol { margin: 4px 0; }
 .chain li > span strong { font-weight: 600; }
 .chain li + li::before { content: "→"; color: var(--muted); padding: 0 8px; }
 
+/* ---- map: a drawn picture from a ```map fence (declared grid, inline SVG) ---- */
+.map { width: min(1440px, calc(100vw - 32px)); margin: 16px 0 4px calc(50% - min(1440px, calc(100vw - 32px)) / 2); overflow-x: auto; }
+.map-svg { display: block; margin: 0 auto; font: 12px var(--font); max-width: none; }
+.map-svg .node rect { fill: var(--card); stroke: var(--border); stroke-width: 1; }
+.map-svg .node text { fill: var(--fg); font-weight: 600; }
+.map-svg .node text.sub { fill: var(--muted); font-weight: 400; font-size: 11px; }
+.map-svg .node.gate rect { fill: var(--primary); stroke: var(--primary); }
+.map-svg .node.gate text { fill: var(--primary-fg); }
+.map-svg .node.gate text.sub { fill: var(--primary-fg); opacity: .75; }
+.map-svg .node.check polygon { fill: var(--secondary); stroke: var(--border); stroke-width: 1; stroke-linejoin: round; }
+.map-svg .node.end rect { fill: var(--card); stroke: var(--fg); stroke-width: 2; }
+.map-svg .box rect { fill: var(--secondary); stroke: var(--border); stroke-dasharray: 4 3; }
+.map-svg .box text { fill: var(--muted); font-size: 11px; }
+.map-svg .edge { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.map-svg .edge.dashed { stroke-dasharray: 4 3; }
+.map-svg .elabel { fill: var(--muted); font-size: 12px; paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round; }
+.map-svg #arrow path { fill: var(--muted); }
+
 /* ---- verdict: the Ask, the go / no-go ---- */
 .verdict { margin-top: 16px; padding: 16px 20px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); }
 .verdict-word { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 6px; }
@@ -234,5 +252,6 @@ h3.sub { margin-top: 20px; }
 }
 @media print {
   main.companion { max-width: none; padding: 0; }
+  .map { overflow: visible; }
   a { text-decoration: none; }
 }

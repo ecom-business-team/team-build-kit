@@ -5,14 +5,15 @@ Usage:
   python3 render.py <path> [<path> ...]   render each markdown file; print the written path
   python3 render.py --stale <dir>         list companions older than their source
 
-Recognises five documents by file name and header — a build-intent memo, a PRD,
-a project log (its last ship review), a state file (the handoff) and the explainer
-(`why_we_build.md`) — and lays
-each out in a fixed plan that foregrounds what its reader must decide and folds
-the rest into native <details>. Standard library only. Idempotent: the same input
-gives the same bytes. Writes only the .html beside the source, never the markdown.
-Exit 0 with the written path on stdout; exit 1 with one line on stderr when a
-file is none of the five. A ```chain fence draws as a strip in any of them.
+Recognises seven documents by file name and header — a build-intent memo, a PRD,
+a project log (its last ship review), a state file (the handoff) and the three
+knowledge documents (`why_we_build.md`, `worked_example.md`, `lifecycle_map.md`) —
+and lays each out in a fixed plan that foregrounds what its reader must decide and
+folds the rest into native <details>. Standard library only. Idempotent: the same
+input gives the same bytes. Writes only the .html beside the source, never the
+markdown. Exit 0 with the written path on stdout; exit 1 with one line on stderr
+when a file is none of the seven. A ```chain fence draws as a strip and a ```map
+fence as a picture (inline SVG from a declared grid) in any of them.
 """
 from __future__ import annotations
 
@@ -352,6 +353,8 @@ def html_block(b: Block, **opts) -> str:
         return f"<blockquote>{inline(b.text)}</blockquote>"
     if b.kind == "code" and (b.lang or "").strip().lower() == "chain":
         return html_chain(b.text)
+    if b.kind == "code" and (b.lang or "").strip().lower() == "map":
+        return html_map(b.text)
     if b.kind == "code":
         return f"<pre><code>{esc(b.text)}</code></pre>"
     if b.kind == "hr":
@@ -1016,6 +1019,219 @@ def html_chain(text: str) -> str:
     return f'<div class="chains">{"".join(rows)}</div>' if rows else ""
 
 
+# ----------------------------------------------------------------------------
+# The map: a drawn picture from a ```map fence (declared grid → inline SVG)
+# ----------------------------------------------------------------------------
+
+NODE_RE = re.compile(r"^node\s+(\w+)\s+(\d+),(\d+)(?:\s+(gate|check|end))?\s*::\s*(.+)$")
+BOX_RE = re.compile(r"^box\s+(\w+)\s+(\d+),(\d+)-(\d+),(\d+)\s*::\s*(.+)$")
+EDGE_RE = re.compile(r"^(\w+)\s+(->|\.\.>)\s+(\w+)(?:\s*::\s*(.+))?$")
+
+MAP_CELL_W, MAP_CELL_H = 138, 74          # one grid cell
+MAP_NODE_W, MAP_NODE_H = 124, 46          # a node, centred in its cell
+MAP_END_W = 84                            # an end node is a pill this wide
+MAP_MARGIN = 12
+MAP_BOX_HEAD = 22                         # a box grows upward this much for its label row
+MAP_LANE = 34                             # the first loop lane sits this far below the last row
+MAP_LANE_STEP = 26                        # each further loop lane sits this much lower
+MAP_LOOP_SPREAD = 18                      # end-points of loops into one node sit this far apart
+MAP_LABEL_LINE = 14                       # line pitch of a multi-line edge label
+MAP_LABEL_CHAR = 6                        # estimated width per label character (for the refusal)
+MAP_NODE_LABEL_MAX = 20
+MAP_CHECK_H = 60                          # a check node is a diamond this tall (one label line)
+
+
+def _num(v: float) -> str:
+    return str(int(v)) if float(v).is_integer() else f"{v:.1f}"
+
+
+class _Shape:
+    def __init__(self, sid, x, y, w, h, kind, lines, is_box=False):
+        self.id, self.x, self.y, self.w, self.h, self.kind, self.lines, self.is_box = sid, x, y, w, h, kind, lines, is_box
+
+    @property
+    def cx(self): return self.x + self.w / 2
+    @property
+    def cy(self): return self.y + self.h / 2
+    @property
+    def right(self): return self.x + self.w
+    @property
+    def bottom(self): return self.y + self.h
+
+
+def parse_map(text: str):
+    """Statements of a ```map fence → (shapes by id in order, edges). ValueError quotes the offending line."""
+    shapes, edges = {}, []
+    for raw in text.splitlines():
+        line = raw.strip()
+        if not line:
+            continue
+        m = NODE_RE.match(line)
+        if m:
+            sid, col, row, kind, label = m.group(1), int(m.group(2)), int(m.group(3)), m.group(4) or "", m.group(5)
+            lines = [s.strip() for s in label.split(" / ")]
+            for ln in lines:
+                if len(ln) > MAP_NODE_LABEL_MAX:
+                    raise ValueError(f"map: node label line over {MAP_NODE_LABEL_MAX} characters: {line!r}")
+            if m.group(4) == "check" and len(lines) > 1:
+                raise ValueError(f"map: a check node (a diamond) takes one label line: {line!r}")
+            shapes[sid] = ("node", col, row, col, row, kind, lines)
+            continue
+        m = BOX_RE.match(line)
+        if m:
+            sid = m.group(1)
+            c1, r1, c2, r2 = (int(m.group(i)) for i in range(2, 6))
+            shapes[sid] = ("box", c1, r1, c2, r2, "", [m.group(6).strip()])
+            continue
+        m = EDGE_RE.match(line)
+        if m:
+            a, arrow, b, label = m.groups()
+            for ref in (a, b):
+                if ref not in shapes:
+                    raise ValueError(f"map: edge names an unknown id {ref!r}: {line!r}")
+            lines = [s.strip() for s in label.split(" / ")] if label else []
+            edges.append((a, b, arrow == "..>", lines, line))
+            continue
+        raise ValueError(f"map: unreadable line: {line!r}")
+    return shapes, edges
+
+
+def _place(shapes):
+    """Grid coordinates → pixel shapes."""
+    placed = {}
+    for sid, (kind, c1, r1, c2, r2, sub, lines) in shapes.items():
+        x0 = MAP_MARGIN + (c1 - 1) * MAP_CELL_W
+        y0 = MAP_MARGIN + (r1 - 1) * MAP_CELL_H
+        if kind == "box":
+            w = (c2 - c1 + 1) * MAP_CELL_W - 8
+            h = (r2 - r1 + 1) * MAP_CELL_H + MAP_BOX_HEAD
+            placed[sid] = _Shape(sid, x0 + 4, y0 - MAP_BOX_HEAD, w, h, "box", lines, True)
+        else:
+            w = MAP_END_W if sub == "end" else MAP_NODE_W
+            h = MAP_CHECK_H if sub == "check" else MAP_NODE_H
+            placed[sid] = _Shape(sid, x0 + (MAP_CELL_W - w) / 2, y0 + (MAP_CELL_H - h) / 2, w, h, sub, lines)
+    return placed
+
+
+def _label(x, y, lines, anchor="middle", cls="elabel"):
+    out = []
+    for i, ln in enumerate(lines):
+        out.append(f'<text class="{cls}" x="{_num(x)}" y="{_num(y + i * MAP_LABEL_LINE)}" text-anchor="{anchor}">{esc(ln)}</text>')
+    return "".join(out)
+
+
+def html_map(text: str) -> str:
+    """A ```map fence → one inline SVG: boxes behind, then edges, then nodes. Three connector cases only."""
+    shapes, edges = parse_map(text)
+    if not shapes:
+        return ""
+    placed = _place(shapes)
+    ncols = max(max(v[1], v[3]) for v in shapes.values())
+    nrows = max(max(v[2], v[4]) for v in shapes.values())
+    width = 2 * MAP_MARGIN + ncols * MAP_CELL_W
+    rows_bottom = MAP_MARGIN + nrows * MAP_CELL_H
+
+    # loop edges (target to the left) share the lane below the last row; the k-th sits one step lower
+    loops = [i for i, (a, b, *_rest) in enumerate(edges) if placed[b].cx < placed[a].cx]
+    lane_of = {i: rows_bottom + MAP_LANE + k * MAP_LANE_STEP for k, i in enumerate(loops)}
+    height = rows_bottom + MAP_MARGIN
+    if loops:
+        height = max(lane_of.values()) + MAP_LABEL_LINE + MAP_MARGIN
+
+    # end-points of several loops into one node (or out of one node) spread apart; the lower lane takes the left slot
+    def spread(key):
+        groups = {}
+        for i in loops:
+            groups.setdefault(key(edges[i]), []).append(i)
+        out = {}
+        for members in groups.values():
+            n = len(members)
+            for j, i in enumerate(sorted(members, key=lambda i: -lane_of[i])):
+                out[i] = (j - (n - 1) / 2) * MAP_LOOP_SPREAD
+        return out
+    dx_target = spread(lambda e: e[1])
+    dx_source = spread(lambda e: e[0])
+
+    svg = [f'<div class="map"><svg class="map-svg" viewBox="0 0 {width} {_num(height)}" width="{width}" height="{_num(height)}" '
+           f'role="img" aria-label="the lifecycle map">',
+           '<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" '
+           'orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>']
+
+    for s in placed.values():
+        if s.is_box:
+            svg.append(f'<g class="box"><rect x="{_num(s.x)}" y="{_num(s.y)}" width="{_num(s.w)}" height="{_num(s.h)}" rx="8"/>'
+                       + _label(s.x + 10, s.y + 15, s.lines, "start", "") + "</g>")
+
+    for i, (a, b, dashed, lines, line) in enumerate(edges):
+        s, t = placed[a], placed[b]
+        cls = "edge dashed" if dashed else "edge"
+        label_html = ""
+        if abs(t.cx - s.cx) < 0.5:                                   # case 1: same column
+            if t.cy > s.cy:
+                y1, y2 = s.bottom, t.y
+            else:
+                y1, y2 = s.y, t.bottom
+            d = f"M{_num(s.cx)},{_num(y1)} V{_num(y2)}"
+            if lines:
+                mid = (y1 + y2) / 2
+                label_html = _label(s.cx - 8, mid + 4 - (len(lines) - 1) * MAP_LABEL_LINE / 2, lines, "end")
+        elif t.cx > s.cx:                                            # case 2: target to the right
+            x1, x2 = s.right, t.x
+            if abs(t.cy - s.cy) < 0.5:
+                if lines and max(len(ln) for ln in lines) * MAP_LABEL_CHAR > (x2 - x1) + MAP_CELL_W:
+                    raise ValueError(f"map: same-row label wider than the gap between its nodes: {line!r}")
+                d = f"M{_num(x1)},{_num(s.cy)} H{_num(x2)}"
+                if lines:
+                    narrow = max(len(ln) for ln in lines) * MAP_LABEL_CHAR > (x2 - x1)
+                    base = min(s.y, t.y) - 4 if narrow else s.cy - 7      # a label wider than its gap sits above the node tops
+                    label_html = _label((x1 + x2) / 2, base - (len(lines) - 1) * MAP_LABEL_LINE, lines)
+            elif s.kind == "check":                                  # a diamond's exits leave from its top or bottom point
+                y1 = s.y if t.cy < s.cy else s.bottom
+                d = f"M{_num(s.cx)},{_num(y1)} V{_num(t.cy)} H{_num(x2)}"
+                if lines:                                            # label right-aligned left of the vertical
+                    mid = (y1 + t.cy) / 2
+                    label_html = _label(s.cx - 8, mid + 4 - (len(lines) - 1) * MAP_LABEL_LINE / 2, lines, "end")
+            else:
+                adjacent = (x2 - x1) < MAP_CELL_W
+                vx = (x1 + x2) / 2 if adjacent else x2 - (MAP_CELL_W - MAP_NODE_W) / 2
+                d = f"M{_num(x1)},{_num(s.cy)} H{_num(vx)} V{_num(t.cy)} H{_num(x2)}"
+                if lines:
+                    mid = (s.cy + t.cy) / 2
+                    if abs(t.cy - s.cy) > 40:
+                        label_html = _label(vx + 8, mid + 4 - (len(lines) - 1) * MAP_LABEL_LINE / 2, lines, "start")
+                    else:
+                        label_html = _label((x1 + x2) / 2, min(s.cy, t.cy) - 7 - (len(lines) - 1) * MAP_LABEL_LINE, lines)
+        else:                                                        # case 3: target to the left — a loop beneath
+            lane = lane_of[i]
+            sx = s.cx + dx_source.get(i, 0)
+            tx = t.cx + dx_target.get(i, 0)
+            d = f"M{_num(sx)},{_num(s.bottom)} V{_num(lane)} H{_num(tx)} V{_num(t.bottom)}"
+            if lines:
+                label_html = _label((sx + tx) / 2, lane + MAP_LABEL_LINE, lines)
+        svg.append(f'<path class="{cls}" d="{d}" marker-end="url(#arrow)"/>' + label_html)
+
+    for s in placed.values():
+        if s.is_box:
+            continue
+        cls = f"node {s.kind}".strip()
+        rx = MAP_NODE_H / 2 if s.kind == "end" else 6
+        if s.kind == "check":
+            pts = f"{_num(s.cx)},{_num(s.y)} {_num(s.right)},{_num(s.cy)} {_num(s.cx)},{_num(s.bottom)} {_num(s.x)},{_num(s.cy)}"
+            g = [f'<g class="{cls}"><polygon points="{pts}"/>']
+        else:
+            g = [f'<g class="{cls}"><rect x="{_num(s.x)}" y="{_num(s.y)}" width="{_num(s.w)}" height="{_num(s.h)}" rx="{_num(rx)}"/>']
+        if len(s.lines) == 1:
+            g.append(f'<text x="{_num(s.cx)}" y="{_num(s.cy + 5)}" text-anchor="middle">{esc(s.lines[0])}</text>')
+        else:
+            g.append(f'<text x="{_num(s.cx)}" y="{_num(s.cy - 3)}" text-anchor="middle">{esc(s.lines[0])}</text>')
+            for j, ln in enumerate(s.lines[1:]):
+                g.append(f'<text class="sub" x="{_num(s.cx)}" y="{_num(s.cy + 13 + j * 13)}" text-anchor="middle">{esc(ln)}</text>')
+        g.append("</g>")
+        svg.append("".join(g))
+    svg.append("</svg></div>")
+    return "".join(svg)
+
+
 def progress_list(rows: list[tuple[str, str, str, str]]) -> str:
     """rows of (number, name, status text, mark) → an ordered progress list."""
     out = ['<ol class="progress">']
@@ -1156,8 +1372,9 @@ def plan_handoff(blocks, src: Path) -> tuple[str, str]:
 # The explainer: every section open in document order, the verification table folded
 # ----------------------------------------------------------------------------
 
-KNOWLEDGE_NAMES = {"why_we_build.md": "The explainer", "worked_example.md": "The worked example"}
-VERIFY_RE = re.compile(r"where each|comes from|verification|sources", re.I)
+KNOWLEDGE_NAMES = {"why_we_build.md": "The explainer", "worked_example.md": "The worked example",
+                   "lifecycle_map.md": "The lifecycle map"}
+VERIFY_RE = re.compile(r"comes from|verification|sources", re.I)  # "where each" alone folded a section that merely used the words
 
 
 def plan_explainer(blocks, src: Path) -> tuple[str, str]:
@@ -1174,7 +1391,7 @@ def plan_explainer(blocks, src: Path) -> tuple[str, str]:
         if VERIFY_RE.search(plain(h.text)):
             out.append(folded_section(inline(h.text), body, "verification"))
         else:
-            out.append(open_section(inline(h.text), html_blocks(body)))
+            out.append(plain_section(inline(h.text), body))
     return plain(title), "".join(out)
 
 
@@ -1219,16 +1436,21 @@ def page(title: str, body: str, source_name: str) -> str:
     )
 
 
-def render(path: Path) -> Path:
+def render_text(path: Path) -> tuple[Path, str]:
+    """The page a source would get, without writing it: (the companion's path, its text)."""
     text = path.read_text(encoding="utf-8")
     kind = detect(path, text)
     if kind is None:
-        raise ValueError(f"{path}: not a memo, PRD, project log, state file, the explainer or the worked example")
+        raise ValueError(f"{path}: not a memo, PRD, project log, state file, the explainer, the worked example or the lifecycle map")
     plan = PLANS[kind]
     blocks = parse(text)
     title, body = plan(blocks, path)
-    out = output_path(path, kind)
-    out.write_text(page(title, body, path.name), encoding="utf-8")
+    return output_path(path, kind), page(title, body, path.name)
+
+
+def render(path: Path) -> Path:
+    out, text = render_text(path)
+    out.write_text(text, encoding="utf-8")
     return out
 
 

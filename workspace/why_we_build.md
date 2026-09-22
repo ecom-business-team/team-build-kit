@@ -82,6 +82,17 @@ queued → memo cleared → PRD approved → building → shipped → **reached*
 
 Without it, "done" gets called at ship. The loop back to the memo never closes, and a thing can be live, stable and unused for months while everyone believes the problem is behind them.
 
+## Why four layers, and where each one lives
+
+This document sorts the kit's content into four layers and gives each layer one home, so nobody has to wonder which file to change or which file an update will overwrite.
+
+**Method:** in the commands. They are written once for everyone and the kit refreshes them, so they are best left unedited; your own rules for a command go in a file of your own that the kit reads and never writes.
+**Judgment:** in your folders: your map, each folder's index, your additions to a command. An update never touches them.
+**Proof:** at the gates, in writing, by a person. Nothing is done without the proof its kind requires, and no gate clears without a document someone approves.
+**Position:** in one state file per project, a few hundred words saying where it stands, rewritten in place. A fresh session orients from it, never from history.
+
+Without the split, an update overwrites a rule you wrote, and nobody can say which file is the kit's and which is yours; the receipt the installer keeps is what tells them apart.
+
 ## What you bring, and what the skills carry
 
 You are not expected to know how to build anything technically. The skills carry that load. Your part is the part no tool can do for you.
@@ -133,3 +144,9 @@ Say what you are trying to do, answer the gates honestly, and the kit does the r
 | A milestone is shipped when live and reached only when the outcome check confirms the success definition | `glossary.md`, "Milestone"; `documentation_standard.md`, §4 (the milestone states) |
 | You decide what is worth building, what done means, what it is not, whether the stakes are acceptable; the skills design, check, write and keep the documents | the June explainer, "What you bring vs. what the skills handle" |
 | When something turns out too big, a skill stops and points back to the starting place, which is the door | the June explainer, "When it gets too big"; `glossary.md`, "The door" |
+| The kit's own files are refreshed by its updater and a file you changed is kept, with the kit's version written beside it; your own rules for a command go in a file the kit reads and never writes | `update-build-kit/SKILL.md`, "What ships" and "Step 2: Verify"; the initiative's north star, §5 (the box) |
+| Your map, your skills list and the folders you made are never read or written by an update | `update-build-kit/SKILL.md`, description and "How it works" |
+| The commands are written once for everyone | the initiative's north star, §2 principle 4 and §7 milestone 2 ("written once") |
+| An update once overwrote a person's edits; the installer's receipt now records every kit-placed file so the kit's files and yours can be told apart | `ship/SKILL.md`, "Phase 3: DISPOSITION" (the Accept row's managed-file example); `install.sh`, header comment (receipts, the package-manager rule) |
+| A gate is cleared in writing by a person, and nothing is done without the proof its kind requires | `memo/SKILL.md`, "Close: hand off or pause"; `prd/SKILL.md`, "Present for approval"; `ship/SKILL.md`, "Definition of done"; the initiative's north star, §2 principle 7 |
+| Position lives in one state file per project, rewritten in place, and a fresh session orients from it, never from history | `glossary.md`, "State file", "Record"; `documentation_standard.md`, §6 "State is a snapshot, history is a log" |

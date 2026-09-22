@@ -3,7 +3,7 @@
 Every workspace is entered through its CONTEXT.md — the local index: what this is, what lives here, which practices it depends on (contract: `documentation_standard.md` §5).
 
 **Canonical standards** (tier 2 — load when the activity starts):
-`documentation_standard.md` — how workspaces/docs are structured (MVA) · `workflow_design_standard.md` — how processes are designed · `testing_standard.md` — how quality is proven on code projects (the layer split; assert properties, not values) · `glossary.md` — every lifecycle term in one plain sentence · `why_we_build.md` — why the method is shaped this way · `worked_example.md` — one build walked through every gate · `_practices/` — per-tool knowledge: **load the files for whatever stack your task touches** (see `_practices/CONTEXT.md`) · `SKILLS.md` — skill reference.
+`documentation_standard.md` — how workspaces/docs are structured (MVA) · `workflow_design_standard.md` — how processes are designed · `testing_standard.md` — how quality is proven on code projects (the layer split; assert properties, not values) · `glossary.md` — every lifecycle term in one plain sentence · `why_we_build.md` — why the method is shaped this way · `worked_example.md` — one build walked through every gate · `lifecycle_map.md` — every door, the three gates and the loop on one page · `_practices/` — per-tool knowledge: **load the files for whatever stack your task touches** (see `_practices/CONTEXT.md`) · `SKILLS.md` — skill reference.
 
 ## Routing
 

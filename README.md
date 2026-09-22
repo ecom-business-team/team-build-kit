@@ -4,7 +4,7 @@
 
 ## What this is
 
-A way of building you can hold in one breath: six kinds of thing you might build, three gates a build passes through (think it through → design it → make it safe to rely on), and one state layer that says where every piece of work sits. The kit is files and skills: commands you type in Claude Code, the standards they read, and five small hooks that keep notes about your sessions. Nothing is hosted; it all lives on your machine.
+A way of building you can hold in one breath: six kinds of thing you might build (an automation, a service, an application, a tool, a procedure, or knowledge, each defined in one sentence in `workspace/glossary.md`), three gates a build passes through (think it through → design it → make it safe to rely on), and one state layer that says where every piece of work sits. The kit is files and skills: commands you type in Claude Code, the standards they read, and five small hooks that keep notes about your sessions. Nothing is hosted; it all lives on your machine.
 
 ---
 
@@ -41,7 +41,7 @@ Claude installs the commands (it asks permission once), interviews you about you
 | **Gates** | |
 | `/memo` | Gate 1: says why this is worth building and what done looks like, before any design or code. |
 | `/prd` | Gate 2: designs the change and checks every dependency live, so the build runs in one go. |
-| `/build` | Carries out an approved design, one work item per session, with a handoff card at every stop. |
+| `/build` | Carries out an approved design work item by work item, with a handoff card at every stop that says, from a measured number, whether to carry on or start fresh. |
 | `/ship` | Gate 3: the review a build passes before other people, real data or money depend on it. |
 | `/quick-fix` | Fixes something small without the ceremony, and still asks the Gate 3 questions at the end. |
 | **Every session** | |

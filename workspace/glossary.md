@@ -40,6 +40,7 @@
 | **Handoff card** | The five lines printed at every stop: where we are on the ladder, what just got done and how it was proved, exactly what to type next, what only the owner can do, and where all of this is written down. |
 | **Companion** | The HTML page generated beside a gate document (a memo, a PRD, a project log's ship review, a state file's handoff) so a person can approve from it without reading the markdown. The markdown stays the source; the skill that writes the document regenerates the page, and no one edits it by hand. |
 | **The explainer** (`why_we_build.md`) | The one document that says why we build this way: two ladders, six kinds, three gates, one state layer, and what goes wrong when each is ignored. It ships with the kit, its page is generated from it like a companion, and it never says where any project stands. |
+| **Worked example** (`worked_example.md`) | One build walked start to finish in the kit's own words, so a new person sees what each step asks and what it hands back before they run one. It ships with the kit and its page is generated from it. |
 | **CONTEXT.md** | The index of a folder: what this is, what lives here, and how to pick the work up in a fresh session. It never holds position and never holds decisions. |
 | **system_contracts.md** | Every place where data crosses from one system to another: who writes it, who reads it, what each field means, and which single system owns it. |
 | **decision_log.md** | Why things were built the way they were, one numbered and dated entry per decision, never edited afterwards. |

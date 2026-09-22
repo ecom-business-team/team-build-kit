@@ -21,7 +21,6 @@ OUT = os.path.join(ROOT, "daily-outputs")
 LEDGER = os.path.join(OUT, "sessions.jsonl")
 LOOKBACK_DAYS = 14
 MAX_LIST = 6
-TELEMETRY_START = "2026-08-26"  # the day the ledger began; sessions before it were never expected to log
 
 
 def read(path):
@@ -82,7 +81,7 @@ def main():
         sys.stderr.write(f"session_start_gate: backfill skipped ({exc})\n")
     today = dt.date.today()
     today_s = today.isoformat()
-    cutoff = max((today - dt.timedelta(days=LOOKBACK_DAYS)).isoformat(), TELEMETRY_START)
+    cutoff = (today - dt.timedelta(days=LOOKBACK_DAYS)).isoformat()
 
     unlogged = []
     for r in load_rows(cutoff):

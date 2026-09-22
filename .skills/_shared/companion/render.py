@@ -1156,7 +1156,7 @@ def plan_handoff(blocks, src: Path) -> tuple[str, str]:
 # The explainer: every section open in document order, the verification table folded
 # ----------------------------------------------------------------------------
 
-EXPLAINER_NAME = "why_we_build.md"
+KNOWLEDGE_NAMES = {"why_we_build.md": "The explainer", "worked_example.md": "The worked example"}
 VERIFY_RE = re.compile(r"where each|comes from|verification|sources", re.I)
 
 
@@ -1164,7 +1164,8 @@ def plan_explainer(blocks, src: Path) -> tuple[str, str]:
     pre, secs = split_sections(blocks, 2)
     title, subtitle, fields, order, notes = header_parts(pre)
     title = title or src.stem.replace("_", " ")
-    out = ['<header class="doc-head">', '<p class="eyebrow">The explainer</p>', f"<h1>{inline(title)}</h1>"]
+    eyebrow = KNOWLEDGE_NAMES.get(src.name, "The explainer")
+    out = ['<header class="doc-head">', f'<p class="eyebrow">{eyebrow}</p>', f"<h1>{inline(title)}</h1>"]
     if subtitle:
         out.append(f'<p class="subtitle">{inline(subtitle)}</p>')
     out.append(html_blocks(notes))
@@ -1193,7 +1194,7 @@ def detect(path: Path, text: str) -> str | None:
         return "ship"
     if name == "state.md":
         return "handoff"
-    if name == EXPLAINER_NAME:
+    if name in KNOWLEDGE_NAMES:
         return "explainer"
     head = text[:3000]
     if re.search(r"^_.*build-intent memo", head, re.I | re.M) or "/memos/" in path.resolve().as_posix():
@@ -1222,7 +1223,7 @@ def render(path: Path) -> Path:
     text = path.read_text(encoding="utf-8")
     kind = detect(path, text)
     if kind is None:
-        raise ValueError(f"{path}: not a memo, PRD, project log, state file or the explainer")
+        raise ValueError(f"{path}: not a memo, PRD, project log, state file, the explainer or the worked example")
     plan = PLANS[kind]
     blocks = parse(text)
     title, body = plan(blocks, path)

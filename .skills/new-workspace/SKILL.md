@@ -22,6 +22,7 @@ Stand up the **documentation foundation** for anything you'll build and operate 
 /new-workspace reports            — name given, interview the rest
 /new-workspace --brownfield payout  — skip the fork question, go straight to extraction
 /new-workspace --initiative platform-rebuild — the planning folder above a sequence of projects (compass, snapshot, index)
+/convert-to-standard <folder>       — the same fork, by its own door
 ```
 
 ## When to Use
@@ -149,7 +150,7 @@ Then go to Phase 3, mapping the verified picture onto the Standard's templates. 
 2. **Create the folder(s)** if greenfield (or if a brownfield system needs a home).
 3. **Write each doc from its Standard template** (Part 4), applying the universal content rules (Part 3): point-to-source, accuracy over completeness, never empty sections, one canonical home.
 4. **Create-if-missing for canonical homes:** if a required cross-cutting doc (`system_contracts.md`, `decision_log.md`) doesn't exist at the workspace root and the level now needs it, create it now — never defer (CLAUDE.md: undocumented architecture is a blocking task).
-5. **Update root `CLAUDE.md` routing** — Workspaces table + Routing table. Flag for approval per the Living Documentation Rule before writing.
+5. **Update root `CLAUDE.md` routing** — the Routing table, and the Workspaces table when the file has one. Flag for approval per the Living Documentation Rule before writing.
 
 **Confirm the plan before creating anything** (show the folder tree + the doc set + why each doc). Never overwrite an existing file — if one exists, offer to update or skip.
 
@@ -170,22 +171,20 @@ For brownfield especially: re-read each doc and ask "could I have made this up?"
 
 ---
 
-## Phase 5: SUMMARY
+## Phase 5: HANDOFF
+
+Print the handoff card (Standard §4.10) for both forks — the summary lines become its Done and Written lines:
 
 ```
-{LEVEL} · {KIND} {READY / BROUGHT TO STANDARD}: {name}
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-  {folder}/CONTEXT.md            ✓
-  {canonical homes, if created}  ✓
-  Root CLAUDE.md routing         ✓
-
-Fork: {greenfield / brownfield}
-{brownfield: N systems observed, M facts confirmed by interview}
-
-Ready to build:
-  /memo {first thing to build}     (greenfield)
-  /prd  {next change}              (brownfield — docs now reflect ground truth)
+HANDOFF
+Where:  standalone | {initiative} · {LEVEL} · {KIND} · {ready | brought to standard}: {name}
+Done:   {LEVEL} · {KIND} {READY / BROUGHT TO STANDARD}: {name} — {folder}/CONTEXT.md ✓ · {canonical homes, if created} ✓ · root CLAUDE.md routing ✓ · fork: {greenfield | brownfield — N systems observed, M facts confirmed by interview}
+Next:   /memo {first thing to build} (greenfield) | /prd {next change} or /memo {…} (brownfield — docs now reflect ground truth) — in a fresh session
+Needs {owner}: {open questions filed to the task manager, with ids} | none
+Written: {the paths written}
 ```
+
+Next is always something the owner can type verbatim.
 
 ---
 

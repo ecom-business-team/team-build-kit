@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One build, start to finish</title>
+<style>
+/* companion.css — the block library for gate-document companions.
+   Inlined by render.py; read unchanged by the explainer.
+   Greyscale tokens (chroma 0 except --destructive), three-state theme:
+   bare :root is light; the dark blocks only redefine tokens. No script, no request. */
+
+:root {
+  color-scheme: light;
+  --bg: oklch(0.985 0 0);
+  --fg: oklch(0.205 0 0);
+  --muted: oklch(0.515 0 0);
+  --card: oklch(1 0 0);
+  --border: oklch(0.908 0 0);
+  --primary: oklch(0.255 0 0);
+  --primary-fg: oklch(0.99 0 0);
+  --secondary: oklch(0.968 0 0);
+  --accent: oklch(0.955 0 0);
+  --destructive: oklch(0.55 0.205 27);
+  --ring: oklch(0.45 0 0);
+  --radius: 6px;
+  --font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: oklch(0.17 0 0);
+    --fg: oklch(0.96 0 0);
+    --muted: oklch(0.665 0 0);
+    --card: oklch(0.205 0 0);
+    --border: oklch(0.285 0 0);
+    --primary: oklch(0.92 0 0);
+    --primary-fg: oklch(0.2 0 0);
+    --secondary: oklch(0.248 0 0);
+    --accent: oklch(0.265 0 0);
+    --destructive: oklch(0.66 0.19 25);
+    --ring: oklch(0.56 0 0);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: oklch(0.17 0 0);
+  --fg: oklch(0.96 0 0);
+  --muted: oklch(0.665 0 0);
+  --card: oklch(0.205 0 0);
+  --border: oklch(0.285 0 0);
+  --primary: oklch(0.92 0 0);
+  --primary-fg: oklch(0.2 0 0);
+  --secondary: oklch(0.248 0 0);
+  --accent: oklch(0.265 0 0);
+  --destructive: oklch(0.66 0.19 25);
+  --ring: oklch(0.56 0 0);
+}
+
+/* ---- ground ---- */
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.55 var(--font);
+  letter-spacing: -0.011em;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+main.companion { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
+h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 600; line-height: 1.25; margin: 0; }
+h1 { font-size: 22px; }
+h2 { font-size: 16px; }
+h3 { font-size: 14px; }
+h4 { font-size: 13px; color: var(--muted); }
+p { margin: 8px 0; }
+a { color: inherit; text-decoration: underline; text-decoration-color: var(--muted); text-underline-offset: 2px; }
+a:hover { text-decoration-color: var(--fg); }
+code { font: 12.5px var(--mono); background: var(--secondary); padding: 1px 4px; border-radius: 4px; letter-spacing: 0; }
+pre { background: var(--secondary); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; overflow-x: auto; font: 12.5px/1.5 var(--mono); margin: 12px 0; }
+pre code { background: none; padding: 0; }
+blockquote { margin: 12px 0; padding-left: 12px; border-left: 2px solid var(--border); color: var(--muted); }
+hr { border: 0; border-top: 1px solid var(--border); margin: 24px 0; }
+ul, ol { margin: 8px 0; padding-left: 22px; }
+li { margin: 4px 0; }
+li > ul, li > ol { margin: 4px 0; }
+strong { font-weight: 600; }
+.muted { color: var(--muted); }
+.count { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 8px; }
+
+/* ---- header ---- */
+.doc-head { padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.eyebrow { margin: 0 0 8px; font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.subtitle { margin: 6px 0 0; color: var(--muted); }
+.lede { margin: 16px 0; padding-left: 12px; border-left: 2px solid var(--primary); font-size: 15px; }
+.note { margin: 12px 0 0; font-size: 13px; color: var(--muted); }
+.doc-foot { margin-top: 48px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+
+/* ---- section (open, or folded as <details>) ---- */
+.section { margin-top: 32px; }
+.section > h2 { padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.section .sub { margin-top: 20px; }
+details.section > summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+details.section > summary::-webkit-details-marker { display: none; }
+details.section > summary::before { content: "▸"; color: var(--muted); font-size: 12px; flex: none; transition: transform 120ms; }
+details.section[open] > summary::before { transform: rotate(90deg); }
+details.section > summary h2 { flex: 1; }
+details.section > summary .count::after { content: " · folded"; }
+details.section[open] > summary .count::after { content: ""; }
+details.section > summary:hover h2 { color: var(--muted); }
+
+/* ---- fields: dense hairline label/value rows ---- */
+dl.fields { display: grid; grid-template-columns: max-content minmax(0, 1fr); margin: 12px 0 0; border-top: 1px solid var(--border); }
+dl.fields dt, dl.fields dd { margin: 0; padding: 6px 0; border-bottom: 1px solid var(--border); }
+dl.fields dt { color: var(--muted); padding-right: 20px; white-space: nowrap; font-size: 13px; }
+dl.fields dd { min-width: 0; overflow-wrap: anywhere; }
+dl.fields dd p { margin: 0; }
+dl.fields dd p + p { margin-top: 6px; }
+dl.fields dd ul, dl.fields dd ol { margin: 4px 0; }
+
+/* ---- ribbon: the stage marks ---- */
+.ribbon { display: flex; margin: 16px 0 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.ribbon span { flex: 1; padding: 8px 10px; border-right: 1px solid var(--border); font-size: 12px; text-align: center; white-space: nowrap; }
+.ribbon span:last-child { border-right: 0; }
+.ribbon .done { background: var(--secondary); }
+.ribbon .active { background: var(--primary); color: var(--primary-fg); font-weight: 600; }
+.ribbon .todo { color: var(--muted); }
+
+/* ---- chain: a drawn sequence from a ```chain fence ---- */
+.chains { display: grid; gap: 12px; margin: 12px 0 4px; }
+.chain .label { display: block; font-size: 12px; color: var(--muted); margin: 0 0 5px; }
+.chain ol { list-style: none; display: flex; flex-wrap: wrap; align-items: center; padding: 0; margin: 0; row-gap: 6px; }
+.chain li { display: flex; align-items: center; margin: 0; }
+.chain li > span { padding: 7px 11px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); font-size: 13px; line-height: 1.3; white-space: nowrap; }
+.chain li > span strong { font-weight: 600; }
+.chain li + li::before { content: "→"; color: var(--muted); padding: 0 8px; }
+
+/* ---- verdict: the Ask, the go / no-go ---- */
+.verdict { margin-top: 16px; padding: 16px 20px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); }
+.verdict-word { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 6px; }
+.verdict p:first-child { margin-top: 0; }
+.verdict p:last-child { margin-bottom: 0; }
+
+/* ---- boundary: what it is / in / what it is not ---- */
+.boundary { margin-top: 8px; }
+.boundary .panel { padding: 14px 0; border-top: 1px solid var(--border); }
+.boundary .panel:first-child { border-top: 0; }
+.boundary .panel h3 { font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.boundary .panel.not h3::before { content: "✕ "; }
+.boundary .panel p:first-of-type { margin-top: 0; }
+
+/* ---- checklist ---- */
+ul.checklist, ol.checklist { list-style: none; padding: 0; margin: 8px 0 0; }
+.checklist li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 8px; margin: 0; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.checklist li > div { min-width: 0; }
+.checklist li p { margin: 0; }
+.checklist li p + p { margin-top: 4px; }
+.mark { font-variant-numeric: tabular-nums; text-align: center; line-height: 1.55; }
+.mark.done { color: var(--fg); }
+.mark.todo { color: var(--muted); }
+.mark.fail { color: var(--destructive); }
+.mark.active { color: var(--fg); font-weight: 600; }
+
+/* ---- table, with status pills ---- */
+.table { overflow-x: auto; margin: 12px 0 0; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th { text-align: left; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); padding: 6px 8px; white-space: nowrap; }
+td { border-bottom: 1px solid var(--border); padding: 6px 8px; vertical-align: top; }
+th:first-child, td:first-child { padding-left: 0; }
+th:last-child, td:last-child { padding-right: 0; }
+.pill { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; line-height: 1.4; padding: 1px 7px; border: 1px solid var(--border); border-radius: 999px; white-space: nowrap; vertical-align: middle; }
+.pill.ok { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
+.pill.fail { color: var(--destructive); border-color: var(--destructive); }
+.pill.pending { color: var(--muted); }
+.pill + span { margin-left: 6px; }
+
+/* ---- callout: needs the owner ---- */
+.callout { margin-top: 16px; padding: 12px 16px; border: 1px solid var(--border); border-left: 3px solid var(--fg); border-radius: var(--radius); background: var(--card); }
+.callout h3 { font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.callout ul { margin: 0; padding-left: 18px; }
+.callout p { margin: 0; }
+.callout .empty { color: var(--muted); }
+
+/* ---- progress: milestones and work items ---- */
+ol.progress { list-style: none; padding: 0; margin: 8px 0 0; }
+.progress li { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 8px; margin: 0; padding: 6px 0; border-bottom: 1px solid var(--border); align-items: baseline; }
+.progress .status { color: var(--muted); font-size: 12px; text-align: right; }
+.progress .num { color: var(--muted); font-size: 12px; margin-right: 6px; }
+.progress li.active .name { font-weight: 600; }
+.progress li.todo .name { color: var(--muted); }
+
+/* ---- tag: provenance labels ---- */
+.tag { display: inline-block; font-size: 11px; font-weight: 500; line-height: 1.4; padding: 0 5px; border: 1px solid var(--border); border-radius: 4px; background: var(--secondary); color: var(--muted); vertical-align: baseline; white-space: nowrap; }
+
+/* ---- kind: name · definition · proof ---- */
+.kind { margin-top: 16px; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); }
+.kind .label { font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.kind .name { font-weight: 600; }
+.kind .definition { margin-top: 4px; }
+.kind .proof { margin-top: 4px; color: var(--muted); }
+.kind .proof::before { content: "Proved by · "; }
+
+/* ---- work-item card (fields inside a bordered card) ---- */
+article.wi { margin-top: 12px; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); }
+article.wi h3 { display: flex; gap: 10px; align-items: baseline; }
+.wi-num { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+article.wi dl.fields { margin-top: 8px; border-top: 0; }
+article.wi dl.fields dt:last-of-type, article.wi dl.fields dd:last-of-type { border-bottom: 0; }
+
+/* ---- plain layer: the plain-words line first, the technical body folded beneath ---- */
+.plain { margin: 8px 0 0; font-size: 16px; line-height: 1.5; }
+details.section > summary { flex-wrap: wrap; }
+details.section > summary .plain { flex-basis: 100%; margin: 4px 0 0 20px; font-weight: 400; }
+details.details { margin-top: 10px; }
+details.details > summary { cursor: pointer; list-style: none; font-size: 12px; color: var(--muted); }
+details.details > summary::-webkit-details-marker { display: none; }
+details.details > summary::before { content: "▸ "; }
+details.details[open] > summary::before { content: "▾ "; }
+details.details > :not(summary) { margin-top: 8px; }
+.kind .statement { margin-top: 4px; }
+.kind .part { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); }
+
+/* ---- ship review: holes with a disposition pill; handoff residuals ---- */
+ul.holes, ul.residuals { margin: 8px 0 0; padding-left: 0; list-style: none; }
+ul.holes li, ul.residuals li { padding: 6px 0; border-bottom: 1px solid var(--border); }
+ul.holes .pill { margin-right: 6px; }
+.progress .name { min-width: 0; overflow-wrap: anywhere; }
+.progress li { grid-template-columns: 20px minmax(0, 1fr) fit-content(38%); }
+.progress .status { white-space: normal; }
+h3.sub { margin-top: 20px; }
+
+@media (max-width: 540px) {
+  main.companion { padding: 24px 16px 60px; }
+  dl.fields { grid-template-columns: 1fr; }
+  dl.fields dt { border-bottom: 0; padding-bottom: 0; }
+  .ribbon { flex-wrap: wrap; }
+  .ribbon span { flex: 1 1 33%; border-bottom: 1px solid var(--border); }
+}
+@media print {
+  main.companion { max-width: none; padding: 0; }
+  a { text-decoration: none; }
+}
+
+</style>
+</head>
+<body>
+<main class="companion">
+<header class="doc-head"><p class="eyebrow">The worked example</p><h1>One build, start to finish</h1><p class="subtitle">A personal expense tracker, walked from the install to a shipped quick fix, in the kit's own words.</p><p>You have a bank export and a question: where does the money go each month? This document follows that one small build through every step the kit gives you, so you can see what each step asks of you and what it hands back before you run one yourself. The thing built is a <strong>tool</strong>: a script you run by hand that reads the export and writes a monthly report. It touches real money, so the third gate fires exactly once, and you will see where. Each section says what you type, what you see, and why, in one sentence pointing at the explainer.</p><div class="chains"><div class="chain"><span class="label">The lifecycle</span><ol><li><span>install</span></li><li><span>/onboard</span></li><li><span><strong>/memo</strong></span></li><li><span>/prd</span></li><li><span>/build</span></li><li><span>/ship</span></li><li><span>outcome check</span></li><li><span>/quick-fix</span></li></ol></div><div class="chain"><span class="label">A project's states</span><ol><li><span>queued</span></li><li><span>cleared</span></li><li><span>approved</span></li><li><span>building</span></li><li><span>shipped</span></li><li><span>reached</span></li></ol></div></div></header><section class="section"><h2>Step 1 — Install the kit</h2><p><strong>What you type.</strong> Either the one line from the README, or <code>get started</code> inside the kit folder you downloaded.</p><p><strong>What you see.</strong> A line that starts with ✅ and gives a file count, then the list of commands you now have, then one sentence: new here, type <code>/onboard</code>.</p><p><strong>Why.</strong> The commands are files; nothing is hosted and nothing runs until you type a command (the explainer, "What you bring, and what the skills carry").</p></section><section class="section"><h2>Step 2 — Create your workspace</h2><p><strong>What you type.</strong> <code>/onboard</code></p><p><strong>What you see.</strong> Six questions in plain words: what you do, which tools you use, what you produce, what to call you, where your tasks live and how you mark them ready, blocked or waiting, and where shared keys will live. A readback of your areas of work. A folder map with your workspace placed beside the kit, never inside it. After you approve: the installer's ✅ line, then a card.</p><pre><code>HANDOFF
+Where:  standalone · your workspace
+Done:   workspace created and mapped — 20 kit files, 1 area
+Next:   open the folder in Claude Code, read why_we_build.html, then /memo your first small thing
+Needs you: none
+Written: CLAUDE.md · SKILLS.md · money/CONTEXT.md</code></pre><p><strong>Why.</strong> Your map carries your names, so every later card can say what it needs from you by name; the kit's files sit beside it and refresh without touching it (the explainer, "What you bring, and what the skills carry").</p></section><section class="section"><h2>Step 3 — Read the explainer, once</h2><p><strong>What you type.</strong> Nothing. Open <code>why_we_build.html</code> in your workspace and read it.</p><p><strong>What you see.</strong> Two ladders, six kinds, three gates, one state layer, and one idea: complexity is the enemy.</p><p><strong>Why.</strong> Every step below is one of those sentences applied, so a single read makes the rest predictable (the explainer, "The one idea").</p></section><section class="section"><h2>Step 4 — Gate 1: is it worth building?</h2><p><strong>What you type.</strong> <code>/memo expense tracker</code></p><p><strong>What you see.</strong> The door decides the size first. It is not a fix, because nothing exists yet. It is not an initiative, because one milestone finishes it. So it is a project, and the memo asks the business questions: the problem (you cannot see where money goes), the cost of doing nothing (another month of guessing), the value (one report you act on), why now (the export is already on your disk), the boundary in one sentence (it reads one bank's export and writes one monthly report; it does not categorise automatically or touch the bank), and the success definition (by the end of next month one real export has produced a report you acted on). A companion page opens beside the memo for you to approve from. Then a card: Next <code>/prd expense-tracker</code>.</p><p><strong>Why.</strong> Gate 1 asks whether the thing should exist at all, before any design, and a memo that says no is a win (the explainer, "Why gates, and why they check themselves").</p></section><section class="section"><h2>Step 5 — Gate 2: is it designed right?</h2><p><strong>What you type.</strong> <code>/prd expense-tracker</code></p><p><strong>What you see.</strong> The skill reads the memo and states the kind back: this is a tool, your own code that a person runs by hand, so its proof is tests on fixtures for the logic and one check of its output against a real export. It locks the beginning state (the export's exact columns, read from the file, not assumed), designs the smallest path (one script, one fixture folder, one report file), and writes a validation log where every dependency was tried live today. The last section says the build can run in one go with no open decision. Approve, and a card names work item 1.</p><p><strong>Why.</strong> The kind decides the proof and the documents; naming it before building is what keeps a small thing small (the explainer, "Why six kinds").</p></section><section class="section"><h2>Step 6 — Build, one work item per session</h2><p><strong>What you type.</strong> <code>/build expense-tracker</code>, then a fresh session for each work item.</p><p><strong>What you see.</strong> The first session builds the parser and its tests, proves them, rewrites the project's <code>state.md</code> and stops with a card. The next session opens from that snapshot in two minutes, verifies three things, and builds the report writer. At the end the skill walks the four router questions. Two answer yes: the report's numbers drive a decision about your spending, and the thing touches money. So the build halts and the card says Next <code>/ship expense-tracker</code>.</p><div class="chains"><div class="chain"><span class="label">The value stream</span><ol><li><span>bank export</span></li><li><span>the script</span></li><li><span>monthly report</span></li><li><span><strong>a decision about spending</strong></span></li></ol></div></div><p><strong>Why.</strong> Position lives in one small file rewritten at every stop, so a session is cheap to end and cheap to resume; and the router, not your mood, decides whether the third gate runs (the explainer, "Why one state layer, and why position is kept apart from history").</p></section><section class="section"><h2>Step 7 — Gate 3: can you rely on it?</h2><p><strong>What you type.</strong> <code>/ship expense-tracker</code></p><p><strong>What you see.</strong> Six questions answered in a paragraph. What breaks: a column the bank renames, so the parser stops with a named error instead of a wrong total. Who notices: you, because the report refuses to write. The fallback: last month's report stays where it was. The contingency: the fixture that reproduces the rename becomes a test before the fix. How you fix it: <code>/quick-fix</code>, then the same exit gate. What it concludes without testing: nothing, because the one real export check ran. Every hole gets a verdict, the tool goes live, the memo moves to <code>_done/</code> and the PRD folder to <code>_archive/</code>, and the outcome check is scheduled for a date two weeks out. The card's Where line now reads shipped.</p><p><strong>Why.</strong> Shipped is a promise other people can lean on; a tool that touches money earns that word only after the questions are answered (the explainer, "Why gates, and why they check themselves").</p></section><section class="section"><h2>Step 8 — Two weeks later: was the problem solved?</h2><p><strong>What you type.</strong> Nothing new. The scheduled task comes due; you open a session and answer it.</p><p><strong>What you see.</strong> The memo's success definition, read back word for word: did one real export produce a report you acted on? You say yes, you cancelled two subscriptions. The milestone's row changes from shipped to reached, and the lessons written at ship time get one line about what real use showed.</p><p><strong>Why.</strong> Shipped means the build is done; reached means the problem is gone, and only the second one was the point (the explainer, "Why shipped is not reached").</p></section><section class="section"><h2>Step 9 — Later: a small change</h2><p><strong>What you type.</strong> <code>/quick-fix rename the "eating out" category to "restaurants"</code></p><p><strong>What you see.</strong> A diagnosis first, then a two-line change and its test, then the same four router questions. This time none fires: the report's numbers do not change, no data is written, nobody else reads it. The fix ships freely, and the session ends with its log line and a card.</p><p><strong>Why.</strong> The exit gate is the same rule at the bottom of the ladder as at the top; the size of the work changes how much ceremony it gets, never whether it is checked (the explainer, "Why two ladders, and why a door").</p></section><section class="section"><h2>Step 10 — Every session ends the same way</h2><p><strong>What you type.</strong> Nothing; the skill you ran closes the session.</p><p><strong>What you see.</strong> One entry in the day's log, a check that the living documents still match what changed when the session changed a system, and the card. The card at the end of one session and the gate line at the start of the next say the same thing.</p><p><strong>Why.</strong> History goes to the log and position goes to the snapshot, so nobody reads a transcript to find out where things stand (the explainer, "Why one state layer, and why position is kept apart from history").</p></section><details class="section verification"><summary><h2>Where each step comes from</h2><span class="count">437 words</span></summary><div class="table"><table><thead><tr><th>Claim</th><th>Source that confirms it</th></tr></thead><tbody><tr><td>The installer prints ✅, a count, the command list, and "New here? Type /onboard"</td><td>the kit's <code>install.sh</code>, the success branch</td></tr><tr><td><code>/onboard</code> asks six questions, places the workspace beside the kit, installs the kit's files, prints the card</td><td><code>onboard/SKILL.md</code>, Phase 2 questions 1–6, Phase 4a, Phase 4b, Phase 4c</td></tr><tr><td>The card's five lines: Where · Done · Next · Needs · Written</td><td><code>documentation_standard.md</code> (the template library) §4.10</td></tr><tr><td><code>/memo</code> is the one door and decides fix, project or initiative first</td><td><code>memo/SKILL.md</code>, "When NOT to use" and "the initiative test"</td></tr><tr><td>The memo's six inputs: problem, cost of inaction, value, why now, boundary, success definition</td><td><code>memo/SKILL.md</code>, the frontmatter description; <code>glossary.md</code>, "Gate 1, the memo"</td></tr><tr><td>A companion page opens beside every gate document</td><td><code>glossary.md</code>, "Companion"</td></tr><tr><td>The PRD states the kind and the proof it requires</td><td><code>prd/SKILL.md</code>, the "Kind" line of the PRD header</td></tr><tr><td>A tool is proved by tests on fixtures and one check against real data</td><td><code>documentation_standard.md</code> (the root standard), the kinds table, "Tool" row</td></tr><tr><td>The PRD locks the beginning state live and ends with the one-shot readiness section</td><td><code>prd/SKILL.md</code>, the definition of done and Phase 9 (the PRD's §15)</td></tr><tr><td>A build session is one work item; it ends with <code>state.md</code> rewritten and a card</td><td><code>build/SKILL.md</code>, Phase 2 Step 4 and Step 5</td></tr><tr><td>The next session verifies three commands from the snapshot before continuing</td><td><code>build/SKILL.md</code>, Phase 1-A</td></tr><tr><td>The router's four questions, and one yes sends the build to <code>/ship</code></td><td><code>build/SKILL.md</code>, Phase 4; <code>glossary.md</code>, "Blast radius" and "Router"</td></tr><tr><td>Ship's six questions: what breaks, who notices, fallback, contingency, how we fix it, what it concludes without testing</td><td><code>ship/SKILL.md</code>, the definition of done</td></tr><tr><td>Ship moves the memo to <code>_done/</code> and the PRD folder to <code>_archive/</code>, and schedules the outcome check</td><td><code>_shared/project_close.md</code>, §3 and §5</td></tr><tr><td>A milestone reads reached only when the outcome check confirms the success definition</td><td><code>glossary.md</code>, "Milestone" and "Outcome check"; the explainer, "Why shipped is not reached"</td></tr><tr><td><code>/quick-fix</code> ends with the same four router questions</td><td><code>quick-fix/SKILL.md</code>, Phase 3.5</td></tr><tr><td>Every session ends with a log entry, and with a living-docs check when it changed a system</td><td><code>session-close/SKILL.md</code>, §1 and §2</td></tr><tr><td>The card at the end of a session and the gate line at the start of the next say the same thing</td><td><code>documentation_standard.md</code> (the template library) §4.10, the purpose line</td></tr></tbody></table></div></details>
+<footer class="doc-foot">Companion of <code>worked_example.md</code>. Generated from the markdown, which stays the source; regenerated by the skill step that writes the document, never edited by hand.</footer>
+</main>
+</body>
+</html>

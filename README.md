@@ -50,7 +50,7 @@ Claude installs the commands (it asks permission once), interviews you about you
 | `/week` | Reviews the week's digests and names the one thing that kept getting in the way. |
 | `/doc-audit` | Checks every living document against what actually exists and lists the defects to fix, for one area or the whole workspace. |
 | **Your own skills** | |
-| `/new-workflow` | Turns a process you keep repeating into a skill of your own, and adds it to your skills list. |
+| `/new-workflow` | Turns a process you keep repeating into a skill of your own, or a pipeline of stage folders when a person checks each stage, and adds it to your skills list. |
 | **The kit** | |
 | `/update-build-kit` | Pulls the latest kit and refreshes its files; run it from inside your workspace. |
 

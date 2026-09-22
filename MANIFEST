@@ -23,6 +23,7 @@
 .skills/_shared/claude_md_template.md
 .skills/_shared/companion/render.py
 .skills/_shared/companion/companion.css
+.skills/_shared/flow_base.html
 workspace/.claude/hooks/session_ledger.py
 workspace/.claude/hooks/session_start_gate.py
 workspace/.claude/hooks/practices_gate.py
@@ -30,6 +31,7 @@ workspace/.claude/hooks/skill_additions.py
 workspace/.claude/hooks/state_budget_gate.py
 workspace/.claude/tools/orientation_cost.py
 workspace/.claude/tools/gate_cost.py
+workspace/.claude/tools/index_check.py
 workspace/documentation_standard.md
 workspace/workflow_design_standard.md
 workspace/testing_standard.md

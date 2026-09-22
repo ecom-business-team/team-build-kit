@@ -48,6 +48,7 @@ Claude installs the commands (it asks permission once), interviews you about you
 | `/session-close` | Writes the session's log entry and checks the living documents match what changed. |
 | `/day` | Turns a day's session logs into one digest and files the loose threads. |
 | `/week` | Reviews the week's digests and names the one thing that kept getting in the way. |
+| `/doc-audit` | Checks every living document against what actually exists and lists the defects to fix, for one area or the whole workspace. |
 | **Your own skills** | |
 | `/new-workflow` | Turns a process you keep repeating into a skill of your own, and adds it to your skills list. |
 | **The kit** | |

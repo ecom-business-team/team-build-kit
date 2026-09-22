@@ -37,6 +37,8 @@ M -> SZ
 SZ -> Q :: a small fix
 SZ -> P :: one project
 SZ -> INI :: several projects
+M1 -> M2
+M2 -> M3
 INI ..> M :: each milestone runs the full loop from the memo
 P -> B
 B -> R

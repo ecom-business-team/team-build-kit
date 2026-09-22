@@ -31,11 +31,11 @@ The kit lives at a public GitHub repo. This skill runs the kit's `install.sh` st
 **Run this from the workspace root.** Tell the user: *"Pulling the latest Team Build Kit and re-installing it — this won't touch any of your own work."* Then run:
 
 ```bash
-W=""; [ -f "$PWD/.claude/hooks/session_ledger.py" ] && [ ! -f "$PWD/MANIFEST" ] && W="$PWD"
+W=""; [ -f "$PWD/.claude/kit_receipt" ] && [ ! -f "$PWD/MANIFEST" ] && W="$PWD"
 curl -fsSL "${TBK_BASE:-https://raw.githubusercontent.com/zjamesblake/team-build-kit/main}/install.sh" | TBK_WORKSPACE="$W" bash
 ```
 
-The rule the first line applies: the current folder is treated as a kit-provisioned workspace when the kit's session-ledger hook is present in it and it is not the kit folder itself. In that case the installer refreshes the kit-owned files in the workspace too. Those files are every `workspace/` line of the `MANIFEST`: the four hooks under `.claude/hooks/`, the two tools under `.claude/tools/`, the three standards, `glossary.md`, `why_we_build.md` with its page, the `_practices/` files the kit ships, and `.claude/settings.json` — which is **merged** (the kit's hook registrations are added if missing; the person's own hooks and permissions are kept). `CLAUDE.md`, `SKILLS.md`, and every folder the person made are never read or written.
+The rule the first line applies: the current folder is treated as a kit-provisioned workspace when the installer's receipt is present in it (`.claude/kit_receipt`, written when the kit's files were placed there) and it is not the kit folder itself. A folder that merely holds kit-looking files, with no receipt, is left alone. In that case the installer refreshes the kit-owned files in the workspace too — by the package-manager rule: a file whose bytes still match the receipt is refreshed; a file the person changed is **kept**, and the kit's new version is written beside it as `<file>.kit-new`. Those files are every `workspace/` line of the `MANIFEST`: the four hooks under `.claude/hooks/`, the two tools under `.claude/tools/`, the three standards, `glossary.md`, `why_we_build.md` with its page, the `_practices/` files the kit ships, and `.claude/settings.json` — which is **merged** (the kit's hook registrations are added if missing; the person's own hooks and permissions are kept). `CLAUDE.md`, `SKILLS.md`, and every folder the person made are never read or written.
 
 When the folder is not a kit-provisioned workspace, only the skills are refreshed — today's behaviour for anyone who has never created a workspace.
 
@@ -43,7 +43,7 @@ When the folder is not a kit-provisioned workspace, only the skills are refreshe
 
 ### Step 2: Verify
 
-The installer prints the count of files it wrote and, when a workspace was named, a second line with the workspace count. The four core lifecycle skills (`prd`, `build`, `ship`, `new-workspace`) depend on `~/.claude/skills/_shared/documentation_standard.md` — make sure it's present. If the installer printed a ❌ line (no network, repo moved, a refused folder), say so plainly and stop: it changes nothing on failure, so the existing kit is intact. If it printed a ⚠️ line, the files did install but the workspace's `settings.json` could not be merged, so the kit's hooks are not registered there: show the person the line (the file is theirs to fix), then run the update again.
+The installer prints the count of files it wrote and, when a workspace was named, a second line with the workspace count. The four core lifecycle skills (`prd`, `build`, `ship`, `new-workspace`) depend on `~/.claude/skills/_shared/documentation_standard.md` — make sure it's present. If the installer printed a ❌ line (no network, repo moved, a refused folder), say so plainly and stop: it changes nothing on failure, so the existing kit is intact. If it printed a ⚠️ line, the files did install; the line says which of two things happened. A `settings.json` that could not be merged: the kit's hooks are not registered there, so show the person the line (the file is theirs to fix), then run the update again. A kit-owned file they had changed: it was kept, and the kit's new version sits beside it as `<file>.kit-new`. Show them the line and offer the choice in plain words: take the kit's version (`mv <file>.kit-new <file>`), or keep theirs and delete the `.kit-new` — in which case the line returns at every update, so their own rules are better kept in a file of their own, indexed from their map.
 
 ### Step 3: Confirm
 

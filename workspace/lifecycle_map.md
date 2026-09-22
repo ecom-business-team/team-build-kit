@@ -88,6 +88,9 @@ Every session ends the same way: a log line, and when a project is in flight, th
 - In it, the standards, the glossary, the explainer, the worked example, the practice notes, and five small hooks that keep notes about sessions and read your own additions to a command.
 - Your map, the file that tells every session where things live, with one routing row per area of your work. And your skills list.
 - Each area of your work, created to the standard.
+- The folders every workspace has from its first day, before any document goes in them: one for bulk changes with its index, and a task list when your tasks live in a file rather than a tool.
+- A check that your task manager works: one test task filed, read back and completed, or a task list in a file when that fails.
+- The whole workspace saved once in version control, so every later change can be undone in one step.
 - A receipt, so a later update refreshes what you left alone and keeps what you changed, with the kit's new version placed beside it.
 - A handoff card that names the first thing to do.
 
@@ -110,6 +113,7 @@ Every session ends the same way: a log line, and when a project is in flight, th
 **Produces.**
 
 - Exactly the document set the level and the kind call for. Nothing missing, nothing extra.
+- The area's folders, created empty on the first day: a place for memos, a place for designs and an archive, and for an automation a starting page for its flow diagram.
 - An index at the door that says what the thing is, what kind it is, and how it is proved.
 - A routing row in your map.
 - A handoff card that points at the memo.
@@ -148,6 +152,7 @@ Every session ends the same way: a log line, and when a project is in flight, th
 
 **Asks.**
 
+- First, it looks for the thing. It reads your map, your skills list, the memos and designs already written, and the area's index. If what you describe already exists or is already being built, it names the file and asks whether this is that thing or a different one.
 - What the problem is, what doing nothing costs, what solving it is worth, and why now.
 - What the thing is, in one sentence, and what it is deliberately not.
 - How you will know it is solved, written so it can be checked later.
@@ -326,7 +331,7 @@ Every session ends the same way: a log line, and when a project is in flight, th
 
 ## Also in the kit, off the loop
 
-Three commands sit beside the loop rather than on it. Run `/doc-audit` before a big build, after a long gap, or whenever the workspace feels drifty. It checks every living document against what is really there and proposes fixes. Run `/new-workflow` when a process repeats. It turns the steps into a command of your own. Run `/update-build-kit` to refresh the kit's files without touching your map, your skills list, or the folders you made.
+Three commands sit beside the loop rather than on it. Run `/doc-audit` before a big build, after a long gap, or whenever the workspace feels drifty. It checks every living document against what is really there and proposes fixes. Run `/new-workflow` when a process repeats. It turns the steps into a command of your own, or, when a person checks the output of more than one stage and the process has run at least twice, into a pipeline of numbered stage folders, each with its one human check. Run `/update-build-kit` to refresh the kit's files without touching your map, your skills list, or the folders you made.
 
 ## Where each stage comes from
 
@@ -345,13 +350,15 @@ Three commands sit beside the loop rather than on it. Run `/doc-audit` before a 
 | The install places every listed file or nothing, and keeps a receipt of what it placed; an update refreshes unchanged files and keeps changed ones, writing the kit's version beside them | `install.sh`, header comment (atomic; receipts; `.kit-new`, "the package-manager rule") |
 | The install asks nothing; the workspace is made beside the kit, never inside it | `install.sh` (no prompt; its inputs are environment variables); `onboard/SKILL.md`, "Phase 4" 4a ("Where the workspace goes") |
 | The interview asks who you are and what you build, what to call you, where your tasks live, and where shared keys live; it shows the plan before creating anything | `onboard/SKILL.md`, "Phase 2: UNDERSTAND THE PERSON" (questions 1–6); "Phase 4: CONFIRM AND CREATE" 4a |
-| One prompt asks once whether to trust the folder's hooks | `onboard/SKILL.md`, "Phase 4" 4b step 6 |
-| The workspace holds the standards, the glossary, the explainer, the worked example, the practice notes and five hooks; your map with a routing row per area; your skills list; each area created to the standard; a handoff card naming the next step | `onboard/SKILL.md`, "Phase 4" (the folder map, the five-hooks sentence, steps 2–5, the handoff `Next:` line); `update-build-kit/SKILL.md`, the paragraph naming the workspace files; the kit's MANIFEST (`workspace/worked_example.md` and its page) |
+| The workspace holds the skeleton folders from its first day, the task manager is proved by one test task (or a task list in a file), and the workspace is committed once | `onboard/SKILL.md`, "Phase 4" 4b step 3 ("Create the skeleton"), step 5 ("Prove the task manager"), step 8 ("Commit"); `_shared/documentation_standard.md`, "The skeleton — folders that exist from day one" |
+| One prompt asks once whether to trust the folder's hooks | `onboard/SKILL.md`, "Phase 4" 4b step 9 |
+| The workspace holds the standards, the glossary, the explainer, the worked example, the practice notes and five hooks; your map with a routing row per area; your skills list; each area created to the standard; a handoff card naming the next step | `onboard/SKILL.md`, "Phase 4" (the folder map, the five-hooks sentence, 4b steps 2, 4, 6 and 7, the handoff `Next:` line); `update-build-kit/SKILL.md`, the paragraph naming the workspace files; the kit's MANIFEST (`workspace/worked_example.md` and its page) |
 | Without the kit's files the commands point at files that are not there | `update-build-kit/SKILL.md`, the sentence on the four core skills depending on the shared standard being present |
 | The levels are workspace, system, leaf and initiative; the level question includes "one build, or a sequence of shippable milestones"; the kind decides the documents and the proof | `new-workspace/SKILL.md`, "The three things this skill resolves"; "Phase 1: DISCERN — level, fork, kind"; `documentation_standard.md`, §4 "The third axis: kind" |
 | The six kinds are automation, service, application, tool, procedure, knowledge | `documentation_standard.md`, §4 "The third axis: kind" (the kinds table) |
 | The north-star interview asks what will be true, whose day changes, what dies and must never get worse, and the steps in order with what is true at each | `new-workspace/SKILL.md`, "Phase 2a: GREENFIELD" ("For an initiative — the north-star interview") |
 | It provisions exactly the document set for the level and kind, nothing missing and nothing unearned, with the kind and proof stated; a routing row is added; the handoff points at the memo | `new-workspace/SKILL.md`, "Phase 3: PROVISION" items 1–5; "Phase 5: HANDOFF"; `convert-to-standard/SKILL.md`, "Phase 3" (the Kind and Proved-by lines, the routing row) |
+| The area's folders are created empty by level and kind, with a flow page for an automation, and the index check passes | `new-workspace/SKILL.md`, "Phase 3: PROVISION" item 3 ("Create the area's folders"); "Phase 4: VERIFY" item 6 |
 | A document that describes what you assume is deployed is worse than no document | `new-workspace/SKILL.md`, "Principles" ("Accurate or cut") |
 | Every built thing has an index that says what it is and how to pick it up; without one the tree has to be read | `documentation_standard.md`, §5 "CONTEXT.md — the required local index"; `why_we_build.md`, "Why two ladders, and why a door" |
 | Two systems writing one field is a design flaw; one writer per object | `ship/SKILL.md`, "Phase 3: DISPOSITION" (Escalate: "two systems writing one field"); the initiative's north star, §7 ("a writer registry, one writer per object") |
@@ -360,6 +367,7 @@ Three commands sit beside the loop rather than on it. Run `/doc-audit` before a 
 | Its handoff sends the next change through the memo or a quick fix | `convert-to-standard/SKILL.md`, opening paragraph; "Phase 4: Hand off" (the `Next:` line) |
 | An untraced consumer breaks when a change lands | `prd/SKILL.md`, "Phase 6" (the 2026-07-24 lesson: a consumer declared unaffected was never traced) |
 | The memo asks the problem, cost of inaction, value, why now, one sentence plus what it is not, and a checkable success definition; it never says how | `memo/SKILL.md`, "The Required Input Contract"; "Definition of done"; `glossary.md`, "Gate 1, the memo", "Success definition" |
+| The memo first looks for the thing in the map, the skills list, the memos, the designs and the area's index, and asks whether it is that thing or a different one | `memo/SKILL.md`, "First: does it already exist?" |
 | Four cases skip the memo: throwaway, only-you, trivially reversible, a contained fix | `memo/SKILL.md`, "When you can SKIP the memo" |
 | Three initiative questions; two of three make it an initiative | `memo/SKILL.md`, "When the memo is too small — the initiative test"; `documentation_standard.md`, §4 "Planning folder" (the contract paragraph) |
 | The memo is approved by the owner and its correct conclusion may be "do not build" | `memo/SKILL.md`, "Close: hand off or pause" ("Once approved"); "The Required Input Contract" ("the memo's correct conclusion is don't build"); "The Framework" (The Ask: go/no-go); `why_we_build.md`, "Why gates, and why they check themselves" |
@@ -411,6 +419,7 @@ Three commands sit beside the loop rather than on it. Run `/doc-audit` before a 
 | Recurring unfiled threads are the leak the capture layer exists to close | `week/SKILL.md`, "Steps" item 3 |
 | `/doc-audit` runs before major builds, after long gaps, or whenever the workspace feels drifty, and proposes fixes | `doc-audit/SKILL.md`, description |
 | `/new-workflow` turns a repeating process into a command of your own | `new-workflow/SKILL.md`, description |
+| It builds the pipeline form, numbered stage folders each with one human check, when more than one stage is checked and the process has run twice | `new-workflow/SKILL.md`, "Phase 2: MAP THE STEPS" (the shape question); "Phase 4P: BUILD THE PIPELINE" |
 | `/update-build-kit` refreshes the kit's files and never touches your map, your skills list or your folders | `update-build-kit/SKILL.md`, description |
 | The build makes it work; the ship review makes it safe to rely on | `ship/SKILL.md`, "Principles" |
 | Every command the kit ships appears once on this page: eleven on the loop or in the capture strip, three off the loop | the kit's MANIFEST (the `.skills/` lines) |

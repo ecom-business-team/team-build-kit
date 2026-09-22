@@ -35,7 +35,7 @@ Every workspace is entered through its CONTEXT.md — the local index: what this
 
 - Investigating an issue → hypothesis + objective test, **run the test before discussing fixes** → `_practices/investigation.md`
 - Nothing is "done" without proof it works **through the real entry point** — a synthetic call to the consumer proves the consumer, not the wiring. Verifiable success criteria per task; would a staff engineer approve? **On a code project the proof is a test, not a one-off script** → `testing_standard.md` (a defect found by hand gets a test before it gets a fix; assert properties, not values, against live data)
-- Any bulk write (>10 rows / backfill / restore) → prestate snapshot (scoped to affected rows) FIRST → the owning area's `bulk_ops/` (`documentation_standard.md` §4: `INDEX.md` + one folder per write holding the prestate scoped to the affected rows; the snapshot is the undo)
+- Any bulk write (>10 rows / backfill / restore) → prestate snapshot (scoped to affected rows) FIRST → the owning area's `bulk_ops/`, or the workspace root's when the area has none (`documentation_standard.md` §4: `INDEX.md` + one folder per write holding the prestate scoped to the affected rows; the snapshot is the undo)
 - Before any deploy → `git status`; deploy-truth is the running system → `_practices/deploying.md`
 - Fanning out subagents → `_practices/subagents.md` (facts-agents vs simplest-solution agents; pick, never merge)
 - A true close — the session ending, a project archived, a batch done — → run the `session-close` skill (log entry + living-docs check); not after every step inside a larger flow
@@ -46,7 +46,7 @@ Every workspace is entered through its CONTEXT.md — the local index: what this
 - **Capture at occurrence.** A tool gotcha or lesson surfaces → write it down now, split by the portability test: tool-general → `_practices/{tool}.md`; project-specific → that CONTEXT.md. A learning without a doc change or filed action didn't happen. The owner can also invoke capture explicitly.
 - **Doc friction is a doc defect.** When orientation from a folder fails — a doc contradicts live state, the CONTEXT doesn't index something it should, you had to read code/history to learn what a doc should have said — fix the doc at the moment of occurrence. Never work around a bad doc silently. (Deep sweep on demand: `/doc-audit`.)
 - **Session log.** Every session appends an entry to `daily-outputs/YYYY-MM/YYYY-MM-DD.md` at close (floor: one line) — via the `session-close` skill.
-- **Task capture.** The owner mentions work items in any chat → actionable+unblocked: {your actionable label}; blocked: {your blocked label} ({your waiting label} if on a person); unclear: ask in one line. **All backlogs live in the task manager — never in markdown.** **Every task is standalone:** title = verb + outcome; description carries the why, the file/decision pointers, and the next action, so a fresh session can pick it up with zero prior context (the handoff test, applied to tasks).
+- **Task capture.** The owner mentions work items in any chat → actionable+unblocked: {your actionable label}; blocked: {your blocked label} ({your waiting label} if on a person); unclear: ask in one line. **All backlogs live in the task manager — never in any other markdown file** (when the task manager is `tasks.md`, that file is it). **Every task is standalone:** title = verb + outcome; description carries the why, the file/decision pointers, and the next action, so a fresh session can pick it up with zero prior context (the handoff test, applied to tasks).
 - **Secrets.** Never accept keys pasted in chat; verify MCP/deploy auth at build start.
 
 ## Words the skills use
@@ -56,4 +56,4 @@ The lifecycle skills, templates and standards say **the owner** and **the task m
 ## Environment
 
 - {Where shared credentials and MCP connections live, e.g. a root `.env` + `.mcp.json`}. Per-project credentials, CLI, and deploy facts live in that workspace's CONTEXT.md — never here.
-- Naming: folders `kebab-case` · docs `snake_case.md` · n8n workflows `{{System}} | {{Trigger + Action}}` · changelogs Keep-a-Changelog.
+- Naming: folders `kebab-case` · docs `snake_case.md` · automation workflows `{{System}} | {{Trigger + Action}}` · changelogs Keep-a-Changelog.

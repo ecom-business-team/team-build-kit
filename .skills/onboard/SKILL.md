@@ -59,13 +59,14 @@ Fills `{owner}` and `{Your name}`. Whatever they say is the name the handoff car
 
 **5. "Where do your tasks and to-dos live — an app, a list, nowhere yet?"**
 Fills `{task manager}`. An app name, "a notebook", or "nowhere yet" are all fine answers; write what they said.
+If it is an app: check whether this session has a connected tool for it (a tool whose name contains the app's name). If it does, remember to prove it in 4b. If it does not, say that the lifecycle files tasks by id and schedules outcome checks there, and offer two choices: connect it now (their claude.ai connector settings, or `claude mcp` in a terminal) and re-run `/onboard`, or use `tasks.md` in the workspace for now. "A notebook" or "nowhere yet" means `tasks.md`.
 Then: **"In it, how do you mark something ready to do, blocked, or waiting on someone? If you don't, I'll write plain words."**
 Fills the three labels `{your actionable label}`, `{your blocked label}`, `{your waiting label}`. Defaults when they have none: `ready`, `blocked`, `waiting`.
 
 **6. "Where will shared keys and logins live?"**
 Fills the credentials line under Environment. Default when they have no answer: "a root `.env` you create yourself; never pasted in chat".
 
-Two slots are not asked. `{tool}` stays literal in the map, because `_practices/{tool}.md` is the pattern the practice files follow. `{path, once you have one}` is written as "none yet" until the person has a `flow.html`.
+Two slots are not asked. `{tool}` stays literal in the map, because `_practices/{tool}.md` is the pattern the practice files follow. `{path, once you have one}` is written as `~/.claude/skills/_shared/flow_base.html`, the kit's base template for a process's flow page.
 
 ---
 
@@ -121,6 +122,13 @@ YOUR WORKSPACE
     │    Tasks live in [task manager].
     │    Routing: see folders below."
     ├── SKILLS.md                     ← your skills list (one row per command)
+    ├── AGENTS.md                     ← one line that points other AI tools at your map
+    ├── .gitignore                    ← keeps keys and clutter out of version history
+    ├── _admin/                       ← where your plans go: memos, designs, finished work
+    ├── daily-outputs/                ← one short note per working session
+    ├── bulk_ops/INDEX.md             ← the undo register for any large change to data
+    ├── .claude/skills.d/             ← your own additions to a command
+    ├── tasks.md                      ← your task list (only when no app is connected)
     ├── {area-1}/
     │   └── CONTEXT.md                ← [area-1] context (loaded when here)
     ├── {area-2}/
@@ -149,16 +157,19 @@ Order of operations. Stop at the first ❌ and say what happened.
      curl -fsSL "$KIT_RAW/main/install.sh" | TBK_WORKSPACE="<folder>" bash
      ```
    Confirm the ✅ line and the two counts it prints (skills installed; workspace files placed). On ❌ nothing was written; stop.
-3. **Write `<folder>/CLAUDE.md`** from `~/.claude/skills/_shared/claude_md_template.md`. Copy the template whole and fill every slot; change nothing else:
+3. **Create the skeleton.** Create every root entry the template library's skeleton lists (`~/.claude/skills/_shared/documentation_standard.md`, "The skeleton — folders that exist from day one"): `mkdir -p` for each folder, with an empty `.gitkeep` in each folder left empty; `AGENTS.md` and `.gitignore` written from the exact text given there; `bulk_ops/INDEX.md` from template 4.12; and, when question 5's answer is `tasks.md`, `tasks.md` from template 4.13. Never overwrite an existing file.
+4. **Write `<folder>/CLAUDE.md`** from `~/.claude/skills/_shared/claude_md_template.md`. Copy the template whole and fill every slot; change nothing else:
    - `{Your name}` (line 1) → the name from question 4
    - the row `| {a task in plain words} | {the folder, and its CONTEXT.md} |` → one row per area from Phase 3, e.g. `| Client work, briefs, deliverables | `clients/` (its CONTEXT.md) |`
    - `{your actionable label}`, `{your blocked label}`, `{your waiting label}` → the three labels from question 5
-   - `{owner}` (twice) → the name; `{task manager}` → the answer to question 5; `{path, once you have one}` → `none yet`
+   - `{owner}` (twice) → the name; `{task manager}` → the answer to question 5; `{path, once you have one}` → `~/.claude/skills/_shared/flow_base.html`
+   - when the answer to question 5 is `tasks.md`: `{task manager}` → `` `tasks.md` at the workspace root ``, and the three labels → `## Next`, `## Blocked`, `## Waiting`
    - the Environment line `{Where shared credentials …}` → the answer to question 6
    - delete the comment line `<!-- The first-run interview fills the table. -->`
-   - `{tool}` and the n8n naming literal `{{System}} | {{Trigger + Action}}` stay exactly as they are
+   - `{tool}` and the naming literal `{{System}} | {{Trigger + Action}}` stay exactly as they are
    Check before moving on: apart from those two literals, no `{` remains in the file.
-4. **Write `<folder>/SKILLS.md`.** Title `# Skills`, one sentence ("Every command available in this workspace, with what it does; `/new-workflow` adds a row when it creates a skill."), then a table `| Skill | What it does |` with one row per `~/.claude/skills/<name>/SKILL.md` whose folder does not start with `_`, the description being the first sentence of the frontmatter's `description:` line. This loop prints the rows:
+5. **Prove the task manager.** With a connected tool: file one task titled `Kit check — you can delete this` in it, read it back by its id, then complete it; print ✅ with the id. If any of the three fails, say what failed, offer `tasks.md` (create it from template 4.13 and change the map's task-manager line and labels as in step 4), and carry on. With `tasks.md`, there is nothing to prove.
+6. **Write `<folder>/SKILLS.md`.** Title `# Skills`, one sentence ("Every command available in this workspace, with what it does; `/new-workflow` adds a row when it creates a skill."), then a table `| Skill | What it does |` with one row per `~/.claude/skills/<name>/SKILL.md` whose folder does not start with `_`, the description being the first sentence of the frontmatter's `description:` line. This loop prints the rows:
    ```bash
    for f in ~/.claude/skills/*/SKILL.md; do
      n=$(basename "$(dirname "$f")"); case "$n" in _*) continue;; esac
@@ -166,8 +177,9 @@ Order of operations. Stop at the first ❌ and say what happened.
      printf '| /%s | %s |\n' "$n" "$d"
    done
    ```
-5. **Create each area** by following `~/.claude/skills/new-workspace/SKILL.md` with the new folder as the root — read that file and follow it; do not restate it here. Give it the area's name; it is greenfield unless the person said something is already built there, in which case pass `--brownfield`. It writes the area's `CONTEXT.md` (with its Kind and Proved-by lines) and adds the routing row to the map; if the row you wrote in step 3 already covers the area, keep one row, not two.
-6. **Tell the person about the trust prompt:** "The first time Claude Code opens this folder it asks once whether to trust the folder's hooks. Say yes; they are the kit's and they only write notes inside this folder."
+7. **Create each area** by following `~/.claude/skills/new-workspace/SKILL.md` with the new folder as the root — read that file and follow it; do not restate it here. Give it the area's name; it is greenfield unless the person said something is already built there, in which case pass `--brownfield`. It writes the area's `CONTEXT.md` (with its Kind and Proved-by lines) and adds the routing row to the map; if the row you wrote in step 4 already covers the area, keep one row, not two.
+8. **Commit.** If `git --version` succeeds: `git -C <folder> init -q`, `git -C <folder> add -A`, `git -C <folder> commit -qm "Workspace created by /onboard"`; print the short hash. If git is missing, print "Version control is not installed. On a Mac run `xcode-select --install`, then `git init` in this folder; every gate's one-step undo assumes it." If the commit fails for want of a git identity, print the two commands `git config --global user.name "<name>"` and `git config --global user.email "<email>"`, and carry on.
+9. **Tell the person about the trust prompt:** "The first time Claude Code opens this folder it asks once whether to trust the folder's hooks. Say yes; they are the kit's and they only write notes inside this folder."
 
 #### 4c. Present the completed map
 
@@ -180,16 +192,21 @@ WORKSPACE READY
   maria-workspace/
     CLAUDE.md                          ✓ your map
     SKILLS.md                          ✓ your skills list
+    AGENTS.md · .gitignore             ✓ the pointer for other AI tools; what version history ignores
+    _admin/ · daily-outputs/           ✓ where plans and session notes will go
+    bulk_ops/INDEX.md                  ✓ the undo register
+    tasks: {tool id | tasks.md}        ✓ the task manager, proved
     {area-1}/CONTEXT.md                ✓
     {area-2}/CONTEXT.md                ✓
     standards · practices · hooks      ✓ N kit files
+    git {hash}                         ✓ the first saved version, so every change can be undone
 
 HANDOFF
 Where:  standalone · your workspace
 Done:   workspace created and mapped — N kit files, M areas
 Next:   open <folder> in Claude Code, read why_we_build.html, then /memo your first small thing (the door decides its size)
 Needs <owner>: none | the questions the interview left open
-Written: <folder>/CLAUDE.md · SKILLS.md · <area>/CONTEXT.md × M
+Written: <folder>/CLAUDE.md · SKILLS.md · <area>/CONTEXT.md × M · skeleton · AGENTS.md · git {hash} · tasks: {tool id | tasks.md}
 ```
 
 ---

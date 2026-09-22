@@ -1,6 +1,6 @@
 ---
 name: ship
-description: Gate 3 — "others can rely on it." The resilience review a build must clear before it goes live, triggered when the blast radius crosses the line (someone else depends on it, it writes/changes real data, its output is relied on for important decisions, or it touches money / outside parties / business-critical truth). Surfaces what breaks / who notices / fallback / contingency / how-we-fix / what it concludes without testing, dispositions every hole (fix / escalate / accept), then takes the build live and closes the project. Invoked by /build when the router fires.
+description: Gate 3 — "others can rely on it". The resilience review a build must clear before it goes live, triggered when the blast radius crosses the line (someone else depends on it, it writes/changes real data, its output is relied on for important decisions, or it touches money / outside parties / business-critical truth). Surfaces what breaks / who notices / fallback / contingency / how-we-fix / what it concludes without testing, dispositions every hole (fix / escalate / accept), then takes the build live and closes the project. Invoked by /build when the router fires.
 ---
 
 # /ship
@@ -95,7 +95,7 @@ Confirm before flipping the switch:
 - **Idempotency** — every money/critical operation can safely run twice (re-affirm from the PRD).
 - **Reversibility** — go-live can be undone in one step (cutover, not a one-way door).
 - **Monitoring** — every automated event posts to the team's notification channel with what happened, the link, who's tagged (by their ID in that channel), and their specific next action. A notification without an owner and an action is useless. (CLAUDE.md Operational Standards.)
-- **Bulk-ops safety** — if go-live involves a bulk data change (backfill / mass update or delete of > 10 records / restore / recompute): snapshot pre-state first into `{workspace}/bulk_ops/{YYYYMMDD}_{slug}/` with a README. Don't go live without it. (Session Close Protocol #9.)
+- **Bulk-ops safety** — if go-live involves a bulk data change (backfill / mass update or delete of > 10 records / restore / recompute): snapshot pre-state first into the owning area's `bulk_ops/{YYYYMMDD}_{slug}/` (or the workspace root's), with a row in its `INDEX.md` and a README. Don't go live without it. (Session Close Protocol #9.)
 - **Drop safety** — if the build dropped (or its contract phase will drop) any schema object, confirm the verbatim definitions were persisted to the project folder BEFORE the drop. If any drop happened un-snapshotted, say so explicitly in the review — don't paper over it.
 
 ---

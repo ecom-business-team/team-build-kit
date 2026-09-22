@@ -13,6 +13,12 @@ description: The one door for every build intent — it sends small work down to
 
 ---
 
+## First: does it already exist?
+
+Before anything else, look. Read the root `CLAUDE.md` routing table, `SKILLS.md`, the file names in `_admin/memos/` (and `_done/`) and `_admin/prds/` at the root and in the area the intent names, and that area's `CONTEXT.md`. If what the owner describes is already built, already has a memo, or is in flight, say which file in one sentence and ask whether this is that thing or a different one. Only 'a different one' continues to the skip list; 'that one' ends here with a pointer (an in-flight project resumes from its `state.md`).
+
+---
+
 ## When you can SKIP the memo
 
 Below this line, build freely — no memo needed:
@@ -35,7 +41,7 @@ The skip list above sends work *down* to `/quick-fix`. This sends it *up*. Befor
 
 **Two of three → this is an initiative.** Say so plainly — "this is a large build, and we treat it as one: a north star and a roadmap of milestones before any project memo" — and do not write a project memo. Run **`/new-workspace --initiative <name>`**: it creates the planning folder and interviews the owner for the north star (the initiative's memo) and the milestones. Then come back here for the **first milestone's** memo, in the short form ("Two forms" below).
 
-`/memo` is therefore the one door with three exits: `/quick-fix` below, a project memo here, an initiative above. The owner never has to pick the size; they describe the thing and the door decides.
+`/memo` is therefore one door with three exits, after one look: `/quick-fix` below, a project memo here, an initiative above. The owner never has to pick the size; they describe the thing and the door decides.
 
 ---
 

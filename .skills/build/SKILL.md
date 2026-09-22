@@ -122,7 +122,7 @@ Print the **handoff card** (template §4.10):
 HANDOFF
 Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ✅ · build N/{total} · ship ☐ · close ☐
 Done:   WI-N — {name} — proved by {the check and its result}; committed {hash}
-Next:   WI-N+1 — {name} — run: any prompt in a fresh session (/clear or a new chat); the SessionStart gate points at state.md
+Next:   WI-N+1 — {name} — run: `/build {project-name}` in a fresh session (/clear or a new chat); it resumes from state.md
 Needs {owner}: {decision or keyboard step · task id · due} | none
 Written: {workspace}/_admin/prds/{project-name}/state.md · handoff.html
 ```

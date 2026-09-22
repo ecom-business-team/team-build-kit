@@ -53,7 +53,7 @@ Ask enough to place the thing:
 **State the level back with reasoning, and the doc set it implies:**
 ```
 This is a SYSTEM (one buildable bounded context — the payout lifecycle).
-Per the Standard it needs: CONTEXT.md now; CHANGELOG.md + decision_log.md as it earns them.
+Per the Standard it needs: CONTEXT.md now; change_log.md + decision_log.md as it earns them.
 It does NOT yet need system_contracts.md (no second system sharing a boundary).
 Confirm?
 ```
@@ -148,9 +148,10 @@ Then go to Phase 3, mapping the verified picture onto the Standard's templates. 
 
 1. **Determine the required set** for the confirmed level **and kind** (Standard Part 2, and the kinds table in `documentation_standard.md` §4). Create *exactly* that — nothing required missing, nothing unearned.
 2. **Create the folder(s)** if greenfield (or if a brownfield system needs a home).
-3. **Write each doc from its Standard template** (Part 4), applying the universal content rules (Part 3): point-to-source, accuracy over completeness, never empty sections, one canonical home.
-4. **Create-if-missing for canonical homes:** if a required cross-cutting doc (`system_contracts.md`, `decision_log.md`) doesn't exist at the workspace root and the level now needs it, create it now — never defer (CLAUDE.md: undocumented architecture is a blocking task).
-5. **Update root `CLAUDE.md` routing** — the Routing table, and the Workspaces table when the file has one. Flag for approval per the Living Documentation Rule before writing.
+3. **Create the area's folders.** By the confirmed level and kind, create what the template library's area skeleton lists (`documentation_standard.md` Part 2, "The skeleton — folders that exist from day one"): a system's `_admin/memos/_done/`, `_admin/prds/` and `_admin/_archive/`; a workspace's the same plus `bulk_ops/INDEX.md` from template 4.12; a leaf nothing; an initiative its planning folder. For an automation, or a procedure that changes hands, copy `~/.claude/skills/_shared/flow_base.html` to `<area>/flow.html` and replace `{System}` and `{process}` in its title. Put an empty `.gitkeep` in each folder left empty, so git keeps it. Name each entry created in the `CONTEXT.md` "What lives here". Never overwrite.
+4. **Write each doc from its Standard template** (Part 4), applying the universal content rules (Part 3): point-to-source, accuracy over completeness, never empty sections, one canonical home.
+5. **Create-if-missing for canonical homes:** if a required cross-cutting doc (`system_contracts.md`, `decision_log.md`) doesn't exist at the workspace root and the level now needs it, create it now — never defer (CLAUDE.md: undocumented architecture is a blocking task).
+6. **Update root `CLAUDE.md` routing** — the Routing table, and the Workspaces table when the file has one. Flag for approval per the Living Documentation Rule before writing.
 
 **Confirm the plan before creating anything** (show the folder tree + the doc set + why each doc). Never overwrite an existing file — if one exists, offer to update or skip.
 
@@ -166,6 +167,7 @@ Walk the Standard Part 5 checklist explicitly:
    - Greenfield → accurate to the minimal just-defined reality.
    - **Brownfield → every line traces to something observed or explicitly confirmed** (the hard gate — no assumed facts).
 5. Root CLAUDE.md routing updated.
+6. The area's skeleton exists for its level and kind, and `index_check.py <area>` exits 0 (`python3 .claude/tools/index_check.py <area>`).
 
 For brownfield especially: re-read each doc and ask "could I have made this up?" If any line isn't backed by observation or confirmation, verify it or cut it.
 

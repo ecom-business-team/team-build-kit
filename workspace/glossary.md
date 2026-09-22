@@ -52,6 +52,7 @@
 | **The standards** | The three canonical documents: how documents are structured (`documentation_standard.md`), how processes are designed (`workflow_design_standard.md`), and how quality is proved on code (`testing_standard.md`). |
 | **Planning folder** (`_admin/<initiative>/`) | The home of an initiative: its compass, its snapshot, its index, and its research inputs. |
 | **Archive** | Where a closed project goes, whole: the PRD, the record and the final state file, moved and never copied. |
+| **The skeleton** | The folders a workspace or area has from the day it is created, before any document goes in them; listed once in the template library. |
 | **Living vs disposable** | A living document is kept true at the moment something changes. A disposable document is deleted the moment its job is done. Nothing sits in between. |
 
 ## The kinds — what a built thing is made of
@@ -63,6 +64,7 @@
 | **Application** | Your own code with a screen that people sign into. |
 | **Tool** | Your own code that a person runs by hand to produce an output, such as a report or a file. |
 | **Procedure** | Instructions that Claude follows: a skill, a hook, a ritual. |
+| **The pipeline form** | A repeating process built as numbered stage folders, each with one named human check, instead of one skill; `/new-workflow` chooses it when the process has reviewed stages. |
 | **Knowledge** | Something people read: a runbook, a lesson, a reference shelf, a mockup. |
 | **Composite system** | One system made of several kinds that ship as one unit and own one set of data, such as a service with an application on top. Its index must say which part is which kind and where each part's code lives. |
 | **System of systems** | Several systems that share a database or exchange data. Because they will drift apart, they need eight things the standard lists: one data core or explicit contracts, one writer per object, a contract at every boundary, a decision log and change log at the root, drift detection and repair, a noticer that sees across systems, an index that routes, and rules for moving behaviour between systems. |
@@ -96,4 +98,4 @@
 | **Minimum viable architecture (MVA)** | The smallest set of documents, gates, practices and habits that lets an agentic harness build reliable systems and hand them between sessions and people. The kit is this. |
 | **Agentic harness** | The environment in which Claude reads files, runs tools and follows skills. Claude Code is one. |
 | **The owner** | The person whose workspace this is and whose word the gates wait on. Every workspace names its owner in its root CLAUDE.md under "Words the skills use"; skills and templates say "the owner" and write that name, so a handoff card reads "Needs Maria" in Maria's workspace. |
-| **The task manager** | The one tool where every task, date and open question lives, never markdown. Named in the root CLAUDE.md beside the owner, with its filing rules; skills say "the task manager" and "task id" and file there. |
+| **The task manager** | The one tool where every task, date and open question lives, never in any other markdown file (when no app is connected, `tasks.md` at the workspace root is the task manager). Named in the root CLAUDE.md beside the owner, with its filing rules; skills say "the task manager" and "task id" and file there. |

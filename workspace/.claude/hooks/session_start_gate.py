@@ -5,6 +5,7 @@ Plain stdout from a SessionStart hook is added to Claude's context, so this is t
   1. substantial sessions with no session-log entry (from daily-outputs/sessions.jsonl)
   2. days with entries but no /day digest
   3. the last completed ISO week without a /week review
+  4. open tasks in the fallback list (tasks.md at the root) whose due date has come
 Prints nothing when nothing is pending. Reconstructing missing entries is Claude's standing
 behaviour (session-close); /day and /week are the owner's rituals -> mentioned, never run unasked.
 """
@@ -55,7 +56,7 @@ def projects_in_flight():
     """Every project state.md in the workspace = a build in flight (documentation_standard.md §4).
     Depth-limited globs: node_modules and gitignored app checkouts are never walked."""
     out = []
-    for pat in ("*/_admin/prds/*/state.md", "*/*/_admin/prds/*/state.md"):
+    for pat in ("_admin/prds/*/state.md", "*/_admin/prds/*/state.md", "*/*/_admin/prds/*/state.md"):
         for path in sorted(glob.glob(os.path.join(ROOT, pat))):
             text = read(path)
             m = re.search(r"\*\*Next:\*\*\s*(.+)", text)
@@ -63,6 +64,17 @@ def projects_in_flight():
             st = re.search(r"\*\*Stage:\*\*\s*(.+)", text)
             stage = (st.group(1).strip() if st else "")[:90]
             out.append((os.path.relpath(path, ROOT), len(text.split()), nxt, stage))
+    return out
+
+
+def tasks_due(today_s):
+    """Open lines of the fallback task list (ROOT/tasks.md) whose due date is today or past.
+    Absent file -> nothing."""
+    out = []
+    for line in read(os.path.join(ROOT, "tasks.md")).splitlines():
+        m = re.match(r"^\s*- \[ \] (T-\d+)\b.*?\bdue (\d{4}-\d{2}-\d{2})", line)
+        if m and m.group(2) <= today_s:
+            out.append(f"[Task gate - SessionStart] DUE: {m.group(1)} {line.strip()[:140]} (tasks.md)")
     return out
 
 
@@ -115,12 +127,13 @@ def main():
     week_missing = week_has_days and not any(os.path.exists(p) for p in week_candidates)
 
     projects = projects_in_flight()
-    if not (unlogged or unprocessed or week_missing or projects):
+    due = tasks_due(today_s)
+    if not (unlogged or unprocessed or week_missing or projects or due):
         return
 
     lines = []
     for rel, words, nxt, stage in projects:
-        ws = rel.split("/_admin/")[0]
+        ws = "." if rel.startswith("_admin/") else rel.split("/_admin/")[0]
         lines.append(
             f"[State gate - SessionStart] PROJECT IN FLIGHT: {rel} ({words} words) · Stage: {stage or '?'} · Next: {nxt} -> before any work in "
             f"{ws}/: `cat` that file, run its 'Verify before continuing' block, announce the position (/build Phase 1-A). "
@@ -148,6 +161,7 @@ def main():
         lines.append(f"NO /week REVIEW for {week_tag} ({last_monday} to {last_sunday}) -> mention in the same line.")
     if lines and lines[-1].startswith("[Telemetry gate"):
         lines.pop()  # nothing telemetric pending; only the state lines remain
+    lines.extend(due)
     print("\n".join(lines))
 
 

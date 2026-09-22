@@ -16,7 +16,7 @@ user_invocable: true
 
 Fan out read-only Explore agents, one per verification class (parallel; facts only, no fixes — Type-1 agents per `_practices/subagents.md`):
 
-1. **Index integrity:** every CONTEXT.md's file-table and points-up/points-down links vs. the actual folder (`ls`) — missing entries, dead links, files present but unindexed, disposables that outlived their job.
+1. **Index integrity:** run `python3 .claude/tools/index_check.py` first and treat its output as the starting defect list; then every CONTEXT.md's file-table and points-up/points-down links vs. the actual folder (`ls`) — missing entries, dead links, files present but unindexed, disposables that outlived their job.
 2. **Live-system tables:** workflow master tables vs. the live automation tool's API (IDs, names, active state); the data dictionary vs. the live schema (by the generator that writes it, where one exists); deploy facts (URLs, service names) vs. running systems where probeable read-only.
 3. **Lifecycle hygiene:** live memo/PRD trays vs. archives (unfiled shipped work, live/archive twins, "In Progress" logs with stale dates); `_practices/` pointers in CONTEXT.mds vs. files that actually exist.
 4. **State leakage:** grep for backlog/TODO/open-questions sections re-accumulating in markdown (they belong in the task manager).

@@ -1,6 +1,6 @@
 ---
 name: new-workflow
-description: Turn a repeating process into a reusable skill through a guided interview. Walks you through identifying the steps, what Claude can handle vs. what needs your judgment, and saves it as a skill you can invoke with a single command. The daily driver for building your skill library.
+description: Turn a repeating process into a reusable skill through a guided interview. Walks you through identifying the steps, what Claude can handle vs. what needs your judgment, and saves it as a skill you can invoke with a single command, or as a pipeline of stage folders when the process has reviewed stages. The daily driver for building your skill library.
 ---
 
 # /new-workflow
@@ -81,6 +81,8 @@ Final output: {what gets delivered}
 ```
 
 Get confirmation. Let them correct the steps, reorder, add or remove.
+
+**Then ask the shape question:** "Does this process have more than one stage where you stop and check the output before the next stage uses it — and have you run it at least twice?" Yes to both → the pipeline form (Phase 4P builds it instead of Phase 4). Otherwise → one skill (Phase 4, unchanged).
 
 ---
 
@@ -189,6 +191,18 @@ If any check fails, fix it before delivering. Note what went wrong so the skill 
 ```
 
 **Adapt the template to the actual workflow.** Simple workflows get fewer steps. Complex ones get more detail. The quality check section is always present (closed loop thinking).
+
+---
+
+### Phase 4P: BUILD THE PIPELINE (only when the shape question said yes to both)
+
+The process has stages a person reviews, so each stage gets its own folder and the next stage reads whatever the person left in the previous one's `output/`.
+
+1. **The pipeline index.** Create `<area>/<workflow-slug>/CONTEXT.md` from template 4.2 in `~/.claude/skills/_shared/documentation_standard.md`, with the Kind line `procedure (pipeline form)`, a "What lives here" that names `stages/` and `_runs/` (earlier runs' outputs, moved there when a new run starts), and the stage table (Stage · Job · Human check) from template 4.14.
+2. **One folder per stage.** For each stage from Phase 2, create `stages/NN_<stage>/CONTEXT.md` from template 4.14 (Inputs · Process · Outputs · Human check). The Phase 3 "YOU DECIDE" item for that stage becomes its Human check, stated as one action. Create the stage's `references/` and `output/` folders empty, each holding only an empty `.gitkeep` so git keeps it.
+3. **A short runner skill** at `~/.claude/skills/<workflow-slug>/SKILL.md`, whose Process is: "Find the first stage whose `output/` is empty (a `.gitkeep` does not count) or older than its input. If that stage is not stage 01, first ask the owner whether the previous stage's Human check is done; if not, stop there. If every stage is done, the run is complete: say so, and when the owner starts a new run, move every stage's `output/` files into `_runs/{YYYY-MM-DD}/NN_<stage>/` beside `stages/` and begin at stage 01. Read that stage's `CONTEXT.md` and nothing it says not to load; do its Process; write to its `output/`; stop and ask the owner to do its Human check."
+
+Then continue to Phase 5 (the first run walks stage 01) and Phase 6, which applies to both forms.
 
 ---
 

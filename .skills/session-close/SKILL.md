@@ -29,7 +29,7 @@ Trivial session = one line: `## HH:MM · workspace · quick-fix — shipped X (c
 
 ## 2. Living-docs check (when the session modified a system)
 
-1. **System CONTEXT.md** reflects what changed? Update at the moment of change ideally — verify now.
+1. **System CONTEXT.md** reflects what changed? Update at the moment of change ideally — verify now. For each folder with a `CONTEXT.md` that gained a file this session, run `python3 .claude/tools/index_check.py <folder>` and name every unnamed entry before closing.
 2. **flow.html** — process changed? Edit it (hook auto-publishes).
 3. **Team-facing doc, and exports** — flag if a team doc needs updating. If the workspace is the source of something distributed elsewhere, its root CLAUDE.md names the export check under "Words the skills use": run it now, read what it shows, and act on it before closing.
 4. **Lifecycle filing** — build completed? Memo/PRD **moved** (never copied) to `_done`/`_archive`; project folder archived. (/build and /ship enforce this at their own close.)

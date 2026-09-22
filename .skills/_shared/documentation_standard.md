@@ -64,6 +64,58 @@ Required docs scale with what exists. Never create a doc before it's earned — 
 
 `flow.html` is not templated here — it has its own base template, named in the workspace's root CLAUDE.md under "Words the skills use". This Standard governs the markdown docs.
 
+### The skeleton — folders that exist from day one
+
+Documents are created when their phase starts (lazy); the folders they go into exist from creation (eager). `/onboard` creates the root skeleton; `/new-workspace` Phase 3 creates an area's.
+
+**Root** (the workspace folder):
+
+```
+{workspace}/
+├── AGENTS.md              ← one line, below
+├── .gitignore             ← below
+├── _admin/
+│   ├── memos/_done/
+│   ├── prds/
+│   └── _archive/
+├── daily-outputs/
+├── bulk_ops/INDEX.md      ← template 4.12
+├── .claude/skills.d/
+└── tasks.md               ← only when the owner has no task manager this session can write to (template 4.13)
+```
+
+**Area**, by level and kind:
+
+```
+system      → _admin/memos/_done/ · _admin/prds/ · _admin/_archive/
+workspace   → the same, plus bulk_ops/INDEX.md        (a container of systems)
+leaf        → nothing
+initiative  → its planning folder, unchanged
+kind automation, or a procedure that changes hands
+            → flow.html, copied from ~/.claude/skills/_shared/flow_base.html
+```
+
+The area's `CONTEXT.md` "What lives here" names each entry created.
+
+Every folder the skeleton leaves empty gets an empty `.gitkeep` file, because git does not keep an empty folder and a clone or fresh checkout would otherwise arrive without it.
+
+`AGENTS.md` text, exactly:
+
+```
+This workspace's map is CLAUDE.md. Read it first; it routes to every folder's CONTEXT.md.
+```
+
+`.gitignore` text, exactly, one per line:
+
+```
+.env
+.DS_Store
+__pycache__/
+node_modules/
+```
+
+A bulk write's prestate goes in the owning area's `bulk_ops/`, or the workspace root's when the area has none.
+
 ---
 
 ## Part 3 — Universal Content Rules (apply to every doc)
@@ -422,7 +474,7 @@ Needs {owner}: {decision or keyboard step · task id · due} | none
 Written: {path to the project state.md; between projects, the initiative state.md}
 ```
 
-A standalone build (no initiative) writes "standalone" in Where. "Next" is always something the owner can type verbatim: a skill call with its argument, or "any prompt — the gate points at state.md".
+A standalone build (no initiative) writes "standalone" in Where. "Next" is always the exact command the owner types, verbatim: a skill call with its argument (`/build {project}`, `/ship {project}`), never "any prompt" — the owner should never have to know where the state file lives.
 
 ---
 
@@ -473,6 +525,82 @@ A standalone build (no initiative) writes "standalone" in Where. "Next" is alway
 ```
 
 Delete any section without content. A first version with only §1, §3, §7 and §10 is legitimate; the rest are written when their decisions exist. Keep paragraphs one idea long — a 400-word single line cannot be read by section.
+
+---
+
+### 4.12 — `bulk_ops/INDEX.md` (the undo register)
+
+**Purpose:** One row per bulk write, so every large change can be found and undone from its prestate. Part of the skeleton (Part 2): created empty, with its header, by `/onboard` at the root and by `/new-workspace` for a workspace-level area.
+**Maintained by:** the session that runs the bulk write — the prestate folder and the row are written before the write.
+
+```markdown
+# Bulk operations — index
+
+One row per bulk write (more than 10 rows, a backfill or a restore). The prestate is snapshotted into the write's folder before the write; it is the undo.
+
+| Date | Folder | What changed | Rows | Prestate | Reverted? |
+|---|---|---|---|---|---|
+```
+
+---
+
+### 4.13 — `tasks.md` (the task manager, when no app is connected)
+
+**Purpose:** The one sanctioned markdown task list, used only when the owner has no task manager this session can write to. It is the task manager for that workspace: the lifecycle files tasks and outcome checks here by id, and the SessionStart gate prints every open line whose due date has arrived.
+**Maintained by:** every skill that files a task (the same rules as any task manager: title = verb + outcome, the why, the pointer, the next action). A line is ticked when done, never deleted; ids are never reused.
+
+```markdown
+# Tasks
+
+This workspace's task manager: no app is connected, so tasks live here. One line per task; tick it when done, never delete it; the session start prints every unticked line whose due date has arrived. Write each line exactly as `- [ ] T-001 · due YYYY-MM-DD · {verb + outcome} — {why} · next: {next action} · {pointer}` (the `due` part optional), because the session start reads only that shape.
+
+## Next
+
+## Blocked
+
+## Waiting
+```
+
+Line format (the `due` part optional):
+
+```
+- [ ] T-001 · due YYYY-MM-DD · {verb + outcome} — {why} · next: {next action} · {pointer}
+```
+
+---
+
+### 4.14 — Stage `CONTEXT.md` (one stage of a pipeline)
+
+**Purpose:** The contract of one stage of a repeating process built in the pipeline form (`stages/NN_<stage>/` with `CONTEXT.md`, `references/`, `output/`): what it reads, what it does, what it writes, and the one thing a person checks before the next stage reads its output. Written by `/new-workflow` Phase 4P.
+**Maintained by:** whoever changes the stage; the owner edits `output/` in place at the Human check.
+
+```markdown
+<!-- Adapted from ICM's stage-CONTEXT.md, MIT, © 2026 Jake Van Clief — github.com/RinDig/icm-architect -->
+# {NN}_{stage} — {the job in five words}
+
+One job: {…}.
+
+## Inputs
+- Working input: `../{previous stage}/output/{file}`
+- References: {files in references/}
+- Do NOT load: {…}
+
+## Process
+1. {…}
+
+## Outputs
+- {artifact} → `output/`
+
+## Human check
+{One concrete act a person does, stated as an action. They edit the output in place; the next stage reads whatever is there.}
+```
+
+The pipeline's own `CONTEXT.md` is template 4.2 with the Kind line `procedure (pipeline form)` and a stage table:
+
+```markdown
+| Stage | Job | Human check |
+|---|---|---|
+```
 
 ---
 

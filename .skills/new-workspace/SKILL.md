@@ -181,7 +181,8 @@ Print the handoff card (Standard §4.10) for both forks — the summary lines be
 HANDOFF
 Where:  standalone | {initiative} · {LEVEL} · {KIND} · {ready | brought to standard}: {name}
 Done:   {LEVEL} · {KIND} {READY / BROUGHT TO STANDARD}: {name} — {folder}/CONTEXT.md ✓ · {canonical homes, if created} ✓ · root CLAUDE.md routing ✓ · fork: {greenfield | brownfield — N systems observed, M facts confirmed by interview}
-Next:   /memo {first thing to build} (greenfield) | /prd {next change} or /memo {…} (brownfield — docs now reflect ground truth) — in a fresh session
+Next:   /memo {first thing to build} (greenfield) | /prd {next change} or /memo {…} (brownfield — docs now reflect ground truth)
+Context: {line from `python3 .claude/tools/orientation_cost.py --now {memo, or prd when Next names /prd}`}
 Needs {owner}: {open questions filed to the task manager, with ids} | none
 Written: {the paths written}
 ```

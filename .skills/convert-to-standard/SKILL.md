@@ -42,7 +42,8 @@ Print the handoff card (`documentation_standard.md` §4.10):
 HANDOFF
 Where:  standalone | {the initiative, when the folder belongs to one} · brought to standard
 Done:   brought to standard — N parts observed, M facts confirmed by the person; files: {the paths written}
-Next:   /memo {the first thing the person wants changed} | /quick-fix {a known small defect} — in a fresh session
+Next:   /memo {the first thing the person wants changed} | /quick-fix {a known small defect}
+Context: {line from `python3 .claude/tools/orientation_cost.py --now {memo, or quick-fix when Next names /quick-fix}`}
 Needs {owner}: {every question the files could not answer, filed to the task manager with its id} | none
 Written: {the paths}
 ```

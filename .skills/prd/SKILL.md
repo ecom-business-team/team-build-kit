@@ -73,6 +73,7 @@ Systems involved:
 
 Kind of thing built:
 - [one of the six kinds (documentation_standard.md §4), or a composite naming its parts — and the proof each kind requires]
+- [the kind today, read from what the thing is now, against its CONTEXT.md Kind line: same | changed from X, because …] · owes: [the documents that kind owes, from the _shared Part 2 table and the root §4 kinds table] · missing: [none | each one, which becomes work in this PRD]
 
 Schema / data:
 - [table] — [columns, relationships, conventions]
@@ -220,6 +221,7 @@ Ask, explicitly: **Could a fresh session — given only this PRD file, with zero
 - Is every dependency verified (validation log all ✅)?
 - Is every design check passed?
 - **Is every decision, agreed shape, and verified response actually written into the PRD** — nothing load-bearing left in the chat? (Re-read as if you've never seen this project: is anything missing?)
+- Does every end-to-end work item over something that branches carry a path table, with no gap row left unresolved?
 - Is there any "we'll figure that out during build" anywhere? (If yes — it isn't done. Figure it out now.)
 
 If anything is unresolved, name it and resolve it. Only when the answer is an unqualified **yes** is the PRD done.
@@ -236,7 +238,7 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 **Constraint:** [One sentence — the bottleneck this addresses]
 **Memo:** [relative path to memo, e.g. ../memos/payout_disputes.md]
 **Initiative:** [relative path to the planning folder's state.md and the roadmap item, or "standalone"]
-**Kind:** [one of the six kinds, or a composite naming its parts, with the proof each requires — from the Phase 1 briefing]
+**Kind:** [one of the six kinds, or a composite naming its parts, with the proof each requires — from the Phase 1 briefing] · owes: [documents] · missing: [none | each, with the work item that adds it]
 **Date:** [Date]
 **Status:** Draft / Approved
 
@@ -290,10 +292,12 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 
 ## 12. Work Items
 > **Rule:** when the blast-radius router (`/build` Phase 4) will fire, no work item contains the publish or the cutover. The last work item verifies against the staged artifact (the bytes on disk that the publish would send) and `/ship` Phase 5 publishes. A live URL is never a prerequisite for an end-to-end check (found at a ship review, 2026-09-22).
+> **Rule (every path):** when a work item's verification is end to end and the thing it proves branches (more than one way through: personas, modes, connected or not, error exits), the work item carries a path table (Path · Covered by, the persona or fixture · Proof). List every path the design creates. A path nobody covers is written as a gap row, never left out (`testing_standard.md` rule 10).
 ### Work Item 1: [Name]
 - **Scope:** [system/boundary] — one work item = everything inside one boundary
 - **Produces:** [output contract — explicit shape]
 - **Depends on:** [nothing / WI-N]
+- **Paths:** [the path table, when the rule above applies]
 - **Verification:** [specific test or check]
 
 ## 13. Design Rigor Checklist
@@ -354,7 +358,8 @@ Print the **handoff card** (template §4.10) and stop:
 HANDOFF
 Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ✅ · build 0/N · ship ☐ · close ☐
 Done:   PRD approved, Gate 2 — one-shot ready; {N} work items; validation log all ✅
-Next:   build it — run: `/build {project-name}`, in a fresh session (Phase 1-B creates the log; state.md already exists)
+Next:   build it — run: `/build {project-name}` (Phase 1-B creates the log; state.md already exists)
+Context: {line from `python3 .claude/tools/orientation_cost.py --now build`}
 Needs {owner}: {keyboard steps or decisions the PRD names as theirs · task id} | none
 Written: {workspace}/_admin/prds/{project-name}/state.md (Next = WI-1) · {project_name}_prd.html · initiative state.md (In flight → this project)
 ```

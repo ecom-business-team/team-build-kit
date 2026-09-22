@@ -85,7 +85,7 @@ Finding holes is worthless if nothing happens to them. **First, write every hole
 
 Record each hole and its disposition in the Ship Review (Phase 6).
 
-**Each Gate-3 round is a session.** When a round ends — review written, blockers fixed, or waiting on the owner — rewrite `state.md` (Position: Gate 3 round N done; Next: …; Held; Needs {owner}), print the handoff card (template §4.10) and stop, exactly as `/build` Phase 2 Step 5. The next round resumes from the snapshot.
+**A Gate-3 round ends at a stop.** When a round ends (review written, blockers fixed, or waiting on the owner), rewrite `state.md` (Position: Gate 3 round N done; Next: …; Held; Needs {owner}), run `python3 .claude/tools/orientation_cost.py --now ship`, print the handoff card (template §4.10) with its Context line, and follow the verdict exactly as `/build` Phase 2 Step 5: continue into the next round here, or stop for a fresh session. A round waiting on the owner stops regardless.
 
 ---
 
@@ -102,10 +102,11 @@ Confirm before flipping the switch:
 
 ## Phase 5: GO LIVE
 
-1. **Cut over.** Prefer additive cutover — build new alongside old and swap the entry point (e.g. swap the webhook URL) rather than mutating production in place.
-2. **Smoke test in production** — fire one real transaction end-to-end and confirm the value stream completes as the PRD specified.
-3. **Confirm monitoring fired** — the live event actually posted to the team's notification channel with the right owner and action.
-4. Record the go-live result in `project_log.md`.
+1. **Publish, on the owner's go.** When the build has a publish (a push to a public repository, a deploy, a release: the step `/prd` §12 and `/build` Phase 3 item 8 hand to this phase), state the exact command, what it sends and where, then ask the owner for the go and wait. Run it only on an explicit go, which covers that one command; an approval given earlier, of the review or of anything else, is not the go. With no publish, skip this step.
+2. **Cut over.** Prefer additive cutover — build new alongside old and swap the entry point (e.g. swap the webhook URL) rather than mutating production in place.
+3. **Smoke test in production** — fire one real transaction end-to-end and confirm the value stream completes as the PRD specified.
+4. **Confirm monitoring fired** — the live event actually posted to the team's notification channel with the right owner and action.
+5. Record the go-live result in `project_log.md`.
 
 If the smoke test fails: execute the contingency from Phase 2, do not leave it half-live, and return to `/build` Scope Escalation or `/prd` as needed.
 

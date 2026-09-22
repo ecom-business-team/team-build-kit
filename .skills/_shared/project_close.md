@@ -41,7 +41,7 @@ Ship proves the build is safe to rely on. It does not prove the memo's problem i
 4. Print the handoff card.
 
 ## 6. Handoff card
-Template §4.10: Where = project close ✅ · outcome ☐ due {date}; Done = what shipped and how it was proved; Next = the roadmap's next milestone — run: `/memo {name}` in a fresh session — or the human steps that gate the launch, in order; Needs {owner} = every accepted residual and keyboard step with its task id; Written = the initiative `state.md`.
+Template §4.10: Where = project close ✅ · outcome ☐ due {date}; Done = what shipped and how it was proved; Next = the roadmap's next milestone — run: `/memo {name}`; Context = the line `python3 .claude/tools/orientation_cost.py --now memo` prints — or the human steps that gate the launch, in order; Needs {owner} = every accepted residual and keyboard step with its task id; Written = the initiative `state.md`.
 
 ## K. Killing a project
 Only on the owner's explicit word, with the reason in their words.

@@ -115,18 +115,19 @@ Two writes and a render, in this order, committed together with the code:
 2. **Rewrite** `state.md` in place: Done now includes WI-N; Next is WI-N+1 (or "end-of-build verification"); Blocked; Router; the **Verify before continuing** block updated to the new branch head, test counts and one live probe; Held; Needs {owner}; Pointers to the sections the next work item will need. Delete anything that reads as a dated event — that is history and it is already in the log. The PostToolUse state gate warns past 400 words or on a date-led bullet.
 3. **Render** the handoff: `python3 ~/.claude/skills/_shared/companion/render.py {workspace}/_admin/prds/{project-name}/state.md` writes `handoff.html` beside it (the stage ribbon, the position, what needs the owner, the work items and milestones); then open the page in the default browser when the machine has an opener (`open` on macOS, `xdg-open` on Linux; skip silently otherwise), so it is on screen the moment the document is written.
 
-### Step 5: Session boundary — stop here
-A work item is the unit of a session. With WI-N verified, recorded and snapshotted, **stop and hand off**; do not begin WI-N+1 in this context:
-Print the **handoff card** (template §4.10):
+### Step 5: Session boundary — measure, then continue or hand off
+With WI-N verified, recorded and snapshotted, measure: `python3 .claude/tools/orientation_cost.py --now build`. Print the **handoff card** (template §4.10) with its line:
 ```
 HANDOFF
 Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ✅ · build N/{total} · ship ☐ · close ☐
 Done:   WI-N — {name} — proved by {the check and its result}; committed {hash}
-Next:   WI-N+1 — {name} — run: `/build {project-name}` in a fresh session (/clear or a new chat); it resumes from state.md
+Next:   WI-N+1 — {name} — run: `/build {project-name}`; it resumes from state.md
+Context: {the line the tool printed}
 Needs {owner}: {decision or keyboard step · task id · due} | none
 Written: {workspace}/_admin/prds/{project-name}/state.md · handoff.html
 ```
-Why: measured build sessions that ran a whole project in one context reached 500k–1M tokens and re-read the same documents 15–29 times each; a fresh session that orients from a 400-word snapshot in two minutes is cheaper and more reliable than a long one. Two exceptions, both said out loud: the owner says "continue here" (log the override in the project log), or the next work item is docs-only.
+Follow the verdict. **Continue here** → begin WI-N+1 in this session at Phase 1-A step 3 (the snapshot you just wrote is current, so its verify block is already satisfied). **Fresh**, **not measured**, or no `Context:` line at all (the command failed) → stop; the owner types `/clear`, then the Next command. The owner's word overrides the verdict either way; log an override in `project_log.md`.
+Why: build sessions that ran a whole project in one context reached 500k–1M tokens and re-read the same documents 15–29 times each, while a fresh start costs about 60k to load and orient. The measured 300k ceiling keeps the cheap continuations and cuts the marathons (`_practices/claude-code.md`, Context cost).
 
 ### Repeat for each work item.
 
@@ -146,6 +147,8 @@ Walk the PRD systematically against the live system:
 6. **Validation reconciliation** — every dependency the PRD probed still behaves as logged.
 7. **Work item reconciliation** — every work item complete, every verification confirmed, and the kind's proof run.
 8. **Real entry point, staged** — when the real entry point is a publish (a push to a public repository, a deploy, a release), run the end-to-end check against the **staged** artifact: the exact bytes the publish would send, on disk (a local clone or a staged copy; for the kit, `TBK_BASE=file://` against a copy staged with `kit_promote.shipped()`). The publish itself belongs to `/ship` Phase 5 whenever the router below will fire. Publishing inside a work item so the check can use the live URL puts the build in front of others before Gate 3 has run (found at a ship review, 2026-09-22).
+9. **Every path proved** — every row of every path table in the PRD's work items has had its proof run and pass; a gap row or an unproved row is a gap here (`testing_standard.md` rule 10).
+10. **Kind documents** — the system's `CONTEXT.md` Kind line names the kind the PRD's Kind field names, and every document that kind owes exists (the "Adds to the doc set" column of the kinds table in `documentation_standard.md` §4, "The third axis", and the `_shared` Part 2 table). A missing owed document is a gap here.
 
 Present results:
 
@@ -177,7 +180,8 @@ Check the router. Does **any** of these apply?
 HANDOFF
 Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ✅ · build {N}/{N} · ship ☐ · close ☐
 Done:   end-of-build verification passed; router FIRED ({which conditions})
-Next:   the Gate-3 review — run: `/ship {project-name}`, in a fresh session
+Next:   the Gate-3 review — run: `/ship {project-name}`
+Context: {line from `python3 .claude/tools/orientation_cost.py --now ship`}
 Needs {owner}: {keyboard steps the review will need · task id} | none
 Written: state.md (Router: fired → /ship) · handoff.html · project_log.md (router result)
 ```
@@ -238,7 +242,7 @@ Universal build hygiene, regardless of stack:
 - **Pure execution.** If you're deciding scope, you've left `/build`. Stop and go upstream.
 - **The PRD is self-sufficient.** A fresh session builds from it alone. Needing more = a PRD gap to flag, not a memory to reconstruct.
 - **Log as you go.** Every meaningful change logged in the moment — your insurance against session loss.
-- **Snapshot, then stop.** Position lives in `state.md`, rewritten at every work-item boundary; a session ends there and the next one resumes from the snapshot in minutes. History goes to the log and is never read for position.
+- **Snapshot, then measure.** Position lives in `state.md`, rewritten at every work-item boundary; the session measures its context there and carries on only when the handoff card's Context line says continue, otherwise the next session resumes from the snapshot in minutes. History goes to the log and is never read for position.
 - **Verify at two levels.** Per-item against its contract; end-of-build against the whole PRD.
 - **Update the map when you change the territory.** Living docs updated at the end of each work item, not at the end of the build.
 - **The router decides ship.** Internal/reversible → ship freely. Crosses the line → `/ship` first, no exceptions.

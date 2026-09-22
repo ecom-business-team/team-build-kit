@@ -35,7 +35,7 @@ The ladder of work: session → work item → project → milestone → initiati
 The ladder of what exists: part → system → workspace
 ```
 
-On the ladder of work, a session, one conversation with Claude from opening the chat to closing it, does one work item and stops. Work items make a project. A project reaches one milestone. Milestones that build on each other make an initiative. On the ladder of what exists, a workspace holds several systems, and a system holds its parts. Every built thing sits somewhere on the second ladder, and its index says what it is, what lives in it, and how to pick it up in a fresh session.
+On the ladder of work, a session, one conversation with Claude from opening the chat to closing it, does one work item at a time, and stops when its measured size says a fresh start is cheaper. Work items make a project. A project reaches one milestone. Milestones that build on each other make an initiative. On the ladder of what exists, a workspace holds several systems, and a system holds its parts. Every built thing sits somewhere on the second ladder, and its index says what it is, what lives in it, and how to pick it up in a fresh session.
 
 The door is where the ladder of work meets the person. Every build intent, from a one-line fix to a rebuild that takes months, starts at `/memo`. The door places the work on the ladder of work for you, sending it down to a quick fix, on to a project, or up to an initiative. Nobody has to decide the size themselves.
 
@@ -127,7 +127,7 @@ Say what you are trying to do, answer the gates honestly, and the kit does the r
 | The lifecycle runs memo, PRD, build, ship, outcome check | `documentation_standard.md`, §4 (the planning-folder contract, and the milestone states) |
 | The ladder of work is session, work item, project, milestone, initiative | `glossary.md`, "The ladder of work" |
 | The ladder of what exists is part, system, workspace | `glossary.md`, "Part, system, workspace" |
-| A session is one conversation from opening the chat to closing it, and it does one work item, then stops | `glossary.md`, "Session"; "Work item"; "Session boundary" |
+| A session is one conversation from opening the chat to closing it, and it does one work item at a time, stopping when its measured size says a fresh start is cheaper | `glossary.md`, "Session"; "Work item"; "Session boundary" |
 | Work items make a project, a project reaches one milestone, and milestones that build on each other make an initiative | `glossary.md`, "Project", "Milestone", "Initiative" |
 | Every built thing has an index that says what it is, what lives in it, and how to pick it up in a fresh session | `glossary.md`, "CONTEXT.md"; `documentation_standard.md`, §5 (the required local index) |
 | Every build intent starts at the door, which sizes the work so nobody sizes their own | `glossary.md`, "The door"; `documentation_standard.md`, §4 (the planning-folder contract) |

@@ -7,6 +7,10 @@ For each session id prefix given on the command line, read its transcript and re
     minutes, tokens added to context, files read (Read tool, or Bash cat/sed -n/head/grep)
   - compaction events, and re-reads of the orientation set across the whole session
 Usage:  python3 .claude/tools/orientation_cost.py <id8> [<id8> …]   (the 8-char session-id prefixes)
+        python3 .claude/tools/orientation_cost.py --now {memo|prd|build|ship|quick-fix}
+          one line for the handoff card: this session's measured context (found by
+          CLAUDE_CODE_SESSION_ID) plus the next step's typical cost, and the continue-or-fresh
+          verdict against the 300k ceiling (_practices/claude-code.md, Context cost)
 Baselines: record them in the workspace's daily log on the day they are measured.
 Transcript shape: _practices/claude-code.md → Transcripts."""
 import os, sys
@@ -53,7 +57,51 @@ def mins(a, b):
 
 ORIENT_SET = ('project_log.md', '_prd.md', 'north_star.md', 'CONTEXT.md', 'system_contracts.md', 'memory/project_', 'testing.md', 'SKILL.md')
 
+# --now: the handoff card's Context line. STEP_COST = median tokens a step adds to context, measured over
+# transcripts from 2026-08-23 to 2026-09-22 (build = one work item, the top of the 30–58k range seen on
+# 2026-09-21/22); the gate-cost instrument re-derives them.
+CEILING = 300_000
+STEP_COST = {'memo': 70_000, 'prd': 190_000, 'build': 60_000, 'ship': 129_000, 'quick-fix': 144_000}
+FRESH = 'fresh: /clear, then the command above'
+
+def measure(path):
+    """(context of the last main-chain turn, compacted since the last /clear) — (None, False) before any turn."""
+    ctx, compacted = None, False
+    with open(path, errors='ignore') as fh:
+        for line in fh:
+            try: r = json.loads(line)
+            except Exception: continue
+            if not isinstance(r, dict) or r.get('isSidechain'): continue
+            m = r.get('message') if isinstance(r.get('message'), dict) else {}
+            if r.get('type') == 'user' and '<command-name>/clear</command-name>' in json.dumps(m.get('content', '')):
+                ctx, compacted = None, False
+            if r.get('isCompactSummary'): compacted = True
+            u = m.get('usage')
+            if r.get('type') == 'assistant' and m.get('model') != '<synthetic>' and isinstance(u, dict):
+                ctx = u.get('input_tokens', 0) + u.get('cache_creation_input_tokens', 0) + u.get('cache_read_input_tokens', 0)
+    return ctx, compacted
+
+def now_line(step, sid):
+    hits = sorted(Path.home().glob(f'.claude/projects/*/{sid}.jsonl')) if sid else []
+    if not hits:
+        return f'Context: not measured (no session transcript found) → hand off {FRESH}'
+    ctx, compacted = measure(hits[0])
+    if ctx is None:
+        return f'Context: not measured (no assistant turn yet) → hand off {FRESH}'
+    k = lambda n: f'{round(n / 1000)}k'
+    if compacted:
+        return f'Context: {k(ctx)} measured, compacted → {FRESH}'
+    total = ctx + STEP_COST[step]
+    head = f'Context: {k(ctx)} measured + {step} ~{k(STEP_COST[step])} = {k(total)}'
+    return f'{head} ≤ 300k, not compacted → continue here' if total <= CEILING else f'{head} > 300k → {FRESH}'
+
 def main(argv):
+    if argv[:1] == ['--now']:
+        if len(argv) < 2 or argv[1] not in STEP_COST:
+            print('usage: orientation_cost.py --now {' + '|'.join(STEP_COST) + '}', file=sys.stderr)
+            sys.exit(2)
+        print(now_line(argv[1], argv[2] if len(argv) > 2 else os.environ.get('CLAUDE_CODE_SESSION_ID')))
+        return
     sessions = [(a, a) for a in argv]
     if not sessions:
         sys.exit(__doc__)

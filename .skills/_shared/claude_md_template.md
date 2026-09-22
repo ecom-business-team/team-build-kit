@@ -39,7 +39,7 @@ Every workspace is entered through its CONTEXT.md — the local index: what this
 - Before any deploy → `git status`; deploy-truth is the running system → `_practices/deploying.md`
 - Fanning out subagents → `_practices/subagents.md` (facts-agents vs simplest-solution agents; pick, never merge)
 - A true close — the session ending, a project archived, a batch done — → run the `session-close` skill (log entry + living-docs check); not after every step inside a larger flow
-- Corrected by the owner → capture the lesson (feedback memory or `_practices/`) and apply immediately
+- Corrected by the owner → capture the lesson and apply immediately. **Where it goes:** a lesson that changes how a skill, gate, document or tool behaves is architecture → the standard, skill, template or `_practices/` file that owns that behavior. Memory holds only facts about the owner as a person (how they review, reads and decides) and pointers to where a rule lives
 
 ## Standing behaviors (every session)
 

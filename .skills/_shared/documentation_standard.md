@@ -463,18 +463,21 @@ An item leaves when it is decided (→ north_star / decision_log), homed (→ a 
 
 ### 4.10 — The handoff card (printed at every stop)
 
-**Purpose:** Every stop — a gate cleared, a work item done, a session ending, work waiting on the owner — prints the same five lines, so the owner always sees where the work sits on the ladder (initiative › milestone › project › work item) and exactly what to type next. Emitted by `/memo`, `/prd`, `/build`, `/ship` and `session-close`. The same Where and Next lines live in the project `state.md` (its **Stage** and **Next** fields), so the SessionStart gate prints them at the top of the next session: the card at the end of one session and the gate line at the start of the next say the same thing.
+**Purpose:** Every stop — a gate cleared, a work item done, a session ending, work waiting on the owner — prints the same six lines, so the owner always sees where the work sits on the ladder (initiative › milestone › project › work item) and exactly what to type next. Emitted by `/memo`, `/prd`, `/build`, `/ship`, `/new-workspace`, `/convert-to-standard` and `session-close`. The same Where and Next lines live in the project `state.md` (its **Stage** and **Next** fields), so the SessionStart gate prints them at the top of the next session: the card at the end of one session and the gate line at the start of the next say the same thing.
 
 ```
 HANDOFF
 Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ✅ · build k/N · ship ☐ · close ☐ · outcome ☐
 Done:   {what just finished} — proved by {the check and its result}
-Next:   {what} — run: {exact command or prompt}, in a fresh session
+Next:   {what} — run: {exact command or prompt}
+Context: {the line printed by python3 .claude/tools/orientation_cost.py --now {the step Next names}}
 Needs {owner}: {decision or keyboard step · task id · due} | none
 Written: {path to the project state.md; between projects, the initiative state.md}
 ```
 
 A standalone build (no initiative) writes "standalone" in Where. "Next" is always the exact command the owner types, verbatim: a skill call with its argument (`/build {project}`, `/ship {project}`), never "any prompt" — the owner should never have to know where the state file lives.
+
+**Context** is measured, never guessed: run the tool with the lifecycle step the Next line names (`memo`, `prd`, `build`, `ship` or `quick-fix`) and copy its line verbatim. If the command fails or prints anything other than one line starting `Context:` (the tool is missing, older than `--now`, or was run outside the workspace root), write `Context: not measured (the tool did not run) → hand off fresh` and hand off fresh. It adds that step's typical cost to the session's measured context and gives the verdict against 300k (`_practices/claude-code.md`, Context cost). Continue here when it says so; otherwise the owner types `/clear` and then the Next command. The owner's word overrides the verdict either way, and a build logs the override in `project_log.md`.
 
 ---
 

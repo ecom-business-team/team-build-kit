@@ -58,11 +58,11 @@ Written: CLAUDE.md · SKILLS.md · money/CONTEXT.md
 
 **Why.** The kind decides the proof and the documents; naming it before building is what keeps a small thing small (the explainer, "Why six kinds").
 
-## Step 6 — Build, one work item per session
+## Step 6 — Build, work item by work item
 
-**What you type.** `/build expense-tracker`, then a fresh session for each work item.
+**What you type.** `/build expense-tracker`. At each card, carry on or start fresh as its Context line says.
 
-**What you see.** The first session builds the parser and its tests, proves them, rewrites the project's `state.md` and stops with a card. The next session opens from that snapshot in two minutes, verifies three things, and builds the report writer. At the end the skill walks the four router questions. Two answer yes: the report's numbers drive a decision about your spending, and the thing touches money. So the build halts and the card says Next `/ship expense-tracker`.
+**What you see.** The first work item builds the parser and its tests, proves them, rewrites the project's `state.md` and prints a card whose Context line reads continue here, so the same session goes on to build the report writer. At the end the skill walks the four router questions. Two answer yes: the report's numbers drive a decision about your spending, and the thing touches money. So the build halts and the card says Next `/ship expense-tracker`.
 
 ```chain
 The value stream: bank export → the script → monthly report → **a decision about spending**

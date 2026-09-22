@@ -7,7 +7,7 @@
 | Term | What it means |
 |---|---|
 | **Session** | One conversation with Claude, from opening the chat to closing it. A session begins by reading the state file and ends by rewriting it and printing a handoff card. |
-| **Work item** | One bounded piece of a project's design, inside one system boundary, that promises one output. A session does one work item, then stops. |
+| **Work item** | One bounded piece of a project's design, inside one system boundary, that promises one output. A session does one work item, then carries on into the next or stops, as the handoff card's measured Context line decides. |
 | **Quick fix** | A contained change that needs no design: the problem is known, no new architecture is involved, and three or fewer things are touched. It has its own command and the same exit gate as a full build. |
 | **Project** | The work that reaches one milestone, or a standalone build: one memo, one PRD, one build, a ship review when the blast radius asks for it, one outcome check. While it is in flight it lives in `_admin/prds/<project>/`. |
 | **Milestone** | A point on an initiative's roadmap that says what will be true when one project ships. A milestone is *shipped* when the code is live and *reached* when the outcome check confirms the memo's success definition. |
@@ -90,7 +90,7 @@
 | Term | What it means |
 |---|---|
 | **Orient** | The first minutes of a session: read the state file, run the three checks it names, and announce where we are. |
-| **Session boundary** | The rule that a session ends when its work item is done, with the state file rewritten and a handoff card printed, so the next session starts fresh. |
+| **Session boundary** | The rule that at the end of every work item the state file is rewritten and a handoff card printed, and the session carries on or ends as the card's measured Context line decides; a session that ends leaves the next one to start fresh from the state file. |
 | **Capture at occurrence** | Write a lesson down the moment it happens, in the tool's practice file if it is about the tool and in the project's index if it is about the project. |
 | **Provision** | Create exactly the documents a thing needs, from the templates, and nothing more. |
 | **Brownfield and greenfield** | Bringing something that already exists up to standard by observing what is actually deployed, versus starting a new thing from a clean sheet. |

@@ -107,7 +107,14 @@ Every session ends the same way: a log line, and when a project is in flight, th
 **Asks.**
 
 - How big the thing is. A whole workspace, a system, a small leaf inside one, or an initiative, which is a sequence of milestones that build on each other.
-- What kind of thing it is made of. An automation, a service, an application, a tool, a procedure, or knowledge. The kind decides which documents it owes and how it is proved.
+- What kind of thing it is made of. The kind decides which documents it owes and how it is proved, and the kind is checked again at every PRD and build, because a thing can outgrow it. There are six kinds.
+  - An automation is tools you rent, wired together, such as a workflow tool, a board and a chat app.
+  - A service is your own code that runs on its own with no screen, such as a worker, a scheduled job or a bot.
+  - An application is your own code with a screen that people sign into.
+  - A tool is your own code that a person runs by hand to produce an output, such as a report or a file.
+  - A procedure is instructions that Claude follows, such as a skill, a hook or a ritual.
+  - Knowledge is something people read, such as a runbook, a lesson or a reference shelf.
+  - A thing made of several kinds that ship together is a composite system, and several systems that share a database or exchange data are a system of systems.
 - For an initiative, a different interview: what will be true when it is finished, whose day changes, which systems are retired and what must never get worse, and the big steps in order.
 
 **Produces.**
@@ -244,7 +251,7 @@ Every session ends the same way: a log line, and when a project is in flight, th
 
 ## /build — make it work
 
-> **In plain words:** The build is pure execution. It builds one work item per session, proves each one the way its kind is proved, and ends by asking the blast-radius question.
+> **In plain words:** The build is pure execution. It builds one work item at a time, measures the session after each one to decide whether to carry on or start fresh, proves each one the way its kind is proved, and ends by asking the blast-radius question.
 
 **Asks.**
 
@@ -256,7 +263,7 @@ Every session ends the same way: a log line, and when a project is in flight, th
 
 - Each work item proved the way its kind is proved. A test, a replay through the real entry point, a browser check through the real login, or a cold read.
 - The living documents updated as the territory changes.
-- At every work-item boundary: the log appended, the state file rewritten in place, the handoff card printed, and the session stopped there.
+- At every work-item boundary: the log appended, the state file rewritten in place, and the handoff card printed with its measured Context line, which decides whether the session carries on or stops there.
 - A route: close itself when a mistake would travel nowhere, or hand to the ship review.
 
 **Without it.**
@@ -356,6 +363,7 @@ Three commands sit beside the loop rather than on it. Run `/doc-audit` before a 
 | Without the kit's files the commands point at files that are not there | `update-build-kit/SKILL.md`, the sentence on the four core skills depending on the shared standard being present |
 | The levels are workspace, system, leaf and initiative; the level question includes "one build, or a sequence of shippable milestones"; the kind decides the documents and the proof | `new-workspace/SKILL.md`, "The three things this skill resolves"; "Phase 1: DISCERN — level, fork, kind"; `documentation_standard.md`, §4 "The third axis: kind" |
 | The six kinds are automation, service, application, tool, procedure, knowledge | `documentation_standard.md`, §4 "The third axis: kind" (the kinds table) |
+| The kind is checked again at every PRD and build | `prd/SKILL.md`, "Phase 1" briefing, "Kind of thing built"; `build/SKILL.md`, "Phase 3" item 10 |
 | The north-star interview asks what will be true, whose day changes, what dies and must never get worse, and the steps in order with what is true at each | `new-workspace/SKILL.md`, "Phase 2a: GREENFIELD" ("For an initiative — the north-star interview") |
 | It provisions exactly the document set for the level and kind, nothing missing and nothing unearned, with the kind and proof stated; a routing row is added; the handoff points at the memo | `new-workspace/SKILL.md`, "Phase 3: PROVISION" items 1–5; "Phase 5: HANDOFF"; `convert-to-standard/SKILL.md`, "Phase 3" (the Kind and Proved-by lines, the routing row) |
 | The area's folders are created empty by level and kind, with a flow page for an automation, and the index check passes | `new-workspace/SKILL.md`, "Phase 3: PROVISION" item 3 ("Create the area's folders"); "Phase 4: VERIFY" item 6 |
@@ -395,7 +403,7 @@ Three commands sit beside the loop rather than on it. Run `/doc-audit` before a 
 | Building what you cannot explain is how you end up unable to fix it | `why_we_build.md`, "Why gates, and why they check themselves" |
 | The build orients from the state file (≤400 words, at most three checks) and reads the PRD by section | `build/SKILL.md`, "Phase 1: ORIENT"; `documentation_standard.md`, §6 (the 400-word budget) |
 | Each work item is proved the way its kind is proved | `build/SKILL.md`, "Phase 2" Step 2; the initiative's north star, §2 principle 7 |
-| Living documents are updated as the territory changes; at every work-item boundary the log is appended, the state file rewritten, the handoff rendered and printed, and the session stops | `build/SKILL.md`, "Phase 2" Step 3, Step 4 and Step 5; "Principles" ("Update the map when you change the territory"); `glossary.md`, "Work item", "Handoff card" |
+| Living documents are updated as the territory changes; at every work-item boundary the log is appended, the state file rewritten, the handoff rendered and printed, and the session carries on or stops as the card's measured Context line decides | `build/SKILL.md`, "Phase 2" Step 3, Step 4 and Step 5; "Principles" ("Update the map when you change the territory"); `glossary.md`, "Work item", "Handoff card" |
 | The build ends with the four router questions and either closes itself or hands to the ship review | `build/SKILL.md`, "Phase 4: BLAST-RADIUS ROUTER"; "Phase 5: CLOSE"; `glossary.md`, "Router" |
 | Position not written to the state file is position lost, and a session that rebuilds it from history re-reads the same documents many times | `session-close/SKILL.md`, §2 item 9 ("Position written only in the log entry is position lost"); `build/SKILL.md`, opening ("don't reconstruct it from memory"); `documentation_standard.md`, §4 "Planning folder" ("rebuilt their position from six to ten history-shaped documents … re-read 15–29 times") |
 | Ship runs only when one of the four conditions fires; otherwise there is no ship review | `ship/SKILL.md`, "Trigger"; `glossary.md`, "Blast radius", "Gate 3, ship" |

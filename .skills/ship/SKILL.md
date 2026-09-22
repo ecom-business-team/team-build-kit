@@ -73,7 +73,7 @@ Every answer of "I don't know" or "nothing" where there should be something is a
 
 ## Phase 3: DISPOSITION (what we actually do about the holes)
 
-Finding holes is worthless if nothing happens to them. **Every hole from Phase 2 gets exactly one disposition before go-live:**
+Finding holes is worthless if nothing happens to them. **First, write every hole for the owner in four plain sentences:** what it is, why it happened, what we should do about it, and the cost if we do not. The technical detail follows those four; the owner signs off on what they can understand, and a hole they cannot follow is not ready for a disposition (the owner's rule, 2026-09-22). **Then every hole from Phase 2 gets exactly one disposition before go-live:**
 
 | Disposition | When it applies | Action |
 |-------------|-----------------|--------|
@@ -128,7 +128,7 @@ Append to `project_log.md`:
 **How we fix it:** …
 **Concludes without testing:** [each gate/canary/sample → what it decides about untested items, what makes the sample representative, both pass and fail directions — or "none: every item is examined individually"]
 **Holes & dispositions:**
-- [hole] → Fixed: [safeguard built] / Escalated: [back to /prd, why] / Accepted: [residual + contingency + who signed off]
+- [hole — four plain sentences: what it is · why it happened · what we should do · the cost if we do not] → Fixed: [safeguard built] / Escalated: [back to /prd, why] / Accepted: [residual + contingency + who signed off]
 **Go-live:** [date, cutover method, smoke-test result, monitoring confirmed]
 ```
 

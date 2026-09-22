@@ -145,6 +145,7 @@ Walk the PRD systematically against the live system:
 5. **Value stream check** — trace trigger → outcome end-to-end.
 6. **Validation reconciliation** — every dependency the PRD probed still behaves as logged.
 7. **Work item reconciliation** — every work item complete, every verification confirmed, and the kind's proof run.
+8. **Real entry point, staged** — when the real entry point is a publish (a push to a public repository, a deploy, a release), run the end-to-end check against the **staged** artifact: the exact bytes the publish would send, on disk (a local clone or a staged copy; for the kit, `TBK_BASE=file://` against a copy staged with `kit_promote.shipped()`). The publish itself belongs to `/ship` Phase 5 whenever the router below will fire. Publishing inside a work item so the check can use the live URL puts the build in front of others before Gate 3 has run (found at a ship review, 2026-09-22).
 
 Present results:
 

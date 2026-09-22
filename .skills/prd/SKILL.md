@@ -289,6 +289,7 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 [The Phase 6 table — every dependency probed live, all ✅]
 
 ## 12. Work Items
+> **Rule:** when the blast-radius router (`/build` Phase 4) will fire, no work item contains the publish or the cutover. The last work item verifies against the staged artifact (the bytes on disk that the publish would send) and `/ship` Phase 5 publishes. A live URL is never a prerequisite for an end-to-end check (found at a ship review, 2026-09-22).
 ### Work Item 1: [Name]
 - **Scope:** [system/boundary] — one work item = everything inside one boundary
 - **Produces:** [output contract — explicit shape]

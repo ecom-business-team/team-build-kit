@@ -41,6 +41,8 @@ workspace/_practices/claude-code.md
 workspace/_practices/llm-workflows.md
 workspace/why_we_build.md
 workspace/why_we_build.html
+workspace/worked_example.md
+workspace/worked_example.html
 [native]
 .skills/update-build-kit/SKILL.md
 workspace/.claude/settings.json

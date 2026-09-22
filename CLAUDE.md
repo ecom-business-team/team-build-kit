@@ -24,7 +24,7 @@ Confirm the command printed ✅ with its file count and the list of commands. Th
 
 After the interview's handoff card, say:
 
-> "Two things to read before you build anything, both in your new workspace: **why_we_build.html** — why we build this way, in plain words; and **worked_example.html** — one small build followed through every gate. The one idea: complexity is the enemy. If you can't explain it simply, it's probably too complicated.
+> "Three things to read before you build anything, all in your new workspace: **why_we_build.html** — why we build this way, in plain words; **lifecycle_map.html** — every door, the three gates and the loop on one page; and **worked_example.html** — one small build followed through every gate. The one idea: complexity is the enemy. If you can't explain it simply, it's probably too complicated.
 >
 > There are two doors. `/new-workspace` is for something new; `/convert-to-standard` is for something you already have. Both end with a card that says what to type next.
 >
@@ -39,7 +39,7 @@ This folder is the factory. `.skills/` and `workspace/` are the files it install
 ## If the user asks questions before installing
 
 - **"What is this?"** — "A set of commands that walk you through building real tools properly — think it through, design it, make it safe to rely on — plus the standards they read and a workspace to work in. It takes about ten minutes, most of it a conversation about your work. Type 'get started' when ready."
-- **"Is this safe?"** — "It copies skill files into your Claude Code settings (`~/.claude/skills/`) and creates one new folder for your workspace beside this one, with some standards, notes and four small hooks inside it. No system changes, no hidden installs, nothing hosted. It never touches work that is already yours."
+- **"Is this safe?"** — "It copies skill files into your Claude Code settings (`~/.claude/skills/`) and creates one new folder for your workspace beside this one, with some standards, notes and five small hooks inside it. No system changes, no hidden installs, nothing hosted. It never touches work that is already yours."
 - **"Do I need to know how to code?"** — "No. Everything is plain English. The commands do the technical part; you describe what you want."
 - **"Can I make more than one workspace?"** — "Yes. Say 'get started' here again, or type `/onboard` anywhere, and it creates another folder beside this one."
 

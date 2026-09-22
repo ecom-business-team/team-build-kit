@@ -4,7 +4,7 @@
 
 ## What this is
 
-A way of building you can hold in one breath: six kinds of thing you might build, three gates a build passes through (think it through → design it → make it safe to rely on), and one state layer that says where every piece of work sits. The kit is files and skills: commands you type in Claude Code, the standards they read, and four small hooks that keep notes about your sessions. Nothing is hosted; it all lives on your machine.
+A way of building you can hold in one breath: six kinds of thing you might build, three gates a build passes through (think it through → design it → make it safe to rely on), and one state layer that says where every piece of work sits. The kit is files and skills: commands you type in Claude Code, the standards they read, and five small hooks that keep notes about your sessions. Nothing is hosted; it all lives on your machine.
 
 ---
 
@@ -69,7 +69,8 @@ Claude installs the commands (it asks permission once), interviews you about you
 ## Start here
 
 1. **Read [`why_we_build.md`](workspace/why_we_build.md)** — why we build this way, in plain words. Downloaded the kit? Open `workspace/why_we_build.html` for the same document with its diagrams drawn.
-2. **Then read [`worked_example.md`](workspace/worked_example.md)** — one small build followed through every gate (`workspace/worked_example.html` for the drawn version).
+2. **Then [`lifecycle_map.md`](workspace/lifecycle_map.md)** — every door, the three gates and the loop on one page; open `workspace/lifecycle_map.html` for the picture drawn.
+3. **Then read [`worked_example.md`](workspace/worked_example.md)** — one small build followed through every gate (`workspace/worked_example.html` for the drawn version).
 
 The one idea: **complexity is the enemy. If you can't explain it simply, it's probably too complicated.**
 

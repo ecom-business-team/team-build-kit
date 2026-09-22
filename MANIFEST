@@ -45,6 +45,8 @@ workspace/why_we_build.md
 workspace/why_we_build.html
 workspace/worked_example.md
 workspace/worked_example.html
+workspace/lifecycle_map.md
+workspace/lifecycle_map.html
 [native]
 .skills/update-build-kit/SKILL.md
 workspace/.claude/settings.json

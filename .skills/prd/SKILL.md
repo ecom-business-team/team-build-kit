@@ -46,6 +46,8 @@ Why the bar is this high: if anything is discovered mid-build that forces a cour
 
 **Goal:** A perfect, verified picture of exactly what we are working from — and what already exists that we can reuse.
 
+**Inside existing work** (an initiative `state.md` holds this memo's milestone): read that `state.md`, then print the orientation card (template §4.10) before spawning any agent.
+
 Spawn **one ground-truth agent per system/area the build touches.** This is the safe place to parallelize: these agents *observe and report facts* — they do not design, so dividing by area causes no fragmentation. The main session reassembles their reports into **one** coherent picture.
 
 Generalize the agents to the actual systems involved. Common areas (assign whichever apply):
@@ -176,6 +178,8 @@ VALIDATION LOG:
 | 3 | Service W accepts batch writes  | …                 | …      | ❌ does not — revise path |
 ```
 
+4. **The owner reads a rendered draft (a document people read).** When the chosen path creates a document people read, or reshapes one (its structure, its picture or its printed shape changes; not a row or a sentence), draft the part the design rests on and show it to the owner as its reader will see it: its generated page when `render.py` has a plan for it, the markdown preview when it has none, printed in the session when it is session output such as a card. Record the owner's verdict as a validation-log row, in their words, with the date: ✅ when they accept the draft, ❌ while a change they asked for is open. A change they ask for is designed in now and the draft is shown again. Why: a map's plan once approved a shape from a drawing that could not be rendered; the owner's first real read came after the second work item and cost a build cycle.
+
 **Exit:** every assumption in the log is ✅ confirmed and the entire end-to-end path is verified to work. Any ❌ sends you back to revise the design (Phase 4/5) — better here than mid-build. **The "Open assumptions" list from Phase 1 must now be empty.**
 
 ---
@@ -222,6 +226,7 @@ Ask, explicitly: **Could a fresh session — given only this PRD file, with zero
 - Is every design check passed?
 - **Is every decision, agreed shape, and verified response actually written into the PRD** — nothing load-bearing left in the chat? (Re-read as if you've never seen this project: is anything missing?)
 - Does every end-to-end work item over something that branches carry a path table, with no gap row left unresolved?
+- When Phase 6 required the owner's read of a rendered draft, is their verdict in the validation log?
 - Is there any "we'll figure that out during build" anywhere? (If yes — it isn't done. Figure it out now.)
 
 If anything is unresolved, name it and resolve it. Only when the answer is an unqualified **yes** is the PRD done.
@@ -324,6 +329,7 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 - [ ] Every component buildable with zero further decisions
 - [ ] Validation log all ✅
 - [ ] All rigor checks passed
+- [ ] The owner's read of a rendered draft is in the validation log (when the PRD creates or reshapes a document people read; otherwise mark it n/a)
 - [ ] Self-contained: a fresh session could one-shot this from the PRD alone (nothing load-bearing left in chat)
 - [ ] No "figure it out during build" remaining
 ```
@@ -351,18 +357,14 @@ The PRD must be approved before `/build`. Confirm with the user:
 
 ## Close: hand off or pause
 
-The approved PRD at `{workspace}/_admin/prds/{project-name}/{project_name}_prd.md` is self-contained — it carries everything `/build` needs, with nothing load-bearing left in chat. Don't auto-advance. Ask the user explicitly:
+The approved PRD at `{workspace}/_admin/prds/{project-name}/{project_name}_prd.md` is self-contained — it carries everything `/build` needs, with nothing load-bearing left in chat. Don't auto-advance.
 
-Print the **handoff card** (template §4.10) and stop:
-```
-HANDOFF
-Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ✅ · build 0/N · ship ☐ · close ☐
-Done:   PRD approved, Gate 2 — one-shot ready; {N} work items; validation log all ✅
-Next:   build it — run: `/build {project-name}` (Phase 1-B creates the log; state.md already exists)
-Context: {line from `python3 .claude/tools/orientation_cost.py --now build`}
-Needs {owner}: {keyboard steps or decisions the PRD names as theirs · task id} | none
-Written: {workspace}/_admin/prds/{project-name}/state.md (Next = WI-1) · {project_name}_prd.html · initiative state.md (In flight → this project)
-```
+Print the gate document's TLDR, then the **handoff card** (template §4.10), and stop. Its values:
+- **Ribbon:** memo ✅ → PRD ✅ → build 0/N → ship ☐ → close ☐ → outcome ☐; WI-1 ▶ (the one `state.md` Next names), the rest ☐.
+- **Done:** PRD approved at Gate 2, one-shot ready, with {N} work items. Proved by the validation log, every row ✅.
+- **Next:** **Build it:** run `/build {project-name}` (Phase 1-B creates the log; `state.md` already exists), with the line from `python3 .claude/tools/orientation_cost.py --now build`.
+- **Needs {owner}:** the keyboard steps or decisions the PRD names as theirs, with task ids.
+- **Written:** `{workspace}/_admin/prds/{project-name}/state.md` (Next = WI-1) · `{project_name}_prd.html` · the initiative `state.md` (In flight → this project).
 
 ---
 

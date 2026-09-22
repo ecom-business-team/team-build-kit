@@ -153,7 +153,7 @@ Order of operations. Stop at the first ❌ and say what happened.
    - from the kit folder: `TBK_BASE="file://$PWD" TBK_WORKSPACE="<folder>" bash install.sh`
    - from anywhere else, the kit's raw GitHub base and its installer:
      ```bash
-     KIT_RAW="https://raw.githubusercontent.com/zjamesblake/team-build-kit"
+     KIT_RAW="https://raw.githubusercontent.com/ecom-business-team/team-build-kit"
      curl -fsSL "$KIT_RAW/main/install.sh" | TBK_WORKSPACE="<folder>" bash
      ```
    Confirm the ✅ line and the two counts it prints (skills installed; workspace files placed). On ❌ nothing was written; stop.
@@ -183,7 +183,7 @@ Order of operations. Stop at the first ❌ and say what happened.
 
 #### 4c. Present the completed map
 
-Show the map once more with a ✓ per file, then print the handoff card in the shape every command in the kit prints:
+Show the map once more with a ✓ per file, then print the handoff card (template §4.10 in `~/.claude/skills/_shared/documentation_standard.md`) as every command in the kit prints it:
 
 ```
 WORKSPACE READY
@@ -200,14 +200,9 @@ WORKSPACE READY
     {area-2}/CONTEXT.md                ✓
     standards · practices · hooks      ✓ N kit files
     git {hash}                         ✓ the first saved version, so every change can be undone
-
-HANDOFF
-Where:  standalone · your workspace
-Done:   workspace created and mapped — N kit files, M areas
-Next:   open <folder> in Claude Code, read why_we_build.html, then /memo your first small thing (the door decides its size)
-Needs <owner>: none | the questions the interview left open
-Written: <folder>/CLAUDE.md · SKILLS.md · <area>/CONTEXT.md × M · skeleton · AGENTS.md · git {hash} · tasks: {tool id | tasks.md}
 ```
+
+The card's values: **Title** `standalone · your workspace`; no ribbon, no Progress; **Done** = the workspace was created and mapped, with N kit files and M areas; **Needs {owner}** = the questions the interview left open, or None.; **Next** = **Open `<folder>` in Claude Code**, read `why_we_build.html`, then run `/memo` for your first small thing (the door decides its size), with `Context: the next step opens a new folder → fresh session`; **Written** = `<folder>/CLAUDE.md` · `SKILLS.md` · `<area>/CONTEXT.md` × M · the skeleton · `AGENTS.md` · git {hash} · tasks: {tool id | tasks.md}.
 
 ---
 

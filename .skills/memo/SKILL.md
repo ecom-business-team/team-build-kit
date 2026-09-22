@@ -144,7 +144,7 @@ Interview to fill the contract. Lead with the two that are hardest and most load
 Then fill cost, value, why-now, and success. Use judgment — don't interrogate; extract what's needed.
 
 ### Research (if the topic touches the codebase):
-- **Inside an initiative** (a planning folder exists): read its `state.md` first — the milestone table says what shipped and what is queued, the handed-forward tray says what this project inherits and which facts are already verified; then the roadmap entry for this project in `north_star.md` (or `roadmap.md`). Never read the archived PRDs or logs whole; follow the tray's pointers by section.
+- **Inside an initiative** (a planning folder exists): read its `state.md` first — the milestone table says what shipped and what is queued, the handed-forward tray says what this project inherits and which facts are already verified; then the roadmap entry for this project in `north_star.md` (or `roadmap.md`). Never read the archived PRDs or logs whole; follow the tray's pointers by section. Then print the orientation card (template §4.10) before any other work.
 - Read relevant CONTEXT.md, architecture docs, system contracts — enough to state the problem and cost accurately.
 - Check live state only if it changes the problem statement (you are NOT designing here — resist diagnosing the solution).
 - Reference memory for prior decisions or context.
@@ -258,18 +258,14 @@ Present the memo to the user for review. Flag any thin section and suggest the f
 
 ## Close: hand off or pause
 
-Once approved, the memo lives as a standalone artifact at `{workspace}/_admin/memos/{slug}.md` — a fresh session can pick it up from the file alone. Don't auto-advance. Ask the user explicitly:
+Once approved, the memo lives as a standalone artifact at `{workspace}/_admin/memos/{slug}.md` — a fresh session can pick it up from the file alone. Don't auto-advance.
 
-Print the **handoff card** (template §4.10 in `~/.claude/skills/_shared/documentation_standard.md`) and stop:
-```
-HANDOFF
-Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ☐ · build ☐ · ship ☐ · close ☐      (or: standalone)
-Done:   memo cleared Gate 1 — {workspace}/_admin/memos/{slug}.md
-Next:   design it — run: `/prd {workspace}/_admin/memos/{slug}.md`
-Context: {line from `python3 .claude/tools/orientation_cost.py --now prd`}
-Needs {owner}: {inputs the memo could not settle · task id} | none
-Written: {initiative state.md — milestone row → "memo cleared {date} → /prd"} | {slug}.md · {slug}.html
-```
+Print the gate document's TLDR, then the **handoff card** (template §4.10 in `~/.claude/skills/_shared/documentation_standard.md`), and stop. Its values:
+- **Ribbon:** memo ✅ → PRD ☐ → build ☐ → ship ☐ → close ☐ → outcome ☐ (standalone: title `standalone · {slug}`, no milestone table).
+- **Done:** The memo cleared Gate 1: `{workspace}/_admin/memos/{slug}.md`.
+- **Next:** **Design it:** run `/prd {workspace}/_admin/memos/{slug}.md`, with the line from `python3 .claude/tools/orientation_cost.py --now prd`.
+- **Needs {owner}:** the inputs the memo could not settle, with their task ids.
+- **Written:** the memo and its page; the initiative `state.md` milestone row → "memo cleared {date} → /prd".
 
 ---
 

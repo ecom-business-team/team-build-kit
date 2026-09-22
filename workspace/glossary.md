@@ -37,7 +37,8 @@
 | **Record** (`project_log.md`, the daily log) | What happened, appended and never edited. A record is never read to find out where we are; the state file is. |
 | **Contract** | The document that says what we are building and why: the PRD for a project, the north star for an initiative. |
 | **The tray** ("what the next project inherits") | The part of an initiative's state file that lists what the next project depends on: what is live, which switches are still held, what is undecided, which human steps are outstanding, and which facts were verified. An item leaves the tray when it is decided, given a home in a system document, or done. |
-| **Handoff card** | The five lines printed at every stop: where we are on the ladder, what just got done and how it was proved, exactly what to type next, what only the owner can do, and where all of this is written down. |
+| **Handoff card** | The card printed at every stop, as markdown: where the work sits and how far it has come (every milestone and work item marked done, current or to do), what just got done and how it was proved, every task filed and every residual left with whether each needs attention now, what only the owner can do, exactly what to type next with the measured context, and where it was all written down. |
+| **Orientation card** | The same card printed at the start of a session that resumes earlier work, before any other work: what the session will do, how far the work has come, what the checks found, what it inherits, and where it will stop. A misread is caught there, at the cost of a sentence. |
 | **Companion** | The HTML page generated beside a gate document (a memo, a PRD, a project log's ship review, a state file's handoff) so a person can approve from it without reading the markdown. The markdown stays the source; the skill that writes the document regenerates the page, and no one edits it by hand. |
 | **The explainer** (`why_we_build.md`) | The one document that says why we build this way: two ladders, six kinds, three gates, one state layer, and what goes wrong when each is ignored. It ships with the kit, its page is generated from it like a companion, and it never says where any project stands. |
 | **Worked example** (`worked_example.md`) | One build walked start to finish in the kit's own words, so a new person sees what each step asks and what it hands back before they run one. It ships with the kit and its page is generated from it. |
@@ -89,7 +90,7 @@
 
 | Term | What it means |
 |---|---|
-| **Orient** | The first minutes of a session: read the state file, run the three checks it names, and announce where we are. |
+| **Orient** | The first minutes of a session: read the state file, run the three checks it names, and print the orientation card. |
 | **Session boundary** | The rule that at the end of every work item the state file is rewritten and a handoff card printed, and the session carries on or ends as the card's measured Context line decides; a session that ends leaves the next one to start fresh from the state file. |
 | **Capture at occurrence** | Write a lesson down the moment it happens, in the tool's practice file if it is about the tool and in the project's index if it is about the project. |
 | **Provision** | Create exactly the documents a thing needs, from the templates, and nothing more. |

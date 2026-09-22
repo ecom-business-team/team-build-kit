@@ -41,7 +41,7 @@ Ship proves the build is safe to rely on. It does not prove the memo's problem i
 4. Print the handoff card.
 
 ## 6. Handoff card
-Template §4.10: Where = project close ✅ · outcome ☐ due {date}; Done = what shipped and how it was proved; Next = the roadmap's next milestone — run: `/memo {name}`; Context = the line `python3 .claude/tools/orientation_cost.py --now memo` prints — or the human steps that gate the launch, in order; Needs {owner} = every accepted residual and keyboard step with its task id; Written = the initiative `state.md`.
+Template §4.10, with: **Ribbon** close ✅ → outcome ☐ due {date}, and this milestone's row ✅ shipped; **Done** = what shipped and how it was proved; **Residuals** = every hole the ship review accepted, each in its five parts with its task id; **Needs {owner}** = every keyboard step, with its task id; **Next** = the roadmap's next milestone — run `/memo {name}` — or the human steps that gate the launch, in order, with the line `python3 .claude/tools/orientation_cost.py --now memo` prints; **Written** = the initiative `state.md`.
 
 ## K. Killing a project
 Only on the owner's explicit word, with the reason in their words.
@@ -56,3 +56,4 @@ Only on the owner's explicit word, with the reason in their words.
 1. Project `state.md`: Position → `Paused {date} — waiting on {who or what} · task id · resume when {condition}`; Stage ribbon unchanged; Next = `resume: {the first thing to do}`.
 2. Initiative `state.md`: milestone row → `paused {date} (waiting on …)`. Render its companion as in §4.
 3. The project stays in `prds/` and the SessionStart gate keeps printing it, by design: a paused project is still in flight and should stay visible. If it will not resume, kill it (§K).
+4. Print the **handoff card** (template §4.10): **Ribbon** unchanged, the milestone row ▶ paused; **Done** = what was finished before the pause, and what it now waits on (who or what, with its task id); **Needs {owner}** = the owner's own steps toward the resume, or `None.` when the wait is on someone else; **Next** = the command that resumes the work (`/build {project-name}`), with the line from `python3 .claude/tools/orientation_cost.py --now build`, to be typed once the resume condition holds; **Written** = both `state.md` files and the initiative companion.

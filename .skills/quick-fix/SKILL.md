@@ -124,6 +124,12 @@ Per the Living Documentation Rule:
 
 ---
 
+## Phase 5: HAND OFF (only when something was left)
+
+When this fix filed a task or accepted a hole at the exit gate, end with the **handoff card** (template §4.10): title `standalone · quick fix: {what}` (or the initiative title when the fix belongs to one), no ribbon; **Done** = the fix and how it was proved; **Filed this session** and **Residuals** as §4.10 says; **Next** = the command for the most urgent follow-up, with the line from `python3 .claude/tools/orientation_cost.py --now {its step}`, or `Nothing: the fix is live.` with `Context: no next step`; **Written** = the files changed. When nothing was filed or accepted, print no card: the session-log line is the record.
+
+---
+
 ## Scope Escalation
 
 If at any point during Phase 1 you discover:

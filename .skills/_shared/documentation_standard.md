@@ -461,23 +461,97 @@ An item leaves when it is decided (→ north_star / decision_log), homed (→ a 
 
 ---
 
-### 4.10 — The handoff card (printed at every stop)
+### 4.10 — The handoff card and the orientation card
 
-**Purpose:** Every stop — a gate cleared, a work item done, a session ending, work waiting on the owner — prints the same six lines, so the owner always sees where the work sits on the ladder (initiative › milestone › project › work item) and exactly what to type next. Emitted by `/memo`, `/prd`, `/build`, `/ship`, `/new-workspace`, `/convert-to-standard` and `session-close`. The same Where and Next lines live in the project `state.md` (its **Stage** and **Next** fields), so the SessionStart gate prints them at the top of the next session: the card at the end of one session and the gate line at the start of the next say the same thing.
+**Purpose:** Every stop — a gate cleared, a work item done, a session ending, work waiting on the owner — prints the handoff card, and every session that resumes earlier work opens with the orientation card, in the same shape. The owner sees at a glance how far the whole piece of work has come, what this session left behind and whether each leftover needs them now, and exactly what to type next. A misread caught by the orientation card at the top of a session costs a sentence; one found at the end costs the session. The same Stage and Next live in the project `state.md` (its **Stage** and **Next** fields), so the SessionStart gate prints them at the top of the next session: the card at the end of one session and the gate line at the start of the next say the same thing.
 
-```
-HANDOFF
-Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ✅ · build k/N · ship ☐ · close ☐ · outcome ☐
-Done:   {what just finished} — proved by {the check and its result}
-Next:   {what} — run: {exact command or prompt}
-Context: {the line printed by python3 .claude/tools/orientation_cost.py --now {the step Next names}}
-Needs {owner}: {decision or keyboard step · task id · due} | none
-Written: {path to the project state.md; between projects, the initiative state.md}
-```
+**Who prints which.** The handoff card: `/memo`, `/prd`, `/build`, `/ship`, `/quick-fix` (only when it filed a task or accepted a hole), `/new-workspace`, `/convert-to-standard`, `/onboard`, `session-close` and the project close (`project_close.md`). The orientation card: `/memo`, `/prd`, `/build` and `/ship`, when they run on existing work (an initiative `state.md` holds the work, or the project's `state.md` exists): it is the first thing printed, after the state files are read and their verify block is run, and before any other work. Each printer supplies only its own values (the ribbon, Done, Next, the step it measures, what it wrote); this section supplies the shape and where every other value comes from.
 
-A standalone build (no initiative) writes "standalone" in Where. "Next" is always the exact command the owner types, verbatim: a skill call with its argument (`/build {project}`, `/ship {project}`), never "any prompt" — the owner should never have to know where the state file lives.
+**Print it as markdown, never inside a code fence.** The session renders markdown, so the headings give the card its hierarchy: the title is a `##` heading, each block a `###` heading, the milestones a table. The templates below sit inside fences only so that this file can hold them.
 
-**Context** is measured, never guessed: run the tool with the lifecycle step the Next line names (`memo`, `prd`, `build`, `ship` or `quick-fix`) and copy its line verbatim. If the command fails or prints anything other than one line starting `Context:` (the tool is missing, older than `--now`, or was run outside the workspace root), write `Context: not measured (the tool did not run) → hand off fresh` and hand off fresh. It adds that step's typical cost to the session's measured context and gives the verdict against 300k (`_practices/claude-code.md`, Context cost). Continue here when it says so; otherwise the owner types `/clear` and then the Next command. The owner's word overrides the verdict either way, and a build logs the override in `project_log.md`.
+The handoff card:
+
+````markdown
+## HANDOFF · {initiative} · milestone {n}, {name}
+
+**project** memo ✅ → PRD ✅ → build k/N → ship ☐ → close ☐ → outcome ☐
+
+### Progress
+
+| | # | Milestone | Status |
+|---|---|---|---|
+| ✅ | 1 | {name} | {its status, shortened: shipped · check due {date} · reached {date}} |
+| ▶ | {n} | **{name}** | {its status} |
+| ☐ | {n+1} | {name} | queued |
+
+**Work items**
+- ✅ WI-1 {name}
+- ▶ WI-2 {name}
+- ☐ WI-3 {name}
+
+### Done
+{What just finished, in one sentence.} Proved by {the check and its result}.
+
+### Filed this session
+**{task id} {task title}**
+- *Why:* {what was seen, and why it did not belong in this work}.
+- *Now?* {Doable now, about N minutes. Say the word. | Not now: {the reason — it needs a person, a decision, another repository, or a scope the PRD excluded}.}
+
+### Residuals
+**{the residual, named in a few words}**
+- *Noticed:* {what was seen}.
+- *The issue:* {what is wrong}.
+- *If left:* {what leaving it costs, including the second-order effect}.
+- *The fix:* {simple, and what it is | not simple, and why}.
+- *Recommend:* {now | later, and why}. {Filed as {task id}.}
+
+### Needs {owner}
+{One full sentence per decision or keyboard step only the owner can take, with its task id and due date.}
+
+### Next
+**{What}:** run `{the exact command}`
+`{the Context line}`
+
+### Written
+- `{path}` ({what changed})
+````
+
+The orientation card:
+
+````markdown
+## ORIENTATION · {initiative} · milestone {n}, {name}
+
+**Doing:** {the ask, in one sentence}.
+
+**project** memo ✅ → PRD ▶ → build ☐ → ship ☐ → close ☐ → outcome ☐
+
+### Progress
+{the same milestone table and work-item list as the handoff card}
+
+### Checked
+{The verify block's commands and results, and whether the snapshot matched. | No verify block yet.}
+
+### Inherits
+- {each tray item, held switch or owner ruling this step must honour or settle, one sentence each}
+
+### Next
+{What this session will produce, and where it stops.}
+````
+
+**Filling the blocks.** Every value is read from a file that already holds it; nothing is recalled.
+- **Title and ribbon.** The initiative and milestone come from the initiative `state.md` (In flight; after a close or a kill empties it, the milestone just closed); the ribbon is the project `state.md` **Stage**, or, before that file exists, the stages as this step leaves them. Work outside an initiative titles itself `## HANDOFF · standalone · {what}` and has no milestone table; work outside a project has no ribbon.
+- **Milestones.** One row per row of the initiative `state.md` milestone table, every row every time: ✅ for shipped or reached, ▶ for the one in flight, ☐ for the rest, with the status cell shortened (paused and killed rows keep their word).
+- **Work items.** One per `### Work Item` heading in the PRD §12: ✅ for those the project `state.md` Done names, ▶ for the one Next names, ☐ for the rest. No PRD yet, no list. With neither a table nor a list, the Progress block is left out.
+- **Filed this session.** Every task this session filed in the task manager, by its id.
+- **Residuals.** Everything noticed and left unresolved: a hole accepted at a gate, a defect deferred, a follow-up left for later. A residual that was filed appears here with its id and not again under Filed. Every part is a full sentence.
+- **Empty blocks.** Filed this session, Residuals and Needs {owner} print `None.` when empty; they never disappear, because an empty block is information.
+- **Written.** Every file this stop wrote, one per line.
+
+**At a gate, a TLDR above the card.** When the stop closes a gate (a memo cleared, a PRD approved, a ship review written), the card is preceded in the session by the gate document's TLDR in four sentences: the constraint, what it is and what it is not, the calls that need the owner, and success in one line. A path to the document is never the whole presentation.
+
+**Next** is always the exact command the owner types, verbatim: a skill call with its argument (`/build {project}`, `/ship {project}`), never "any prompt" — the owner should never have to know where the state file lives.
+
+**Context** is measured, never guessed: run the tool (`python3 .claude/tools/orientation_cost.py --now {step}`, from the workspace root) with the lifecycle step the Next line names (`memo`, `prd`, `build`, `ship` or `quick-fix`) and copy its line verbatim. If the command fails or prints anything other than one line starting `Context:` (the tool is missing, older than `--now`, or was run outside the workspace root), write `Context: not measured (the tool did not run) → hand off fresh` and hand off fresh. It adds that step's typical cost to the session's measured context and gives the verdict against 300k (`_practices/claude-code.md`, Context cost). Continue here when it says so; otherwise the owner types `/clear` and then the Next command. The owner's word overrides the verdict either way, and a build logs the override in `project_log.md`. When Next names no lifecycle step (a finished quick fix), the line reads `Context: no next step`. `/onboard` hands off into a new folder, so its line reads `Context: the next step opens a new folder → fresh session`.
 
 ---
 

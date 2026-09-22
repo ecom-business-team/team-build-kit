@@ -175,17 +175,12 @@ For brownfield especially: re-read each doc and ask "could I have made this up?"
 
 ## Phase 5: HANDOFF
 
-Print the handoff card (Standard §4.10) for both forks — the summary lines become its Done and Written lines:
-
-```
-HANDOFF
-Where:  standalone | {initiative} · {LEVEL} · {KIND} · {ready | brought to standard}: {name}
-Done:   {LEVEL} · {KIND} {READY / BROUGHT TO STANDARD}: {name} — {folder}/CONTEXT.md ✓ · {canonical homes, if created} ✓ · root CLAUDE.md routing ✓ · fork: {greenfield | brownfield — N systems observed, M facts confirmed by interview}
-Next:   /memo {first thing to build} (greenfield) | /prd {next change} or /memo {…} (brownfield — docs now reflect ground truth)
-Context: {line from `python3 .claude/tools/orientation_cost.py --now {memo, or prd when Next names /prd}`}
-Needs {owner}: {open questions filed to the task manager, with ids} | none
-Written: {the paths written}
-```
+Print the **handoff card** (Standard §4.10) for both forks. Its values:
+- **Title:** `standalone · {name}` or `{initiative} · {name}`; no ribbon.
+- **Done:** {LEVEL} {KIND} {ready | brought to standard}: {name}. Proved by: `{folder}/CONTEXT.md` ✓, the canonical homes (if created) ✓, the root `CLAUDE.md` routing row ✓, fork {greenfield | brownfield — N systems observed, M facts confirmed by interview}.
+- **Next:** `/memo {first thing to build}` (greenfield) | `/prd {next change}` or `/memo {…}` (brownfield), with the line from `python3 .claude/tools/orientation_cost.py --now {memo, or prd when Next names /prd}`.
+- **Needs {owner}:** the open questions filed to the task manager, with ids.
+- **Written:** the paths written.
 
 Next is always something the owner can type verbatim.
 

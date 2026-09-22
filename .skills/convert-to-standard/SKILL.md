@@ -36,17 +36,12 @@ Run `/new-workspace` Phases 3 and 4 as written: exactly the doc set for the conf
 
 ## Phase 4: Hand off
 
-Print the handoff card (`documentation_standard.md` §4.10):
-
-```
-HANDOFF
-Where:  standalone | {the initiative, when the folder belongs to one} · brought to standard
-Done:   brought to standard — N parts observed, M facts confirmed by the person; files: {the paths written}
-Next:   /memo {the first thing the person wants changed} | /quick-fix {a known small defect}
-Context: {line from `python3 .claude/tools/orientation_cost.py --now {memo, or quick-fix when Next names /quick-fix}`}
-Needs {owner}: {every question the files could not answer, filed to the task manager with its id} | none
-Written: {the paths}
-```
+Print the **handoff card** (`documentation_standard.md` §4.10). Its values:
+- **Title:** `standalone · {folder}` or `{initiative} · {folder}`; no ribbon.
+- **Done:** Brought to standard: N parts observed, M facts confirmed by the person.
+- **Next:** `/memo {the first thing the person wants changed}` | `/quick-fix {a known small defect}`, with the line from `python3 .claude/tools/orientation_cost.py --now {memo, or quick-fix when Next names /quick-fix}`.
+- **Needs {owner}:** every question the files could not answer, filed to the task manager with its id.
+- **Written:** the paths.
 
 Next is always something the person can type verbatim. If nothing needs changing yet, Next is `/memo` for whatever they name first; the docs are now the substrate that command reads.
 

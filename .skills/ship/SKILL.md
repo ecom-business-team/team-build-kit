@@ -39,7 +39,7 @@ If none fire, there is no `/ship` — `/build` ships freely and closes the proje
 
 ## Prerequisite
 
-A `/build` that passed end-of-build verification, with `state.md` recording the router result. **Orient from the project's `state.md` first** (`/build` Phase 1-A: read it, run its verify block, announce the position) — it names the held steps and what needs the owner. Then read the PRD's pre-mortem and impact map by section, and the project log only where `state.md` points. This review builds on them.
+A `/build` that passed end-of-build verification, with `state.md` recording the router result. **Orient from the project's `state.md` first** (`/build` Phase 1-A: read it, run its verify block, print the orientation card, template §4.10, with **Doing** = the Gate-3 review of {project}; **Checked** = the verify block's results; **Inherits** = Held and Needs {owner}; **Next** = the review written, and the stop for the owner's sign-off and go) — it names the held steps and what needs the owner. Then read the PRD's pre-mortem and impact map by section, and the project log only where `state.md` points. This review builds on them.
 
 ---
 
@@ -85,7 +85,7 @@ Finding holes is worthless if nothing happens to them. **First, write every hole
 
 Record each hole and its disposition in the Ship Review (Phase 6).
 
-**A Gate-3 round ends at a stop.** When a round ends (review written, blockers fixed, or waiting on the owner), rewrite `state.md` (Position: Gate 3 round N done; Next: …; Held; Needs {owner}), run `python3 .claude/tools/orientation_cost.py --now ship`, print the handoff card (template §4.10) with its Context line, and follow the verdict exactly as `/build` Phase 2 Step 5: continue into the next round here, or stop for a fresh session. A round waiting on the owner stops regardless.
+**A Gate-3 round ends at a stop.** When a round ends (review written, blockers fixed, or waiting on the owner), rewrite `state.md` (Position: Gate 3 round N done; Next: …; Held; Needs {owner}), run `python3 .claude/tools/orientation_cost.py --now ship`, print the ship review's TLDR, then the handoff card (template §4.10) with its Context line; its Residuals block carries every hole this round accepted or left open, in its five parts, and follow the verdict exactly as `/build` Phase 2 Step 5: continue into the next round here, or stop for a fresh session. A round waiting on the owner stops regardless.
 
 ---
 

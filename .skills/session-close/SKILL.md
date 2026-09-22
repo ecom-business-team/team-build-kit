@@ -21,7 +21,7 @@ Append to `daily-outputs/YYYY-MM/YYYY-MM-DD.md` (create month folder/file if abs
 
 Trivial session = one line: `## HH:MM · workspace · quick-fix — shipped X (commit abc123)`. Every session logs; selective logging kills the habit. The log is an index of exhaust — never duplicate content that lives in commits, practices, or the task manager.
 
-**If a project is in flight, end the session with the handoff card** (template §4.10 in `~/.claude/skills/_shared/documentation_standard.md`): Where · Done · Next (the exact thing to type) · Needs {owner} · Written. The log entry points at `state.md`; the card is what the owner reads.
+**If a project is in flight, end the session with the handoff card** (template §4.10 in `~/.claude/skills/_shared/documentation_standard.md`), whole and as markdown. The log entry points at `state.md`; the card is what the owner reads.
 
 **Append, never rewrite.** `cat >> file <<'EOF'` at the end of the file — never Write/overwrite the whole file and never add a second `# ` header (two sessions share a day; a rewrite clobbers or reorders the other one's entries — happened 2026-09-02).
 

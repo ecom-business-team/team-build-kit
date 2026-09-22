@@ -21,16 +21,30 @@ A project's states: queued → cleared → approved → building → shipped →
 
 **What you type.** `/onboard`
 
-**What you see.** Six questions in plain words: what you do, which tools you use, what you produce, what to call you, where your tasks live and how you mark them ready, blocked or waiting, and where shared keys will live. A readback of your areas of work. A folder map with your workspace placed beside the kit, never inside it. After you approve: the installer's ✅ line, then a card.
+**What you see.** Six questions in plain words: what you do, which tools you use, what you produce, what to call you, where your tasks live and how you mark them ready, blocked or waiting, and where shared keys will live. A readback of your areas of work. A folder map with your workspace placed beside the kit, never inside it. After you approve: the installer's ✅ line, then a card, which your screen shows with headings (its markdown is below).
 
-```
-HANDOFF
-Where:  standalone · your workspace
-Done:   workspace created and mapped — 20 kit files, 1 area
-Next:   open the folder in Claude Code, read why_we_build.html, then /memo your first small thing
-Needs you: none
-Written: CLAUDE.md · SKILLS.md · money/CONTEXT.md
-```
+````markdown
+## HANDOFF · standalone · your workspace
+
+### Done
+The workspace was created and mapped, with 20 kit files and 1 area.
+
+### Filed this session
+None.
+
+### Residuals
+None.
+
+### Needs you
+None.
+
+### Next
+**Open the folder in Claude Code**, read `why_we_build.html`, then run `/memo` for your first small thing.
+`Context: the next step opens a new folder → fresh session`
+
+### Written
+- `CLAUDE.md` · `SKILLS.md` · `money/CONTEXT.md`
+````
 
 **Why.** Your map carries your names, so every later card can say what it needs from you by name; the kit's files sit beside it and refresh without touching it (the explainer, "What you bring, and what the skills carry").
 
@@ -108,7 +122,7 @@ The value stream: bank export → the script → monthly report → **a decision
 |---|---|
 | The installer prints ✅, a count, the command list, and "New here? Type /onboard" | the kit's `install.sh`, the success branch |
 | `/onboard` asks six questions, places the workspace beside the kit, installs the kit's files, prints the card | `onboard/SKILL.md`, Phase 2 questions 1–6, Phase 4a, Phase 4b, Phase 4c |
-| The card's five lines: Where · Done · Next · Needs · Written | `documentation_standard.md` (the template library) §4.10 |
+| The card's blocks: Progress (when there is an initiative or a project), Done, Filed this session, Residuals, Needs, Next, Written | `documentation_standard.md` (the template library) §4.10 |
 | `/memo` is the one door and decides fix, project or initiative first | `memo/SKILL.md`, "When NOT to use" and "the initiative test" |
 | The memo's six inputs: problem, cost of inaction, value, why now, boundary, success definition | `memo/SKILL.md`, the frontmatter description; `glossary.md`, "Gate 1, the memo" |
 | A companion page opens beside every gate document | `glossary.md`, "Companion" |

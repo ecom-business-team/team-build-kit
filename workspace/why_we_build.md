@@ -56,13 +56,16 @@ Because the kit asks the kind first, it can provision exactly the documents that
 
 ## Why one state layer, and why position is kept apart from history
 
-Every project and every initiative has one state file, and it is the only place where position is written. It is rewritten in place at every stop, under a word budget, and it is never appended. Everything that happened goes into the record, the project's log, which is appended and never edited, and never read to find out where we are. At every stop the handoff card says the same five things:
+Every project and every initiative has one state file, and it is the only place where position is written. It is rewritten in place at every stop, under a word budget, and it is never appended. Everything that happened goes into the record, the project's log, which is appended and never edited, and never read to find out where we are. At every stop the handoff card says the same things, in the same order:
 
-- where we are on the ladder of work;
+- where the work sits, and how far it has come;
 - what just got done, and how it was proved;
-- exactly what to type next;
+- every task filed and every residual left, and whether each needs attention now;
 - what only the owner can do;
+- exactly what to type next, and whether to continue in this session;
 - where all of this is written down.
+
+A session that resumes earlier work opens with the same card, so a misread is caught before any work is done.
 
 ```chain
 a session ends → the state file is rewritten → the next session reads only the state file
@@ -138,7 +141,7 @@ Say what you are trying to do, answer the gates honestly, and the kit does the r
 | Every project and every initiative has one state file; it is the only place position lives; rewritten, never appended, under a budget | `glossary.md`, "State file"; `documentation_standard.md`, §4 ("Three levels, one snapshot each") and §6 ("State is a snapshot, history is a log") |
 | A fresh session orients from the state file and its checks in minutes | `glossary.md`, "Orient"; the initiative's north star, §1 |
 | The record is the project's log, appended, never edited, and never read for position | `glossary.md`, "Record" |
-| The handoff card says the same five things at every stop | `glossary.md`, "Handoff card" |
+| The handoff card says the same things at every stop, and a resuming session opens with the same card | `glossary.md`, "Handoff card" and "Orientation card" |
 | Sessions rebuilt their position from six to ten history-shaped documents, at a cost between tens of thousands and well over a hundred thousand words of reading, re-reading the same files fifteen to thirty times | `documentation_standard.md`, §4 ("State split from history 2026-09-20": 27k–237k tokens of orientation per session, the same files re-read 15–29 times) |
 | Ship proves safe to rely on, not that the problem was solved; the outcome check is the only step that checks that | the shared close procedure (`project_close.md`), §5; `glossary.md`, "Outcome check" |
 | A milestone is shipped when live and reached only when the outcome check confirms the success definition | `glossary.md`, "Milestone"; `documentation_standard.md`, §4 (the milestone states) |

@@ -44,11 +44,7 @@ A completed, approved PRD at `{workspace}/_admin/prds/{project-name}/{project_na
 1. `cat state.md` (≤400 words). It names the last completed work item, the next one, blockers, held switches, what needs the owner, and a **Verify before continuing** block of at most three commands with their expected results.
 2. Run every command in that block and compare. If anything disagrees, the snapshot is stale: repair `state.md` first (from `git log`, the branch head, and the *last* entry of `project_log.md`), then continue. Do not re-verify completed work items beyond this block — their proof is in the log.
 3. Read the PRD **by section**: the work item named as Next, the validation-log rows it cites, and whatever the work item points at. Read `system_contracts.md`, the system CONTEXT.md and `_practices/` files by section too, following the anchors `state.md` carries.
-4. Announce, then build:
-```
-RESUMING {project} at WI-N — {name}.
-WI-1..N-1 done; snapshot verified by {the checks}. Held: {…}. Needs {owner}: {…}.
-```
+4. Print the orientation card (template §4.10), then build. Its values: **Doing** = WI-N, {name}; **Checked** = the verify block's results; **Inherits** = Held and Needs {owner} from `state.md`, and any tray item the work item touches; **Next** = WI-N, and where this session will stop.
 
 **B. First build session** — no `state.md` yet:
 1. Read the PRD completely. It is self-contained by design; treat it as the single source of truth for *what to build*.
@@ -57,12 +53,7 @@ WI-1..N-1 done; snapshot verified by {the checks}. Held: {…}. Needs {owner}: {
    - `{workspace}/_admin/prds/{project-name}/project_log.md` — the **record**, append-only: Changes Made · Decisions · Scope Changes (empty in a clean one-shot). No "current state" section — position lives in the snapshot.
    - `{workspace}/_admin/prds/{project-name}/state.md` — the **snapshot**: Position (Done / Next = WI-1 / Blocked / Router) · Verify before continuing · Held · Needs {owner} · Pointers. Budget 400 words, rewritten in place, never appended.
    Set the initiative `state.md` "In flight" row to this project.
-4. Announce:
-```
-READY TO BUILD: [project name]
-PRD: [link]   Work Items: [N]   Starting: Work Item 1 — [name]
-Proceeding.
-```
+4. Print the orientation card (template §4.10), then proceed. Its values: **Doing** = start the build at WI-1, {name}; **Checked** = "No verify block yet."; **Inherits** = the tray items the PRD names; **Next** = WI-1, and where this session will stop.
 
 ---
 
@@ -116,16 +107,7 @@ Two writes and a render, in this order, committed together with the code:
 3. **Render** the handoff: `python3 ~/.claude/skills/_shared/companion/render.py {workspace}/_admin/prds/{project-name}/state.md` writes `handoff.html` beside it (the stage ribbon, the position, what needs the owner, the work items and milestones); then open the page in the default browser when the machine has an opener (`open` on macOS, `xdg-open` on Linux; skip silently otherwise), so it is on screen the moment the document is written.
 
 ### Step 5: Session boundary — measure, then continue or hand off
-With WI-N verified, recorded and snapshotted, measure: `python3 .claude/tools/orientation_cost.py --now build`. Print the **handoff card** (template §4.10) with its line:
-```
-HANDOFF
-Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ✅ · build N/{total} · ship ☐ · close ☐
-Done:   WI-N — {name} — proved by {the check and its result}; committed {hash}
-Next:   WI-N+1 — {name} — run: `/build {project-name}`; it resumes from state.md
-Context: {the line the tool printed}
-Needs {owner}: {decision or keyboard step · task id · due} | none
-Written: {workspace}/_admin/prds/{project-name}/state.md · handoff.html
-```
+With WI-N verified, recorded and snapshotted, measure: `python3 .claude/tools/orientation_cost.py --now build`. Print the **handoff card** (template §4.10). Its values: **Ribbon** = build N/{total}; WI-1…N ✅, WI-N+1 ▶ in the list; **Done** = WI-N, {name}, proved by {the check and its result}, committed {hash}; **Next** = **WI-N+1, {name}:** run `/build {project-name}` (it resumes from state.md), with the line the tool printed; **Written** = `state.md` · `handoff.html`.
 Follow the verdict. **Continue here** → begin WI-N+1 in this session at Phase 1-A step 3 (the snapshot you just wrote is current, so its verify block is already satisfied). **Fresh**, **not measured**, or no `Context:` line at all (the command failed) → stop; the owner types `/clear`, then the Next command. The owner's word overrides the verdict either way; log an override in `project_log.md`.
 Why: build sessions that ran a whole project in one context reached 500k–1M tokens and re-read the same documents 15–29 times each, while a fresh start costs about 60k to load and orient. The measured 300k ceiling keeps the cheap continuations and cuts the marathons (`_practices/claude-code.md`, Context cost).
 
@@ -175,16 +157,7 @@ Check the router. Does **any** of these apply?
 - **It touches money / outside parties / business-critical truth.**
 
 - **If any fire → STOP. Do not let it go live.** The build is halted at the router — nothing goes live until `/ship` clears the Gate-3 review (what breaks · who notices · fallback · contingency · how we fix it). Don't auto-advance; ask the user explicitly:
-  **Blast radius crossed the line — nothing goes live until `/ship` (Gate 3) clears.** Print the handoff card and stop:
-```
-HANDOFF
-Where:  {initiative} · milestone {n} {name} · project: memo ✅ · PRD ✅ · build {N}/{N} · ship ☐ · close ☐
-Done:   end-of-build verification passed; router FIRED ({which conditions})
-Next:   the Gate-3 review — run: `/ship {project-name}`
-Context: {line from `python3 .claude/tools/orientation_cost.py --now ship`}
-Needs {owner}: {keyboard steps the review will need · task id} | none
-Written: state.md (Router: fired → /ship) · handoff.html · project_log.md (router result)
-```
+  **Blast radius crossed the line — nothing goes live until `/ship` (Gate 3) clears.** Print the **handoff card** (template §4.10) and stop. Its values: **Ribbon** = build {N}/{N} ✅ → ship ☐; **Done** = end-of-build verification passed; the router fired ({which conditions}); **Next** = **The Gate-3 review:** run `/ship {project-name}`, with the line from `python3 .claude/tools/orientation_cost.py --now ship`; **Needs {owner}** = the keyboard steps the review will need; **Written** = `state.md` (Router: fired → /ship) · `handoff.html` · `project_log.md` (router result).
 - **If none fire → ship freely.** Proceed to Close.
 
 State the router result explicitly in the log **and in `state.md`** (Router: fired → `/ship` | clean) so it's auditable and so the next session knows which skill to run; then render the handoff again and open it (Phase 2 Step 4, item 3), whichever way the router went.
@@ -201,7 +174,7 @@ The close is **one shared procedure**, `~/.claude/skills/_shared/project_close.m
 
 ## Session Recovery
 
-Phase 1-A is the recovery path, and there is nothing else to do: `cat state.md`, run its verify block, read the PRD by section, announce the position. If `state.md` is missing on a build that has clearly started (a `project_log.md` with entries exists), reconstruct it from the log's last entry and `git log` before doing anything else — that is a defect of the previous session, worth a line in Lessons Learned.
+Phase 1-A is the recovery path, and there is nothing else to do: `cat state.md`, run its verify block, read the PRD by section, print the orientation card (template §4.10). If `state.md` is missing on a build that has clearly started (a `project_log.md` with entries exists), reconstruct it from the log's last entry and `git log` before doing anything else — that is a defect of the previous session, worth a line in Lessons Learned.
 
 ---
 

@@ -1,16 +1,16 @@
 ---
 name: update-build-kit
-description: Pull the latest version of the Team Build Kit and re-install its skills. Use when there's a new version of the kit, or to make sure your lifecycle skills (new-workspace, memo, prd, build, ship, quick-fix) and the shared Documentation Standard are current. Never touches your own work — only refreshes the kit's skills.
+description: Pull the latest version of the Team Build Kit and re-install it. Use when there's a new version of the kit, or to make sure your lifecycle skills (new-workspace, memo, prd, build, ship, quick-fix) and the shared Documentation Standard are current. Run from your workspace root and the kit-owned files in the workspace (hooks, tools, standards, practices) are refreshed too. Never touches your CLAUDE.md, SKILLS.md, or your own folders.
 ---
 
 # /update-build-kit
 
-Refresh the Team Build Kit to its latest published version. This re-downloads the kit's skills and the shared Documentation Standard from GitHub and re-installs them into `~/.claude/skills/`. **It only touches the kit's own skills — never the user's workspaces or work.**
+Refresh the Team Build Kit to its latest published version. This runs the kit's own installer from GitHub: it re-downloads every file the kit's `MANIFEST` lists and re-installs the skills into `~/.claude/skills/`. Run from the root of a workspace the kit provisioned, and the kit-owned files inside that workspace are refreshed as well. **It only touches the kit's own files — never your CLAUDE.md, your SKILLS.md, or the folders you made.**
 
 ## When to Use
 
 - You heard there's a new version of the kit.
-- You want to confirm your lifecycle skills are current.
+- You want to confirm your lifecycle skills and the kit-owned workspace files are current.
 
 ## When NOT to Use
 
@@ -20,57 +20,40 @@ Refresh the Team Build Kit to its latest published version. This re-downloads th
 
 ## How it works
 
-The kit lives at a public GitHub repo. This skill pulls the current files straight from there, so it works whether the user cloned the repo or just downloaded the ZIP.
+The kit lives at a public GitHub repo. This skill runs the kit's `install.sh` straight from there, so it works whether the user cloned the repo or just downloaded the ZIP. One script is the source of truth for what gets installed and where; this skill only decides whether to tell it about a workspace.
 
 **Repo:** `https://github.com/zjamesblake/team-build-kit`
 **Raw base:** `https://raw.githubusercontent.com/zjamesblake/team-build-kit/main` — `TBK_BASE` overrides it (a local clone: `TBK_BASE="file://$PWD"`).
-**What ships:** every `.skills/` line in the kit's `MANIFEST`; the skill installs exactly those and nothing else.
+**What ships:** every `.skills/` line in the kit's `MANIFEST` goes to `~/.claude/skills/`; every `workspace/` line goes to the workspace, when one is named. The installer installs exactly those and nothing else.
 
-### Step 1: Re-install from GitHub
+### Step 1: Run the installer from GitHub
 
-Tell the user: *"Pulling the latest Team Build Kit and re-installing the skills — this won't touch any of your own work."* Then run:
+**Run this from the workspace root.** Tell the user: *"Pulling the latest Team Build Kit and re-installing it — this won't touch any of your own work."* Then run:
 
 ```bash
-BASE="${TBK_BASE:-https://raw.githubusercontent.com/zjamesblake/team-build-kit/main}"
-TMP=$(mktemp -d); ok=1
-# 1) the MANIFEST is the one list of what the kit ships — no list, no install
-if ! curl -fsSL "$BASE/MANIFEST" -o "$TMP/MANIFEST"; then
-  rm -rf "$TMP"; echo "Update FAILED: could not fetch MANIFEST from $BASE. Your existing kit is UNTOUCHED — nothing was changed. Check your connection and try again."; exit 1
-fi
-LIST=$(grep -E '^\.skills/' "$TMP/MANIFEST")
-want=$(printf '%s\n' "$LIST" | grep -c .)
-# 2) download EVERYTHING to a temp dir first — touch nothing installed yet
-for p in $LIST; do
-  mkdir -p "$TMP/$(dirname "$p")"; curl -fsSL "$BASE/$p" -o "$TMP/$p" || { ok=0; rm -f "$TMP/$p"; }
-done
-got=$(find "$TMP/.skills" -type f 2>/dev/null | wc -l | tr -d ' ')
-# 3) only install if every listed file downloaded cleanly (atomic — never leave a half-updated kit)
-if [ "$ok" = 1 ] && [ "$want" -gt 0 ] && [ "$got" = "$want" ]; then
-  for p in $LIST; do
-    dest="$HOME/.claude/skills/${p#.skills/}"
-    mkdir -p "$(dirname "$dest")"; cp "$TMP/$p" "$dest"
-  done
-  rm -rf "$TMP"
-  echo "Updated $got files (every .skills/ line the MANIFEST lists)."
-else
-  rm -rf "$TMP"; echo "Update FAILED ($got/$want downloaded). Your existing kit is UNTOUCHED — nothing was changed. Check your connection and try again, or re-download the repo."; exit 1
-fi
+W=""; [ -f "$PWD/.claude/hooks/session_ledger.py" ] && [ ! -f "$PWD/MANIFEST" ] && W="$PWD"
+curl -fsSL "${TBK_BASE:-https://raw.githubusercontent.com/zjamesblake/team-build-kit/main}/install.sh" | TBK_WORKSPACE="$W" bash
 ```
 
-> If the user also has the repo cloned locally and prefers git: `cd` into it, `git pull`, then re-run the install command from the kit's `CLAUDE.md`. The curl path above is the default because it needs no clone.
+The rule the first line applies: the current folder is treated as a kit-provisioned workspace when the kit's session-ledger hook is present in it and it is not the kit folder itself. In that case the installer refreshes the kit-owned files in the workspace too. Those files are every `workspace/` line of the `MANIFEST`: the four hooks under `.claude/hooks/`, the two tools under `.claude/tools/`, the three standards, `glossary.md`, `why_we_build.md` with its page, the `_practices/` files the kit ships, and `.claude/settings.json` — which is **merged** (the kit's hook registrations are added if missing; the person's own hooks and permissions are kept). `CLAUDE.md`, `SKILLS.md`, and every folder the person made are never read or written.
+
+When the folder is not a kit-provisioned workspace, only the skills are refreshed — today's behaviour for anyone who has never created a workspace.
+
+> If the user also has the repo cloned locally and prefers git: `cd` into it, `git pull`, then run `TBK_BASE="file://$PWD" bash install.sh` from the clone (with `TBK_WORKSPACE=<their workspace folder>` to refresh the workspace too). The curl path above is the default because it needs no clone.
 
 ### Step 2: Verify
 
-Confirm every `.skills/` file the MANIFEST lists was written (the command prints the count). The four core lifecycle skills (`prd`, `build`, `ship`, `new-workspace`) depend on `~/.claude/skills/_shared/documentation_standard.md` — make sure it's present. If a `curl` failed (no network, repo moved), say so plainly and stop; don't leave a half-updated set.
+The installer prints the count of files it wrote and, when a workspace was named, a second line with the workspace count. The four core lifecycle skills (`prd`, `build`, `ship`, `new-workspace`) depend on `~/.claude/skills/_shared/documentation_standard.md` — make sure it's present. If the installer printed a ❌ line (no network, repo moved, a refused folder), say so plainly and stop: it changes nothing on failure, so the existing kit is intact.
 
 ### Step 3: Confirm
 
-Tell the user: *"Done — your Team Build Kit skills are current. Nothing in your own workspaces was touched."*
+Tell the user: *"Done — your Team Build Kit is current. Nothing of your own was touched."* Name the workspace folder if one was refreshed.
 
 ---
 
 ## Principles
 
-- **Only the kit's skills change.** This never modifies the user's projects, docs, or data.
-- **All-or-nothing.** If a download fails, report it and stop — a half-updated kit is worse than a stale one.
+- **Only the kit's files change.** Skills in `~/.claude/skills/`, and the kit-owned files in a kit-provisioned workspace. Never the person's CLAUDE.md, SKILLS.md, projects, docs, or data.
+- **All-or-nothing.** The installer downloads everything first and writes nothing unless every file arrived — a half-updated kit is worse than a stale one.
+- **One script.** This skill runs `install.sh`; it does not carry a copy of it, so the two can never disagree.
 - **The source of truth is GitHub.** This skill pulls; it never edits the kit's contents locally.

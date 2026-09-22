@@ -2,7 +2,8 @@
 # [promoted] lines are copied from the source workspace by its kit_promote.py:
 #   .skills/<p>    <- the installed skills folder/<p>      workspace/<p>  <- the workspace root/<p>
 # [native] lines are written in this repo and never copied.
-# install.sh and /update-build-kit install every .skills/ line into ~/.claude/skills/.
+# install.sh and /update-build-kit install every .skills/ line into ~/.claude/skills/; with TBK_WORKSPACE set,
+#   every workspace/ line lands in that folder too (settings.json merged into one already there).
 [promoted]
 .skills/memo/SKILL.md
 .skills/prd/SKILL.md
@@ -39,3 +40,4 @@ workspace/why_we_build.md
 workspace/why_we_build.html
 [native]
 .skills/update-build-kit/SKILL.md
+workspace/.claude/settings.json

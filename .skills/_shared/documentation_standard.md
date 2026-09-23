@@ -371,7 +371,7 @@ How the systems connect. (System internals live in each system's CONTEXT.md; fie
 ### 4.7 — Initiative `state.md` (the snapshot above the projects)
 
 **Purpose:** Answer "where does this initiative stand, and what does the next project inherit?" in one read of at most 600 words. Rewritten in place, never appended. History lives in the archived project logs; decisions and the roadmap live in `north_star.md`.
-**Maintained by:** `/memo` (milestone row → memo cleared), `/prd` (milestone row → PRD approved; In flight set), `/build` and `/ship` at close (milestone row → shipped; tray refilled), and any session that changes position.
+**Maintained by:** `/memo` (milestone row → memo cleared), `/prd` (milestone row → PRD approved; In flight set), `/build` and `/ship` at close (milestone row → shipped; tray refilled), and any session that changes position. The initiative close (`project_close.md` §I) rewrites it once more as the close record: `**Closed:** {date}`, the tray replaced by **Where everything went**.
 
 ```markdown
 # State — {initiative}

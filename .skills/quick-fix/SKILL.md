@@ -61,6 +61,7 @@ Before proceeding, answer these questions:
 2. **What is the blast radius?** (what else touches the same data/workflow/boundary?)
 3. **Does this cross a system boundary?** If yes, check `system_contracts.md`.
 4. **How many things need to change?** If the answer is more than ~3 files/components/queries, stop and suggest `/memo` → `/prd` → `/build`.
+5. **How long will this system live?** Check the owning initiative's roadmap before proposing any hardening. A fix is worth at most what it protects for the system's remaining life. When the system is being retired soon, repair the damage and record the defect as a requirement on its replacement (the initiative's defect list, or wherever its roadmap keeps them), rather than building the fix into something that is about to be switched off.
 
 ### Step 4: Present the diagnosis
 

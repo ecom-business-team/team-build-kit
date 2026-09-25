@@ -212,6 +212,7 @@ Then the checks:
 | 10 | **Blast radius** | Affected systems listed; unaffected systems explicitly confirmed; the impact map is complete. |
 | 11 | **Pre-mortem** | "3 months out, this failed badly — what went wrong?" Top 3 failure scenarios with defenses. **Time-window check:** if the design stretches the time between two steps that used to run back-to-back (a draft that persists, a queue that buffers, an approval that waits), explicitly ask "what can change in the world between step A and step B, and does step B re-verify it?" Guards written for a minutes-long window silently break at days. (Lesson, 2026-07-15: a design stretched assemble→push from minutes to days; push never re-checked that its inputs were still in the state assemble had seen; caught only at /ship.) |
 | 12 | **Expand-and-contract** | If modifying existing contracts, the migration path is defined (add new → migrate consumers → remove old). |
+| 13 | **History** | Every state change and meaningful action of the build's entities is recorded by the history rule (`workflow_design_standard.md`, "The history rule"): a named event type from the catalogue, the actor, the time, a correlation id, and a named writer. A replacement writes the same events and proves it by a parallel run. |
 
 If any check fails, fix the design before continuing.
 
@@ -321,6 +322,7 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 | 10 | Blast radius mapped | Y/N |
 | 11 | Pre-mortem (top 3 + defenses) | Y/N |
 | 12 | Expand-and-contract (if applicable) | Y/N |
+| 13 | History (events, actor, time, correlation id) | Y/N |
 
 ## 14. Pre-mortem
 ### Failure Scenario 1: [Name]

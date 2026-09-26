@@ -67,7 +67,7 @@ The skip list above sends work *down* to `/quick-fix`. This sends it *up*. Befor
 - System design / scoping (use `/prd` after the memo)
 - Implementation (use `/build` after the PRD)
 - Bug fixes or config changes (use `/quick-fix`)
-- Task management (use `/tasks`)
+- Task management (file it in the task manager, by the workspace's task-capture rule)
 
 ---
 

@@ -19,7 +19,7 @@ user_invocable: true
    - **Second occurrences:** a lesson that bit in a *second* project this week is proof of generality — promote to `_practices/` if it isn't there.
    - **Stability → team-build-kit:** any `_practices/` file or workflow module that's been stable for weeks and is genericizable → flag as a team-build-kit publication candidate (publication is deliberate editorial work, not automatic).
 
-3. **Open-threads sweep:** anything that appeared as "Open" in ≥2 dailies without a task or resolution — surface it; recurring unfiled threads are the leak this system exists to close.
+3. **Open-threads sweep:** anything that appeared as "Open" in ≥2 dailies without a task or resolution — surface it; recurring unfiled threads are the leak this system exists to close. Then reset the this-week label (when the workspace's task rules name one): any task carrying it that was not worked on this week loses it, and the count left per project goes in the summary.
 
 4. **The one diagnostic question:** *what was the biggest recurring friction this week, and what one action addresses it?* Evidence from the logs, one concrete action (filed to the task manager or proposed to the owner). One — not a list.
 

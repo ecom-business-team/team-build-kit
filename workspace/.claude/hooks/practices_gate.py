@@ -2,7 +2,8 @@
 """PreToolUse hook: tier-2 retrieval-at-need for _practices/.
 
 On the FIRST call to a tool family in a session (Supabase MCP, n8n MCP/REST, Railway, Vercel,
-Google APIs, ClickUp, Discord, Supabase REST/psql), inject the matching _practices/<tool>.md
+Google APIs, ClickUp, Discord, Supabase REST/psql; any other MCP server loads
+_practices/<server>.md and <server>_conventions.md when they exist), inject the matching _practices/<tool>.md
 into Claude's context via additionalContext. Once per file per session (marker files under
 ~/.claude/state/practices-gate/<session>/). Replaces reliance on CONTEXT.md pointers alone,
 which most CONTEXT.md files turned out not to carry when audited.
@@ -37,6 +38,10 @@ def files_for(tool_name, tool_input):
         out.append("supabase")
     elif tool_name.startswith("mcp__n8n-mcp__"):
         out.append("n8n")
+    elif tool_name.startswith("mcp__"):
+        # Any other MCP server: its same-named practice file and conventions file, when they exist.
+        server = tool_name.split("__")[1]
+        out.extend([server, server + "_conventions"])
     elif tool_name == "Bash":
         cmd = tool_input.get("command", "") or ""
         for pattern, files in BASH_RULES:

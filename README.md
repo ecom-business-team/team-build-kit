@@ -76,6 +76,18 @@ The one idea: **complexity is the enemy. If you can't explain it simply, it's pr
 
 ---
 
+## Your day with the kit
+
+Three habits keep your workspace true, and the kit asks for them:
+
+- **At the end of each session**, type `/session-close`. It writes one line in today's log and checks that the documents match what changed.
+- **At the end of the day, or the next morning**, type `/day`. In about five minutes it turns the day's lines into a short digest and files the loose ends in your task manager.
+- **Once a week**, type `/week`. In about twenty minutes it looks back over the week and names the one thing that kept getting in the way.
+
+From the day after your first session, Claude mentions it when a day or a week has not been reviewed. It only mentions it; nothing runs until you type the command.
+
+---
+
 ## What lands where
 
 - **Your Claude Code's skills folder** gets the commands above; the quick install touches nothing else.

@@ -91,6 +91,7 @@ The fix should feel mechanical at this point — the hard thinking was Phase 1.
 1. Test that the original problem is resolved **with the proof the system's kind requires**: the **Kind** line of its `CONTEXT.md` names the kind, and the kinds table in `documentation_standard.md` §4 ("The third axis") names the proof — replay through the real entry point for an automation; tests plus a live probe for a service; smoke through the real login for an application; tests on fixtures plus a real-data check for a tool; a cold read for a procedure; review against its sources for knowledge. The method for the code kinds is `testing_standard.md`.
 2. Spot-check that adjacent functionality still works
 3. If there's an easy way to trigger the flow end-to-end, do it
+4. **Sweep the siblings.** When the defect could exist in sibling components (repeated workflows, a repeated query pattern, a shared read or write convention), enumerate them by the defect's shape and check each one in this session. Report a carrier table (carrier, severity, live evidence) that names the ones found clean as well, by the method in `_practices/investigation.md` "Sweeping a defect class". Two or more further carriers, or any corrupted data, is no longer a quick fix: stop and raise `/memo` for the class.
 
 ---
 

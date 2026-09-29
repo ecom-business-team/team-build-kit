@@ -33,3 +33,16 @@ Recovery starts from the error list, but the list only holds the failures the to
 ## A rule that bans a platform feature records the evidence behind it (2026-08-25)
 
 A single failed attempt is easy to write down as "the feature is broken", and once it is a rule nobody re-tests it. One empty variable resolution became a ban on the platform's variables, and the ban put a secret key into 34 workflows instead. When a rule forbids a tool or feature, write beside it what was tried, what came back, and the date, so the next reader can re-test the claim instead of inheriting it.
+
+## Sweeping a defect class
+
+When a fix addresses a class of defect rather than a one-off, the instance that surfaced it is only the entry point, and a partial sweep leaves the class open with a record that says it is closed.
+
+1. **Enumerate by the defect's shape, not by the category the first carrier sat in.** Draw the population from the property that defines the bug (every node of that type in every active workflow, every call site of that read), never from the folder or feature that was being worked on. Do it with a script, not by eye; in code, write the scan as a test, so the class cannot return in a file that does not exist yet (`testing_standard.md` rule 6).
+2. **Classify every member and write all the sets down**, the clean ones with the reason they are safe (for example, "a terminal step with nothing downstream, so a failure loses a notification but cannot strand a record"). A sweep that is not written down gets re-run, or worse, assumed complete.
+3. **Sweep the values, not the presence.** A setting switched on with its parameters unset still runs the defaults. State the effective value and the number it yields ("5 tries at 5 s is about a 25 s window"), never just "enabled".
+4. **Compute the ceiling before claiming the fix.** The quantified value can show that the fix cannot work (a 25 s retry window against outages that last minutes), which turns a quick fix into a memo.
+5. **Read what each carrier does.** Severity follows what the carrier does, not where the defect was filed; the damaging instances are often outside the module the sweep was filed against.
+6. **A reasoning flaw is a class too.** When a gate concludes something about items it never tested, sweep the other gates for the same reasoning shape, and check the worked precedents first: the operator's real practice may already hold the stronger test, waiting to be promoted into the document.
+
+If the same class turns up twice, the recurrence itself is the finding: say so, rather than fixing the second instance quietly.

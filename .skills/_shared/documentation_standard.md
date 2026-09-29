@@ -494,8 +494,9 @@ The handoff card:
 
 ### Filed this session
 **{task id} {task title}**
-- *Why:* {what was seen, and why it did not belong in this work}.
-- *Now?* {Doable now, about N minutes. Say the word. | Not now: {the reason — it needs a person, a decision, another repository, or a scope the PRD excluded}.}
+- *What:* {the task in one plain sentence}.
+- *Why:* {what was seen, and why it is not part of this work}.
+- *Expect:* {who acts, when, and the exact command or step}.
 
 ### Residuals
 **{the residual, named in a few words}**
@@ -542,7 +543,7 @@ The orientation card:
 - **Title and ribbon.** The initiative and milestone come from the initiative `state.md` (In flight; after a close or a kill empties it, the milestone just closed); the ribbon is the project `state.md` **Stage**, or, before that file exists, the stages as this step leaves them. Work outside an initiative titles itself `## HANDOFF · standalone · {what}` and has no milestone table; work outside a project has no ribbon.
 - **Milestones.** One row per row of the initiative `state.md` milestone table, every row every time: ✅ for shipped or reached, ▶ for the one in flight, ☐ for the rest, with the status cell shortened (paused and killed rows keep their word).
 - **Work items.** One per `### Work Item` heading in the PRD §12: ✅ for those the project `state.md` Done names, ▶ for the one Next names, ☐ for the rest. No PRD yet, no list. With neither a table nor a list, the Progress block is left out.
-- **Filed this session.** Every task this session filed in the task manager, by its id.
+- **Filed this session.** Every task this session filed in the task manager, by its id, in its three parts, including tail items the owner chose to file; a filed follow-up is listed here and not under Residuals. The rule, and the session-tail offer that comes first, live in the `session-close` skill, "Follow-ups".
 - **Residuals.** Everything noticed and left unresolved: a hole accepted at a gate, a defect deferred, a follow-up left for later. A residual that was filed appears here with its id and not again under Filed. Every part is a full sentence.
 - **Empty blocks.** Filed this session, Residuals and Needs {owner} print `None.` when empty; they never disappear, because an empty block is information.
 - **Written.** Every file this stop wrote, one per line.

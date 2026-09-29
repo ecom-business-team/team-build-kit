@@ -7,6 +7,21 @@ description: Close out a working session — append the session-log entry to dai
 
 **When:** true close moments — the session is ending, a project archived, a batch finished, or the owner says "close this out." NOT mid-build with the next step queued (just report the handoff and stop). Heuristic: closing a *session/project*, or a *task within one*? If the latter, skip.
 
+## Follow-ups: the session tail, then the filed (the one home of this rule)
+
+**During the session.** A small follow-up of this work that the session can do, but that would break the flow if done now, goes on the session's **tail**: a plain list kept in the conversation, never the task manager. (A document that misled you or contradicts the live system is still fixed at once, by the workspace's doc-friction rule; the tail is for what can wait until the end.) Work that is substantial or standalone (its own quick fix or memo), or that waits on a person, an outside party or a date, is filed in the task manager when it is seen, by the workspace's task-capture rule.
+
+**At the end, before the log entry:**
+1. **Offer the tail.** List each tail item in one line with its minutes, and ask the owner: "These N items take about X minutes. Do them now, or file them for later?" The answer decides, for all of them or item by item: done now, or filed. Nothing on the tail is filed without that answer.
+2. **Announce what was filed.** Every task this session filed, including tail items the owner chose to file, is shown to the owner at the end, before the log entry and even if it was mentioned when filed (on the handoff card's Filed block when the stop prints one), in three parts:
+   - **What:** the task in one plain sentence.
+   - **Why:** what was seen, and why it is not part of this work.
+   - **Expect:** who acts, when, and the exact command or step.
+
+   A title alone is not an announcement.
+
+Why: filing costs the session nothing and moves the cost to the owner, who has to remember the item, come back to it and rebuild its context. A series of small filed items once took about three hours of sessions to clear (the owner, 2026-09-29). Other stops point here: the handoff card's Filed block (template §4.10), `/ship`'s residual review, and the workspace `CLAUDE.md`.
+
 ## 1. Session-log entry (always — floor is one line)
 
 Append to `daily-outputs/YYYY-MM/YYYY-MM-DD.md` (create month folder/file if absent):
@@ -19,7 +34,7 @@ Append to `daily-outputs/YYYY-MM/YYYY-MM-DD.md` (create month folder/file if abs
 **Open:** threads left hanging → file to the task manager, reference the task here
 ```
 
-**An untasked Open item is refused.** Every thread on the **Open:** line carries one of three things: the task id it was filed as, `resolved` with the pointer that shows it, or, for the in-flight project's next step, the exact command (its position already lives in `state.md`). A thread with none of the three is not written until it is filed: file it, then write the id. The log is where threads are found, not where they are kept; a thread that waits for the next `/day` is lost the week `/day` lapses (13 days of backlog found 13 unfiled threads, three of them live defects, 2026-09-28).
+**An untasked Open item is refused.** Every thread on the **Open:** line carries one of four things: `done` (the session tail did it), the task id it was filed as, `resolved` with the pointer that shows it, or, for the in-flight project's next step, the exact command (its position already lives in `state.md`). A thread with none of the four is not written until it is filed: file it, then write the id. The log is where threads are found, not where they are kept; a thread that waits for the next `/day` is lost the week `/day` lapses (13 days of backlog found 13 unfiled threads, three of them live defects, 2026-09-28).
 
 Trivial session = one line: `## HH:MM · workspace · quick-fix — shipped X (commit abc123)`. Every session logs; selective logging kills the habit. The log is an index of exhaust — never duplicate content that lives in commits, practices, or the task manager.
 

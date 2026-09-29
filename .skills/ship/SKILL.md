@@ -85,7 +85,7 @@ Finding holes is worthless if nothing happens to them. **First, write every hole
 
 Record each hole and its disposition in the Ship Review (Phase 6).
 
-**Done here, not filed.** A follow-up this session can do is done in this session, before go-live or before the close, and is never filed as a task and left. A task is filed only for what cannot be done now, because it waits on a person, an outside party or a date, and every filed task comes back to the owner at the residual review (Phase 6, Step 2). Why: the owner's rule, 2026-09-29, after a close left about thirty filed items to come back to.
+**Follow-ups: the session tail.** A follow-up found during the review is handled by the rule in the `session-close` skill, "Follow-ups": a small one goes on the session tail and is done before the stop unless the owner chooses to file it; substantial or people-dependent work is filed and announced in three parts. Everything still open at the close comes back to the owner at the residual review (Phase 6, Step 2).
 
 **A Gate-3 round ends at a stop.** When a round ends (review written, blockers fixed, or waiting on the owner), rewrite `state.md` (Position: Gate 3 round N done; Next: …; Held; Needs {owner}), run `python3 .claude/tools/orientation_cost.py --now ship`, print the ship review's TLDR, then the handoff card (template §4.10) with its Context line; its Residuals block carries every hole this round accepted or left open, in its five parts, and follow the verdict exactly as `/build` Phase 2 Step 5: continue into the next round here, or stop for a fresh session. A round waiting on the owner stops regardless.
 

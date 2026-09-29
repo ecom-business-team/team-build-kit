@@ -29,3 +29,7 @@ When you build a rule that keys on *observed* failure signatures — an error-me
 ## After an outage, a clean error list is not a clean system
 
 Recovery starts from the error list, but the list only holds the failures the tools recognised. Also compare throughput in the outage window with the hour before it (rows written, runs per workflow). A drop the errors don't explain is a silent loss, and it has to be found run by run, in successful runs that ended too early.
+
+## A rule that bans a platform feature records the evidence behind it (2026-08-25)
+
+A single failed attempt is easy to write down as "the feature is broken", and once it is a rule nobody re-tests it. One empty variable resolution became a ban on the platform's variables, and the ban put a secret key into 34 workflows instead. When a rule forbids a tool or feature, write beside it what was tried, what came back, and the date, so the next reader can re-test the claim instead of inheriting it.

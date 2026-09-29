@@ -4,7 +4,7 @@
 
 ## What this is
 
-A way of building you can hold in one breath: six kinds of thing you might build, each defined in one sentence in `workspace/glossary.md`. An automation is tools you pay for, wired together. A service is your own code running on its own, with no screen. An application is your own code with screens people sign into. A tool is code a person runs by hand to get an output. A procedure is written steps Claude follows. Knowledge is something people read. On top of the six kinds there are three checkpoints a build passes through (think it through → design it → make it safe to rely on), and one short note, the state file, that says where every piece of work sits. Together these steps are the kit's lifecycle, the path every build follows from an idea to something finished and checked. The kit is files and skills. A skill is a command you type in Claude Code, such as `/memo`, whose written instructions Claude follows. The standards are three documents the commands read, which say how documents are laid out, how processes are designed and how quality is proved on code. The kit also has five small hooks. A hook is a small script Claude Code runs by itself at set moments, such as the start or the end of a session, and these five keep notes about your sessions, where a session is one conversation with Claude, from opening the chat to closing it. Nothing is hosted; it all lives on your machine.
+A way of building you can hold in one breath: six kinds of thing you might build, each defined in one sentence in `workspace/glossary.md`. An automation is tools you pay for, wired together. A service is your own code running on its own, with no screen. An application is your own code with screens people sign into. A tool is code a person runs by hand to get an output. A procedure is written steps Claude follows. Knowledge is something people read. On top of the six kinds there are three checkpoints a build passes through (think it through → design it → make it safe to rely on), and one short note, the state file, that says where every piece of work sits. The state file is `state.md` in each project's folder; `/prd` creates it when you approve the design, and `/build` and `/ship` rewrite it at every stop. Together these steps are the kit's lifecycle, the path every build follows from an idea to something finished and checked. The kit is files and skills. A skill is a command you type in Claude Code, such as `/memo`, whose written instructions Claude follows. The standards are three documents the commands read, which say how documents are laid out, how processes are designed and how quality is proved on code. The kit also has five small hooks. A hook is a small script Claude Code runs by itself at set moments, such as the start or the end of a session, and these five keep notes about your sessions, where a session is one conversation with Claude, from opening the chat to closing it. Nothing is hosted; it all lives on your machine.
 
 ---
 
@@ -35,7 +35,7 @@ Claude installs the commands (it asks your permission once), interviews you abou
 K=https://raw.githubusercontent.com/ecom-business-team/team-build-kit; curl -fsSL $K/main/install.sh | bash
 ```
 
-Then type **`/onboard`** in Claude Code. It interviews you and creates your workspace with the background parts in it. **Do not stop after the first line:** without `/onboard` you have the commands only.
+Then type **`/onboard`** in Claude Code. It interviews you and creates your workspace with the background parts in it, in the folder where you ran the install, because with this route there is no downloaded kit folder for it to sit beside. **Do not stop after the first line:** without `/onboard` you have the commands only.
 
 **Route 3: you already have a folder you work in.** Run this line, with that folder's full path in place of `<your folder>`. It installs the commands and puts the background parts into your folder, beside your own files. It never changes your own files or your `CLAUDE.md`, the file that tells every Claude Code session where things live in that folder (the kit calls it your map):
 
@@ -43,7 +43,7 @@ Then type **`/onboard`** in Claude Code. It interviews you and creates your work
 K=https://raw.githubusercontent.com/ecom-business-team/team-build-kit; curl -fsSL $K/main/install.sh | TBK_WORKSPACE="<your folder>" bash
 ```
 
-Then open that folder in Claude Code and type **`/convert-to-standard`**. It looks at what is already there and writes the documents the folder is missing, so the commands have something to stand on.
+Then open that folder in Claude Code and type **`/convert-to-standard`**. It looks at what is already there and writes the documents the folder is missing, which are the index and the few documents each command reads to know what exists there, so the commands have something to stand on.
 
 ### After installing, whichever route you took
 
@@ -58,19 +58,19 @@ Then open that folder in Claude Code and type **`/convert-to-standard`**. It loo
 | Command | What it does |
 |---|---|
 | **First run** | |
-| `/onboard` | Interviews you about your work, creates your workspace beside the kit, and writes your map (your `CLAUDE.md`) and your skills list (`SKILLS.md`, the list of the commands your workspace has). |
+| `/onboard` | Interviews you about your work, creates your workspace (the one folder for all your work) beside the kit, or where you ran the install if you downloaded nothing, and writes your map (your `CLAUDE.md`) and your skills list (`SKILLS.md`, the list of the commands your workspace has). |
 | **Ways to start** | |
-| `/new-workspace` | Sets up a tidy, documented home for something new you are about to build. |
+| `/new-workspace` | Sets up a tidy, documented folder inside your workspace for one new thing you are about to build, or a whole new workspace when you ask for one. |
 | `/convert-to-standard` | Looks at something you already have, names what it is, writes the documents it is missing, and hands it into the lifecycle. |
 | **Checkpoints** | |
 | `/memo` | Checkpoint 1: says why this is worth building and what done looks like, before any design or code. |
 | `/prd` | Checkpoint 2: writes the PRD, the design of the change. It checks every dependency, meaning anything the design relies on such as another system, a file or an account, against the real running systems rather than against documents, so the build runs in one go. |
-| `/build` | Carries out an approved design one work item at a time. A work item is one bounded piece of the design that promises one output. At every stop it prints a handoff card, a short summary of where the work stands and exactly what to type next, and the card's Context line measures how full the conversation is and says whether to carry on or start a fresh conversation. |
+| `/build` | Carries out the design you approved when `/prd` presented it, one work item at a time. A work item is one bounded piece of the design that promises one output. At every stop, meaning the end of a work item, a checkpoint cleared, a wait on you, or the end of a session, it prints a handoff card, a short summary of where the work stands and exactly what to type next, and the card's Context line measures how full the conversation is and says whether to carry on or start a fresh conversation. |
 | `/ship` | Checkpoint 3: the review a build passes before other people, real data or money depend on it. |
-| `/quick-fix` | Fixes something small without the ceremony, and still asks the Checkpoint 3 questions at the end. |
+| `/quick-fix` | Fixes something small without the ceremony, and still asks the Checkpoint 3 questions at the end. It first asks whether someone else depends on the fix, whether it changes real data, whether its output is used for decisions, and whether it touches money or anyone outside; if any answer is yes, it works through `/ship`'s six questions (what breaks, who notices, what the fallback is, what the contingency is, how it gets fixed, and what the tests take for granted) before the fix goes live. |
 | **Every session** | |
 | `/session-close` | Writes the session's log entry and checks that the living documents, the ones kept true at the moment something changes, match what changed. |
-| `/day` | Turns a day's session logs into one digest, a short paragraph that sums up the day, and files the loose threads in your task manager, the one app or file where every task and open question lives. |
+| `/day` | Turns a day's session logs into one digest, a short paragraph that sums up the day, and files the loose threads in your task manager, the one app or file where every task and open question lives. That is the task app you already use, which you name during `/onboard`, or a `tasks.md` file in your workspace if you use none. |
 | `/week` | Reviews the week's digests and names the one thing that kept getting in the way. |
 | `/doc-audit` | Checks every living document against what actually exists and lists the defects to fix, for one area or the whole workspace. |
 | **Your own skills** | |
@@ -95,7 +95,7 @@ There are two ways to start: build something new with `/new-workspace`, or bring
 ## Start here
 
 1. **Read [`why_we_build.md`](workspace/why_we_build.md)** — why we build this way, in plain words. Downloaded the kit? Open `workspace/why_we_build.html` for the same document with its diagrams drawn.
-2. **Then [`lifecycle_map.md`](workspace/lifecycle_map.md)** — every way to start, the three checkpoints and the loop on one page, where the loop is the path every build follows, which closes only when a final outcome check confirms the problem is really gone; open `workspace/lifecycle_map.html` for the picture drawn.
+2. **Then [`lifecycle_map.md`](workspace/lifecycle_map.md)** — every way to start, the three checkpoints and the loop on one page, where the loop is the same path as the lifecycle, the path every build follows, and it closes only when a final outcome check confirms the problem is really gone. The outcome check is not a command: when `/ship` takes a project live it puts a dated task in your task manager, and on that date you and Claude check the memo's success definition against real use; open `workspace/lifecycle_map.html` for the picture drawn.
 3. **Then read [`worked_example.md`](workspace/worked_example.md)** — one small build followed through every checkpoint (`workspace/worked_example.html` for the drawn version).
 
 The one idea: **complexity is the enemy. If you can't explain it simply, it's probably too complicated.**
@@ -128,7 +128,7 @@ From the day after your first session, Claude mentions it when a day or a week h
 
 Run `/update-build-kit` from inside your workspace. It pulls the latest kit, refreshes the commands and the kit-owned files there, and touches nothing of yours. Once a day, at the start of a session in your workspace, Claude checks whether a newer kit has been published and tells you in one line; it never updates on its own.
 
-Looking for `HOW_WE_BUILD.md` or `flow.html`? Those June files were replaced by `workspace/why_we_build.md`, which carries the same why.
+Looking for `HOW_WE_BUILD.md` or `flow.html`? The kit's earlier explainer files were replaced by `workspace/why_we_build.md`, which carries the same why.
 
 ---
 

@@ -2,7 +2,11 @@
 
 **Canonical.** How quality is proven on code projects. Loaded by `/prd` (deciding what each layer must prove before the build starts) and `/build` (Phase 3 verification and the per-work-item checks). Sibling standards: `documentation_standard.md` (how docs are structured), `workflow_design_standard.md` (how processes are designed).
 
-**Scope.** Code projects — anything with a repo, a build and a deploy. Automation built from connected systems (a workflow tool, a board, webhooks) is verified differently: its equivalent is the tripwire "proof through the real entry point", and its regression suite is the reconcile lanes. A project with neither is too small to need this. Which proof a thing owes is decided by its **kind**: the kinds table in `documentation_standard.md` §4 ("The third axis") assigns one to each of the six, and this standard is the method for the three kinds that are code — service, application and tool.
+**Scope.** Code projects — anything with a repo, a build and a deploy. Automation built from connected systems (a workflow tool, a board, webhooks) is verified differently: its equivalent is "Proof through the real entry point" below, and its regression suite is the reconcile lanes. A project with neither is too small to need this. Which proof a thing owes is decided by its **kind**: the kinds table in `documentation_standard.md` §4 ("The third axis") assigns one to each of the six, and this standard is the method for the three kinds that are code — service, application and tool.
+
+## Proof through the real entry point
+
+This rule holds for every kind, code or not; the root CLAUDE.md carries it as a tripwire. Nothing is done until it has been shown to work through the real entry point. A synthetic call to the consumer proves the consumer, not the wiring that is supposed to reach it. A pass is read from the resulting state or from the real counterpart, never from the actor's own output. A check that skipped, that ran on a proxy (another alias, a page instead of the API, a grep of prose), or that cannot fail is not a pass. Every task has success criteria that can be verified, and the bar is whether a staff engineer would approve. On a code project the proof is a test, not a one-off script, and the rules below apply: a defect found by hand gets a test before it gets a fix, and live data is checked by asserting properties, not values.
 
 ## The layer split, and why there is one
 

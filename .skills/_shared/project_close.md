@@ -42,7 +42,7 @@ Ship proves the build is safe to rely on. It does not prove the memo's problem i
 4. Print the handoff card.
 
 ## 6. Handoff card
-Template §4.10, with: **Ribbon** close ✅ → outcome ☐ due {date}, and this milestone's row ✅ shipped; **Done** = what shipped and how it was proved; **Residuals** = every hole the ship review accepted, each in its five parts with its task id; **Needs {owner}** = every keyboard step, with its task id; **Next** = the roadmap's next milestone — run `/memo {name}` — or the human steps that gate the launch, in order, with the line `python3 .claude/tools/orientation_cost.py --now memo` prints; **Written** = the initiative `state.md`.
+Template §4.10, with: **Ribbon** close ✅ → outcome ☐ due {date}, and this milestone's row ✅ shipped; **Done** = what shipped and how it was proved; **Residuals** = every item the residual review scheduled (`/ship` Phase 6 Step 2), each in its five parts with its date and task id; after a close without a ship, every accepted hole, each with its task id; **Needs {owner}** = every keyboard step, with its task id; **Next** = the roadmap's next milestone — run `/memo {name}` — or the human steps that gate the launch, in order, with the line `python3 .claude/tools/orientation_cost.py --now memo` prints; **Written** = the initiative `state.md`.
 
 ## K. Killing a project
 Only on the owner's explicit word, with the reason in their words.

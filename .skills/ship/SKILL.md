@@ -85,6 +85,8 @@ Finding holes is worthless if nothing happens to them. **First, write every hole
 
 Record each hole and its disposition in the Ship Review (Phase 6).
 
+**Done here, not filed.** A follow-up this session can do is done in this session, before go-live or before the close, and is never filed as a task and left. A task is filed only for what cannot be done now, because it waits on a person, an outside party or a date, and every filed task comes back to the owner at the residual review (Phase 6, Step 2). Why: the owner's rule, 2026-09-29, after a close left about thirty filed items to come back to.
+
 **A Gate-3 round ends at a stop.** When a round ends (review written, blockers fixed, or waiting on the owner), rewrite `state.md` (Position: Gate 3 round N done; Next: …; Held; Needs {owner}), run `python3 .claude/tools/orientation_cost.py --now ship`, print the ship review's TLDR, then the handoff card (template §4.10) with its Context line; its Residuals block carries every hole this round accepted or left open, in its five parts, and follow the verdict exactly as `/build` Phase 2 Step 5: continue into the next round here, or stop for a fresh session. A round waiting on the owner stops regardless.
 
 ---
@@ -131,11 +133,20 @@ Append to `project_log.md`:
 **Holes & dispositions:**
 - [hole — four plain sentences: what it is · why it happened · what we should do · the cost if we do not] → Fixed: [safeguard built] / Escalated: [back to /prd, why] / Accepted: [residual + contingency + who signed off]
 **Go-live:** [date, cutover method, smoke-test result, monitoring confirmed]
+**Residual rulings:** [each item from Step 2 → done now / scheduled {date, task id} / dropped (reason)]
 ```
 
 Then render the log's companion: `python3 ~/.claude/skills/_shared/companion/render.py {workspace}/_admin/prds/{project-name}/project_log.md` writes `ship_review.html` beside it (the last Ship Review section with its Go-live, the questions as fields, every hole with its disposition); then open the page in the default browser when the machine has an opener (`open` on macOS, `xdg-open` on Linux; skip silently otherwise), so it is on screen the moment the document is written. If the review is appended before the cutover and the Go-live line is filled in later, re-run the same command then, so the page carries the go-live.
 
-### Step 2: The shared close
+### Step 2: Residual review (before the close)
+List, in one block, every item still open from this project: each task it filed at any stage (memo, PRD, build, this review), each Needs {owner} item, and each hole this review accepted. Find them in the handoff cards' **Filed this session**, **Residuals** and **Needs {owner}** lines and in the project log. The outcome-check task the shared close files is not on the list. Write each item in the five parts of a residual (template §4.10: Noticed, The issue, If left, The fix, Recommend), and make The fix the exact next action: the command, or the step and who takes it. An item this session could do, even one filed earlier, is listed with Recommend: now. Then ask the owner to rule each item, and act on the ruling:
+- **Do now.** It is done in this session, before the close, and its task, if it has one, is completed.
+- **Schedule.** Its task gets a date and an owner; an accepted hole with no task gets one here.
+- **Drop.** Its task, if it has one, is closed with the reason. Dropping an accepted hole drops only its follow-up; the acceptance signed at Phase 3 stands.
+
+Nothing leaves the ship without a ruling, and the owner's ruling wins, including a schedule for something the session could have done. Record each ruling on the Ship Review's **Residual rulings** line, then re-render its page (the Step 1 command). The close card (the shared close, §6) then carries only the scheduled items, each with its date and task id: a step only the owner can take under Needs {owner}, everything else under Residuals.
+
+### Step 3: The shared close
 Everything after the review is **one shared procedure**, `~/.claude/skills/_shared/project_close.md`, run top to bottom. It captures the lessons (provisional until real use), brings the living documents current including the register entries this build satisfied, archives the project folder and moves the memo to `_done/` (a blocking step), rewrites the initiative's state file (the milestone row becomes shipped and the tray is refilled), **schedules the outcome check** (the memo's success definition, verified against real use on the date it names or 14 days after go-live, after which the milestone reads `reached`), and prints the handoff card with the go-live state and the monitoring owners now in place.
 
 ---

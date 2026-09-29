@@ -8,7 +8,7 @@
 |---|---|
 | **Session** | One conversation with Claude, from opening the chat to closing it. A session begins by reading the state file and ends by rewriting it and printing a handoff card. |
 | **Work item** | One bounded piece of a project's design, inside one system boundary, that promises one output. A session does one work item, then carries on into the next or stops, as the handoff card's measured Context line decides. |
-| **Quick fix** | A contained change that needs no design: the problem is known, no new architecture is involved, and three or fewer things are touched. It has its own command and the same exit gate as a full build. |
+| **Quick fix** | A contained change that needs no design: the problem is known, no new architecture is involved, and three or fewer things are touched, or it is a chore: a known procedure with no design question, such as closing an initiative, whatever it touches. It has its own command and the same exit gate as a full build. |
 | **Project** | The work that reaches one milestone, or a standalone build: one memo, one PRD, one build, a ship review when the blast radius asks for it, one outcome check. While it is in flight it lives in `_admin/prds/<project>/`. |
 | **Milestone** | A point on an initiative's roadmap that says what will be true when one project ships. A milestone is *shipped* when the code is live and *reached* when the outcome check confirms the memo's success definition. |
 | **Initiative** | A large build made of several milestones that build on each other, replacing or retiring systems over months. It is planned in one folder that holds a compass, a snapshot and an index. |

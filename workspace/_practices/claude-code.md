@@ -33,6 +33,7 @@ Verified against the hooks reference (https://code.claude.com/docs/en/hooks) on 
 - Filter out `isSidechain: true` (subagent lines) and `isMeta: true` (skill / command expansions) to see the human's own prompts; system reminders arrive as user text starting with `<`; tool results are user records whose content is a `tool_result` list.
 - Tool calls are `assistant` records whose `message.content[]` contains `type: "tool_use"` (`name`, `input`). `ai-title` records carry an auto-generated session title. Records carry `timestamp` (UTC), `cwd`, `gitBranch`, `version`.
 - A session that spans days keeps its start-date file mtime only until its last write — group by first timestamp, not mtime.
+- **A subagent cannot be told apart by its environment.** Its Bash sees the parent's exact `CLAUDE_CODE_SESSION_ID` and variables, with no marker (verified 2026-09-29, CLI 2.1.280). Its records go to their own file, `<session_id>/subagents/agent-<id>.jsonl` (every line `isSidechain: true`); the main transcript holds none of them. The `tool_use` record that runs a command is flushed to the caller's transcript before the command starts, so a script finds its caller as whichever transcript's last record is the call to itself (`orientation_cost.called_from_subagent`).
 
 ## Shell working directory drifts between tool calls
 

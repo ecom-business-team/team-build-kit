@@ -26,6 +26,7 @@ Below this line, build freely — no memo needed:
 - **Only-you** — nobody else depends on it and it changes no shared/real data.
 - **Trivially reversible** — undoing it is a single step.
 - **A contained fix** — known issue, no new architecture → use `/quick-fix`.
+- **A chore** — the work follows a procedure that is already written or already known and holds no design question, even when it is a milestone on an initiative's roadmap (closing an initiative by `_shared/project_close.md` §I, an archive, a tidy-up, a rename across files) → use `/quick-fix`. The test: you can name every step before you start, and no step needs a choice between designs. If one does, it is not a chore, however small.
 
 A memo is required when you intend to **build something non-trivial that should exist past today.** When in doubt, the one-sentence problem test settles it: if you can't write it in one sentence, you need the memo more, not less.
 
@@ -84,6 +85,8 @@ The skip list above sends work *down* to `/quick-fix`. This sends it *up*. Befor
 5. **The Ask** — go to `/prd`.
 
 Problem, cost of inaction and value are one pointer line each into the north star ("north star §3 creator journey · §8 item 3"). Two exceptions send you back to the full form: the project **departs from the north star** (write the full memo and **amend the north star first** — the compass is edited before anything is built against a different heading), or the project **is not on the roadmap** (full memo; if approved it gains a roadmap entry). Same file, same folder, same lifecycle either way — `_admin/memos/<project>.md`, moved to `_done/` at ship — and a fresh session must still be able to read it alone.
+
+**A roadmap milestone that is a chore** (the skip list above) takes neither form: it goes to `/quick-fix`, which sets its row in the initiative `state.md` to `shipped {date} (quick-fix)` when it ships (when the chore is the initiative close itself, `_shared/project_close.md` §I writes the close record, as `/quick-fix` says). The initiative's outcome check for that milestone still follows the initiative's rule.
 
 ---
 

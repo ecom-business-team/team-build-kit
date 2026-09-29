@@ -63,7 +63,7 @@ node K4 4,1 end   :: reached
 - A diamond is a question the kit answers for you. The first asks how big the work is; the second asks how far a mistake would travel.
 - The outlined pill is the only end state. Reached means the memo's success definition came true in real use.
 
-The dashed lines are the returns. Each milestone of an initiative comes back to the memo and runs the full loop as a project of its own. An outcome check that finds the problem still there sends you back to the memo too: a defect becomes a quick fix or a new project, and a wrong success definition corrects the memo. A quick fix leaves the map after the blast-radius question; close, archive and the outcome check belong to projects.
+The dashed lines are the returns. Each milestone of an initiative comes back to the memo and runs the full loop as a project of its own, unless the memo finds it is a chore and sends it to a quick fix. An outcome check that finds the problem still there sends you back to the memo too: a defect becomes a quick fix or a new project, and a wrong success definition corrects the memo. A quick fix leaves the map after the blast-radius question; close, archive and the outcome check belong to projects.
 
 ```chain
 Every session, every day, every week: /session-close → /day → /week
@@ -163,7 +163,7 @@ Every session ends the same way: a log line, and when a project is in flight, th
 - What the problem is, what doing nothing costs, what solving it is worth, and why now.
 - What the thing is, in one sentence, and what it is deliberately not.
 - How you will know it is solved, written so it can be checked later.
-- How big it is. A throwaway, a thing only you depend on, or a change you can undo in one step is waved through with no memo; the map does not draw these, you simply do them. A contained fix is sent to a quick fix.
+- How big it is. A throwaway, a thing only you depend on, or a change you can undo in one step is waved through with no memo; the map does not draw these, you simply do them. A contained fix, or a chore (a known procedure with no design question, even a milestone on a roadmap), is sent to a quick fix.
 - Whether it is really several things. Three signs: success takes several releases that build on each other; systems are replaced or retired over months; the boundary keeps growing. Two of the three make it an initiative.
 
 **Produces.**
@@ -171,7 +171,7 @@ Every session ends the same way: a log line, and when a project is in flight, th
 - A short memo the owner approves. It says what and why, never how.
 - Its honest answer may be "do not build". That is a good memo, not a failed one.
 - A route: down to a quick fix, on to the design gate, or up to an initiative.
-- Inside an initiative, each milestone comes back through this same door with a short memo that points into the north star instead of repeating it.
+- Inside an initiative, each milestone comes back through this same door with a short memo that points into the north star instead of repeating it; a milestone that is a chore goes down to a quick fix instead.
 
 **Without it.**
 
@@ -186,8 +186,8 @@ Every session ends the same way: a log line, and when a project is in flight, th
 **Asks.**
 
 - What is actually wrong, read from the live system before anything is changed.
-- How many things must change. More than about three, and it stops and sends you to the memo.
-- It refuses a change that needs new tables or new architecture, or that spans several systems or several sessions.
+- How many things must change. More than about three, and it stops and sends you to the memo, unless the work is a chore that follows a known procedure.
+- It refuses a change that needs new tables or new architecture, or that spans several systems or several sessions; a chore may span several systems.
 
 **Produces.**
 
@@ -213,7 +213,7 @@ Every session ends the same way: a log line, and when a project is in flight, th
 **Produces.**
 
 - A planning folder with three documents. The north star, which also serves as the initiative's memo. One state file for the whole initiative. An index.
-- One project per milestone. Each has its own memo, its own PRD, its own build, its own blast-radius check, and its own outcome check.
+- One project per milestone, except a chore milestone, which goes through a quick fix. Each project has its own memo, its own PRD, its own build, its own blast-radius check, and its own outcome check.
 - The roadmap holds the order and the reasons, never status. Status lives in the state file's milestone table. A milestone moves from queued, to memo cleared, to PRD approved, to building, to shipped, and only after the outcome check, to reached.
 - A tray, handed from each finished project to the next. What is live, what is held, what is undecided, what is verified.
 
@@ -281,6 +281,7 @@ Every session ends the same way: a log line, and when a project is in flight, th
 - It runs only when the blast-radius question says a mistake would travel: someone else depends on it, it writes real data, its output drives decisions, or it touches money or people outside. Otherwise there is no ship review.
 - Six questions, in writing. What breaks. Who notices. What the fallback is. What the contingency is. How we fix it. And what a test that checked a sample tells us about the items it never looked at.
 - For every hole: fix it now, send the design back to the PRD or the memo, or accept it with the owner's explicit sign-off. A hole with no decision blocks go-live.
+- Before the close, every task the project filed along the way is brought to the owner in one list, each with its next action, and ruled: do it now, schedule it, or drop it. A follow-up the session can do is done, not filed.
 
 **Produces.**
 
@@ -376,11 +377,11 @@ Three commands sit beside the loop rather than on it. Run `/doc-audit` before a 
 | An untraced consumer breaks when a change lands | `prd/SKILL.md`, "Phase 6" (the 2026-07-24 lesson: a consumer declared unaffected was never traced) |
 | The memo asks the problem, cost of inaction, value, why now, one sentence plus what it is not, and a checkable success definition; it never says how | `memo/SKILL.md`, "The Required Input Contract"; "Definition of done"; `glossary.md`, "Gate 1, the memo", "Success definition" |
 | The memo first looks for the thing in the map, the skills list, the memos, the designs and the area's index, and asks whether it is that thing or a different one | `memo/SKILL.md`, "First: does it already exist?" |
-| Four cases skip the memo: throwaway, only-you, trivially reversible, a contained fix | `memo/SKILL.md`, "When you can SKIP the memo" |
+| Five cases skip the memo: throwaway, only-you, trivially reversible, a contained fix, a chore (even a roadmap milestone) | `memo/SKILL.md`, "When you can SKIP the memo" |
 | Three initiative questions; two of three make it an initiative | `memo/SKILL.md`, "When the memo is too small — the initiative test"; `documentation_standard.md`, §4 "Planning folder" (the contract paragraph) |
 | The memo is approved by the owner and its correct conclusion may be "do not build" | `memo/SKILL.md`, "Close: hand off or pause" ("Once approved"); "The Required Input Contract" ("the memo's correct conclusion is don't build"); "The Framework" (The Ask: go/no-go); `why_we_build.md`, "Why gates, and why they check themselves" |
 | Inside an initiative each milestone's memo is the short form pointing into the north star | `memo/SKILL.md`, "Two forms" ("a project on an initiative's roadmap") |
-| A quick fix skips design and never the exit gate; it reads the live system first, stops at more than about three things, and refuses new tables, several systems, new architecture, or multi-session work | `quick-fix/SKILL.md`, "Phase 3.5" opening sentence; "When NOT to Use"; "Phase 1" Step 2 and Step 3; `glossary.md`, "Quick fix" |
+| A quick fix skips design and never the exit gate; it reads the live system first, stops at more than about three things or several systems (a chore excepted from both), and refuses new tables, new architecture, or multi-session work | `quick-fix/SKILL.md`, "Phase 3.5" opening sentence; "When NOT to Use"; "Phase 1" Step 2 and Step 3; `glossary.md`, "Quick fix" |
 | A quick fix is verified before it goes live, and it has no close, archive or outcome check of its own | `quick-fix/SKILL.md`, "Phase 3: VERIFY"; "Phase 3.5" ("a quick fix has no project log"); "Phase 4" ("Do NOT create: project folders…"); `_shared/project_close.md`, opening ("Who points here: `/build` Phase 5 … and `/ship` Phase 6") |
 | A quick fix creates no project folder, log or decision entries, and updates the living documents it touched | `quick-fix/SKILL.md`, "Phase 4: UPDATE LIVING DOCS" |
 | A quick fix ends with the same four questions; if any fires, the six answers are given inline in a paragraph; every "nothing" is fixed now or escalated | `quick-fix/SKILL.md`, "Phase 3.5: EXIT GATE" |
@@ -388,7 +389,7 @@ Three commands sit beside the loop rather than on it. Run `/doc-audit` before a 
 | A fix that turns out bigger escalates to the memo instead of designing inside the fix | `quick-fix/SKILL.md`, "Scope Escalation" |
 | The north star holds decisions, never progress | `glossary.md`, "North star"; `documentation_standard.md`, §4 "Planning folder" (the tree comment on `north_star.md`) |
 | The planning folder holds the north star, one state file for the whole and an index; the north star is also the initiative's memo; the roadmap holds order and rationale, never status | `documentation_standard.md`, §4 "Planning folder" and its contract paragraph ("The north star is the initiative's memo"); `glossary.md`, "Initiative", "North star" |
-| One project per milestone, each with its own memo, PRD, build, blast-radius check, ship review when needed, and outcome check | `documentation_standard.md`, §4 "Planning folder" (the contract paragraph); `glossary.md`, "Project" |
+| One project per milestone, each with its own memo, PRD, build, blast-radius check, ship review when needed, and outcome check; a chore milestone goes through a quick fix instead | `documentation_standard.md`, §4 "Planning folder" (the contract paragraph); `glossary.md`, "Project"; `memo/SKILL.md`, "Two forms" |
 | A milestone moves queued → memo cleared → PRD approved → building → shipped → reached | `documentation_standard.md`, §4 "Planning folder" ("A milestone's states") |
 | The tray lists what is live, what is held, what is undecided, what is verified, and is handed from each project to the next | `glossary.md`, "The tray"; `documentation_standard.md`, §4 "Where an initiative fact lives" ("What a project inherits") |
 | Decisions belong in the compass, not in chat | `documentation_standard.md`, §4 "Where an initiative fact lives" ("Decisions" row); `glossary.md`, "North star" |
@@ -409,8 +410,9 @@ Three commands sit beside the loop rather than on it. Run `/doc-audit` before a 
 | Ship runs only when one of the four conditions fires; otherwise there is no ship review | `ship/SKILL.md`, "Trigger"; `glossary.md`, "Blast radius", "Gate 3, ship" |
 | The six questions: what breaks, who notices, fallback, contingency, how we fix it, what it concludes without testing | `ship/SKILL.md`, "Phase 2: RESILIENCE REVIEW"; `glossary.md`, "Gate 3, ship" |
 | Every hole is fixed now, escalated, or accepted with the owner's sign-off; an undispositioned hole blocks go-live | `ship/SKILL.md`, "Phase 3: DISPOSITION" (the table and the go-live gate) |
+| A follow-up the session can do is done, not filed; before the close every filed task is ruled do now, schedule or drop | `ship/SKILL.md`, "Phase 3" ("Done here, not filed"); "Phase 6" Step 2 ("Residual review") |
 | Go-live is undoable in one step, smoke-tested in production, with monitoring confirmed to have fired | `ship/SKILL.md`, "Phase 4: PRE-FLIGHT CHECKS" (Reversibility); "Phase 5: GO LIVE" |
-| The shared close: provisional lessons, living documents current, archive, milestone shipped and tray refilled, outcome check scheduled, handoff card | `ship/SKILL.md`, "Phase 6" Step 2; `_shared/project_close.md`, §§1–6 |
+| The shared close: provisional lessons, living documents current, archive, milestone shipped and tray refilled, outcome check scheduled, handoff card | `ship/SKILL.md`, "Phase 6" Step 3; `_shared/project_close.md`, §§1–6 |
 | A silent failure is a hole; a quietly tolerated hole is the failure the gate exists to prevent | `ship/SKILL.md`, "Phase 2" ("Who notices?" row and the sentence that every "nothing" is a hole); "Phase 3" (the go-live gate sentence) |
 | A wrong number someone acted on is exactly the case the "drives decisions" condition covers | `ship/SKILL.md`, "Trigger" (the third condition and its parenthetical) |
 | The outcome check copies the success definition and verifies each point through the real entry point, never the test suite alone, the day after the named date or 14 days after go-live | `_shared/project_close.md`, §5 items 1–3 |

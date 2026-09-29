@@ -22,11 +22,12 @@ Diagnose and fix a focused issue. No tickets, no project scaffolding — just un
 - Workflow adjustments (modify existing automation behavior)
 - Minor enhancements (small improvement to existing functionality)
 - One-off corrections (data fixes, field updates)
+- Chores (a known procedure with no design question; the test is in `/memo`'s skip list), including a milestone on an initiative's roadmap that `/memo` routed here: closing an initiative, an archive, a tidy-up
 
 ## When NOT to Use (use /memo → /prd → /build instead)
 
 - New workflows or new database tables
-- Changes spanning 3+ systems
+- Changes spanning 3+ systems (a chore excepted, see Step 3 item 4)
 - Anything requiring new architecture or design decisions
 - Work that will take multiple sessions
 
@@ -60,7 +61,7 @@ Before proceeding, answer these questions:
 1. **What exactly is the problem?** (not the symptom — the root cause)
 2. **What is the blast radius?** (what else touches the same data/workflow/boundary?)
 3. **Does this cross a system boundary?** If yes, check `system_contracts.md`.
-4. **How many things need to change?** If the answer is more than ~3 files/components/queries, stop and suggest `/memo` → `/prd` → `/build`.
+4. **How many things need to change?** If the answer is more than ~3 files/components/queries, stop and suggest `/memo` → `/prd` → `/build`. A chore that follows a written or known procedure is exempt from this count and from the 3+ systems limit, because both exist to catch hidden design work and a chore has none; the refusals for new workflows or tables, new architecture and multi-session work still apply. If a step of the chore turns out to need a design choice, stop and send it to `/memo`.
 5. **How long will this system live?** Check the owning initiative's roadmap before proposing any hardening. A fix is worth at most what it protects for the system's remaining life. When the system is being retired soon, repair the damage and record the defect as a requirement on its replacement (the initiative's defect list, or wherever its roadmap keeps them), rather than building the fix into something that is about to be switched off.
 
 ### Step 4: Present the diagnosis
@@ -120,6 +121,7 @@ Per the Living Documentation Rule:
 2. Flag proposed updates for approval
 3. Add a changelog entry if the change is meaningful (skip for trivial config tweaks)
 4. If the system's `CONTEXT.md` predates 2026-09-20 and has no **Kind** and **Proved by** lines, add them now — two lines, from what Phase 1 observed.
+5. When the work is a milestone on an initiative's roadmap, set its row in the initiative `state.md` to `shipped {date} (quick-fix)`, and clear the In-flight row if it names this milestone, before any archive step the chore runs. The milestone's outcome check then follows the initiative's rule like any other milestone's. When the chore is the initiative close itself, `_shared/project_close.md` §I is the fix (Phase 2), run after the exit gate's answers because its writes are what goes live, and runs as written: its "every milestone shipped or killed" counts every milestone but the close, the close's own row is set to `shipped {date} (quick-fix)` when §I writes the close record (§I's "table as it stands" keeps every other row), this skill's Phase 4 edits to the planning folder are approved in the same confirmation as the diagnosis (Step 4) and made between §I's close record and its archive move (§I's own later steps run as §I says), and §I's card, which is always printed, replaces this skill's Phase 5.
 
 **Do NOT create:** project folders, tickets, PROJECT_LOG, retrospectives, or decision log entries. This is a quick fix.
 

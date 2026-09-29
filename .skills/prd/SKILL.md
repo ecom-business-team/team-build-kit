@@ -38,7 +38,7 @@ Why the bar is this high: if anything is discovered mid-build that forces a cour
 
 - Bug fixes or config tweaks (use `/quick-fix`)
 - Strategic decisions not yet clarified (use `/memo` first)
-- The change is trivial (single table, single workflow, no boundary crossings, nothing to verify — go straight to `/build`)
+- The change is trivial or a chore (a known procedure, no design question, nothing to verify beyond its own result) — use `/quick-fix`, which `/memo` routes it to
 
 ---
 
@@ -167,6 +167,7 @@ Present the candidates and the selected path to the user. Confirm before proceed
    **Trace platform automations as consumers, not just workflows.** If the design changes any status/field value, enumerate every platform-native automation (board automations, DB triggers, scheduled rules) that fires ON that value — they are invisible consumers that never appear in workflow-to-workflow tracing. A status a build stops transiting silently starves every automation listening for it. (Lesson, 2026-07-24: an impact map declared a consumer unaffected; that consumer's board automation on `status→approved` was never traced, and the new one-step path would have silently dropped a grading step; caught only at build time, forcing a PRD amendment.)
    **Verify the property you depend on, not the artifact's existence.** A key that exists may be the wrong tier; a tool that "works" is only verified on the code paths it has actually run. Probe the specific property the design rests on (key tier/scope, the exact branch, the exact response field) — existence checks pass while the design-breaking detail hides underneath. (Lesson, 2026-07: a push tool's INSERT path had never once executed because the key it held was the wrong tier; the artifact existed, the property did not.)
    **If the design changes a filter, report, or count semantic: replay the producer end-to-end against CURRENT live data** (dry-run style), not just per-dependency probes. Per-dependency probes verify each piece in isolation; only a full replay reveals how the new semantic interacts with the data that already exists. (Lesson, 2026-07-14: every dependency of a daily report probed ✅, yet items already dispositioned would have re-reported forever; caught only by the /build dry run, forcing a mid-build PRD amendment.)
+   **Probe at the edge the schedule will actually see.** A replay over settled history proves the logic, not the live edge: a scheduled job meets data that is still changing (today's spend, a day not yet closed in another time zone, a queue mid-write). Run one probe at the job's real time and window. (Lesson, 2026-09-29: a daily per-ad spend job's completeness check was proved on a finished month and failed on its first live run, because the window included a day still spending; the schedule and window changed mid-build.)
 3. **Record a validation log:**
 
 ```
@@ -189,13 +190,15 @@ VALIDATION LOG:
 
 ## Phase 7: DESIGN RIGOR PASS (every check must pass — same rigor, session-run)
 
-**Goal:** On the chosen, verified design, run every mental model. The session does this work; the human supplies judgment where flagged. Document pass/fail for each in the PRD. **Do not proceed until all pass.**
+**Goal:** On the chosen, verified design, run every mental model. The session does this work; the human supplies judgment where flagged. Run every check (a check with nothing to check passes; a check changed the design when running it added or altered something in the proposed changes or the impact map, compared with the design before that check ran, and when two checks would add the same thing, the first to run gets the row); the PRD's §13 plain line says every check passed and names the ones that changed the design, and a row records what each of those changed. **Do not proceed until all pass.**
 
 The three exit artifacts (the drawable picture of the design) are the centerpiece:
 
 - **Domain model (ERD)** — every entity and how they relate (1:1, 1:many, many:many). Which exist vs. are new.
 - **Value stream** — how value flows from trigger to outcome, with every cross-system handoff marked.
-- **System narrative (C4 Level 1)** — one paragraph, plain language: what this system does and how its pieces connect. If you can't tell it in a paragraph, the design isn't clear yet.
+- **System narrative (C4 Level 1)** — one to three sentences, plain language (it becomes §4's plain line): what this system does and how its pieces connect. If you can't tell it in a paragraph, the design isn't clear yet.
+
+All three are worked out here, in the session. The PRD writes them by the sizing rule in Phase 9: the narrative becomes §4's plain line (one to three sentences), and the ERD and the value stream are written in full in §5 and §7 only when that rule's trigger for each section fires.
 
 Then the checks:
 
@@ -242,6 +245,8 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 
 ### PRD Format
 
+**Write a section in full only when it holds something a builder needs.** Every `##` section keeps its heading and number, because other documents cite them, and opens with its plain-words line (`> **In plain words:**`). Sections 2, 4 and 15 stop at that line, and section 13 adds a row only for a check that changed the design (no such check, no table): the desired state is the memo's success definition in this project's terms, the narrative is the chosen path told plainly, and the checks and the readiness gate are run in Phases 7 and 8, where a line of "Y" marks proves nothing. Each of sections 5 to 8 is written in full only when the change creates or changes its own subject: stored data, meaning a table, field or file shape rather than the rows a job writes (5), a state (6), a handoff between systems, including a message to people sent through another system (7), a contract, meaning a shape another system or person relies on such as fields, a payload or a file format, while a shared word list is knowledge (8); otherwise its plain line says none, and why, and the section's subheadings and blocks are dropped. The header fields and sections 1, 3, 9, 10, 11, 12 and 14 are always written in full; section 10 stays because `/ship` reads it as the blast-radius map. Why: an evidence pass over sixteen PRDs (2026-09-29) found that sections 2, 4, 13 and 15 restated other text in all sixteen, that sections 5 to 8 earned their words only when the change created the thing each one describes, and that every defect the method caught came from sections 1, 3, 9, 11, 12 and 14.
+
 ```markdown
 # PRD: [Project Name]
 
@@ -261,18 +266,19 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 [Reassembled current-state picture + reusable-assets inventory]
 
 ## 2. Desired State
-[One paragraph — what "solved" looks like. Beginning + desired = the gap.]
+[`> **In plain words:**` only: the memo's success definition in this project's terms, which with the beginning state names the gap.]
 
 ## 3. Chosen Path
 [The selected bridge. If multi-path was run, one line on why this beat the alternatives.]
 
 ## 4. System Narrative (C4 L1)
-[One plain-language paragraph: what this does and how the pieces connect.]
+[`> **In plain words:**` only: the chosen path told plainly, what this does and how the pieces connect.]
 
 ## 5. Domain Model (ERD)
-[Entities + relationships. Which exist vs. new.]
+[In full only when the change creates or changes stored data: entities + relationships, which exist vs. new. Otherwise the plain line says none, and why, and nothing below it is written.]
 
 ## 6. State & Entity Lifecycles
+[In full only when the change creates or changes a state; otherwise the plain line says none, and why, and nothing below it is written.]
 ### [Entity]
 [States (incl. skipped ones), transitions, triggers, validations, side effects, timestamp fields]
 ```chain
@@ -281,13 +287,14 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 [One line per lifecycle; the companion draws each line as a strip; write states as short names, not clauses.]
 
 ## 7. Value Stream
-[Trigger → outcome, with handoff points marked]
+[In full only when the change creates or changes a handoff between systems; otherwise the plain line says none, and why, and nothing below it is written. In full: trigger → outcome, with handoff points marked.]
 ```chain
 [trigger] → [step] → **[handoff]** → [outcome]
 ```
 [One line per stream; bold the handoffs; the prose below keeps the full sentences.]
 
 ## 8. Domain Boundaries
+[In full only when the change creates or changes a contract; otherwise the plain line says none, and why, and nothing below it is written.]
 ### [System]
 - **Ownership:** … **Interface:** … **Produces:** {field: type} **Consumes:** {field: type}
 
@@ -313,21 +320,9 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 - **Verification:** [specific test or check: the proof this work item's kind owes (`documentation_standard.md` §4, the kinds table); for the code kinds, service, application and tool, the method is `testing_standard.md`]
 
 ## 13. Design Rigor Checklist
-| # | Check | Pass |
-| 1 | ERD / entities & relationships | Y/N |
-| 2 | State lifecycles (incl. skipped states) | Y/N |
-| 3 | Entity lifecycles | Y/N |
-| 4 | Transition timestamps | Y/N |
-| 5 | Value stream traced | Y/N |
-| 6 | Domain boundaries (ownership+interface+contract) | Y/N |
-| 7 | Output isolation | Y/N |
-| 8 | Idempotency (money/critical ops) | Y/N |
-| 9 | Reuse-over-rebuild (every new artifact justified) | Y/N |
-| 10 | Blast radius mapped | Y/N |
-| 11 | Pre-mortem (top 3 + defenses) | Y/N |
-| 12 | Expand-and-contract (if applicable) | Y/N |
-| 13 | History (events, actor, time, correlation id) | Y/N |
-| 14 | A failing command (each command a skill runs has a written answer for fails or missing) | Y/N |
+[`> **In plain words:**` every check passed, saying in plain words which ones changed the design ("safe to run twice", not "idempotency"), or that none did. Then one row for each of those; when none did, no table:]
+| # (its Phase 7 number) | Check | What it changed |
+|---|---|---|
 
 ## 14. Pre-mortem
 ### Failure Scenario 1: [Name]
@@ -335,12 +330,7 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 (×3)
 
 ## 15. One-Shot Readiness
-- [ ] Every component buildable with zero further decisions
-- [ ] Validation log all ✅
-- [ ] All rigor checks passed
-- [ ] The owner's read of a rendered draft is in the validation log (when the PRD creates or reshapes a document people read; otherwise mark it n/a)
-- [ ] Self-contained: a fresh session could one-shot this from the PRD alone (nothing load-bearing left in chat)
-- [ ] No "figure it out during build" remaining
+[`> **In plain words:**` only: ready to build with no decision left. Phase 8 must answer an unqualified yes before the PRD goes for approval; its questions are asked there, not copied here.]
 ```
 
 ### Where to save
@@ -358,7 +348,8 @@ The PRD must be approved before `/build`. Confirm with the user:
 - Does this match your intent?
 - Are work items scoped by boundary?
 - Any concerns about the pre-mortem scenarios?
-- **Is the one-shot readiness section an honest, unqualified yes?**
+- **Did Phase 8 answer an honest, unqualified yes?** (§15 states it in its plain line.)
+- **Were the sections sized by the rule?** (§§2, 4 and 15 are their plain lines; §13 has rows only for checks that changed the design, and no table when none did; each of §§5–8 is in full when the change creates or changes its subject, else a "none" line says why.)
 
 **Mark status "Approved" once confirmed.**
 

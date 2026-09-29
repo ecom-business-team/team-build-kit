@@ -8,6 +8,13 @@ Cross-project tool knowledge: how each tool in the stack behaves **anywhere**, l
 
 **Loading:** two mechanisms. (1) Mechanical — the PreToolUse practices gate (`.claude/hooks/practices_gate.py`) injects the matching file into context on the first Supabase / n8n / Railway / Vercel / Google / ClickUp / Discord call of a session (once per file per session). (2) Navigational — each workspace CONTEXT.md lists its practice files ("deploys via Vercel → read `vercel.md` first") as the human-readable dependency list. Sessions load per-tool, on trigger — never all of this folder.
 
+**Anatomy of an entry.** Each lesson is one `##` section:
+- **Heading:** the behaviour in one line, with the date it was learned, e.g. `## A rolled-back test transaction that runs DDL locks live writers out (2026-09-28)`.
+- **Body:** what happens, why it happens, the evidence (how it was found), and what to do instead, in full sentences.
+- **Before adding, search the file for the same lesson.** If it is there, add the new date and case to that entry; never write a second entry.
+- **When a new case contradicts an old one,** reconcile them in place and say which observation held, so the file never gives two answers.
+- **A case from one project** (its names, ids, incidents) goes below the `<!-- kit: stop -->` marker under a heading that says so; only the tool-general truth goes above it.
+
 **Method practices** — how to work, whatever the stack. These ship with the kit.
 
 | File | Covers |

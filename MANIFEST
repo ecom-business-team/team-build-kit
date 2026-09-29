@@ -32,6 +32,7 @@ workspace/.claude/hooks/state_budget_gate.py
 workspace/.claude/tools/orientation_cost.py
 workspace/.claude/tools/gate_cost.py
 workspace/.claude/tools/index_check.py
+workspace/.claude/tools/referrers.py
 workspace/documentation_standard.md
 workspace/workflow_design_standard.md
 workspace/testing_standard.md

@@ -21,6 +21,8 @@ else rm -rf "$TMP"; echo "❌ Neither sha256sum nor shasum is available, so the 
 if ! curl -fsSL "$BASE/MANIFEST" -o "$TMP/MANIFEST"; then
   rm -rf "$TMP"; echo "❌ Could not fetch MANIFEST from $BASE. Nothing was changed — check your connection and try again."; exit 1
 fi
+# the published version, recorded in the receipts so the session-start check can say when a newer kit is out (optional)
+KV=$(curl -fsSL "$BASE/VERSION" 2>/dev/null | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?' | head -1)
 SLIST=$(grep -E '^\.skills/'  "$TMP/MANIFEST")
 WLIST=$(grep -E '^workspace/' "$TMP/MANIFEST")
 if [ -n "${TBK_WORKSPACE:-}" ]; then
@@ -65,6 +67,7 @@ if [ "$ok" = 1 ] && [ "$want" -gt 0 ] && [ "$got" = "$want" ]; then
     mkdir -p "$(dirname "$1")"
     { echo "# Team Build Kit receipt — the sha256 of every kit-owned file as the installer placed it, one line each."
       echo "# /update-build-kit reads it to tell your edits from the kit's files. Written by install.sh; do not edit."
+      [ -n "$KV" ] && echo "# version: $KV"
       [ -f "$2" ] && cat "$2"; } > "$1"
   }
   # skills
@@ -114,7 +117,9 @@ PY
     [ "$kept" -gt 0 ] && echo "   $kept kit-owned file(s) you had changed were kept — see the ⚠️ line(s) above."
     echo "   Next: open $W in Claude Code."
   else
-    echo "   New here? Type /onboard to create your workspace."
+    echo "   These are the commands only. The hooks (session notes, the daily new-version check) and the tools the commands"
+    echo "   call live in a workspace: type /onboard to create one, or put the kit into a folder you already have with"
+    echo "   curl -fsSL $BASE/install.sh | TBK_WORKSPACE=\"<your folder>\" bash"
   fi
 else
   rm -rf "$TMP"; echo "❌ Install failed ($got/$want downloaded). Nothing was changed — check your connection and try again."; exit 1

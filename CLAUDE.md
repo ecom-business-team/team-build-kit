@@ -39,7 +39,7 @@ This folder is the factory. `.skills/` and `workspace/` are the files it install
 ## If the user asks questions before installing
 
 - **"What is this?"** — "A set of commands that walk you through building real tools properly — think it through, design it, make it safe to rely on — plus the standards they read and a workspace to work in. It takes about ten minutes, most of it a conversation about your work. Type 'get started' when ready."
-- **"Is this safe?"** — "It copies skill files into your Claude Code settings (`~/.claude/skills/`) and creates one new folder for your workspace beside this one, with some standards, notes and five small hooks inside it. No system changes, no hidden installs, nothing hosted. It never touches work that is already yours."
+- **"Is this safe?"** — "It copies skill files into your Claude Code settings (`~/.claude/skills/`) and creates one new folder for your workspace beside this one, with some standards, notes and five small hooks inside it. No system changes, no hidden installs, nothing hosted. Once a day one hook reads the kit's public version number from GitHub to tell you when a newer kit is out; nothing is sent. It never touches work that is already yours."
 - **"Do I need to know how to code?"** — "No. Everything is plain English. The commands do the technical part; you describe what you want."
 - **"Can I make more than one workspace?"** — "Yes. Say 'get started' here again, or type `/onboard` anywhere, and it creates another folder beside this one."
 

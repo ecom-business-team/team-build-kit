@@ -8,34 +8,48 @@ A way of building you can hold in one breath: six kinds of thing you might build
 
 ---
 
-## Quick install (already using Claude Code)
+## How to install
 
-Paste this line into a terminal or into Claude Code. It installs the commands and changes nothing else:
+### The one thing to understand first
+
+The kit comes in two halves, and they land in different places.
+
+- **The commands** (`/memo`, `/prd`, `/build` and the rest) go into Claude Code itself. They work in any folder you open.
+- **The background parts** go into one folder of yours, called your **workspace**. These are the session notes, the daily check that tells you when a newer kit is out, the small tools the commands call (for example, the one that measures how full your session is), and the standards the commands read. They only run when Claude Code is opened **in that workspace folder**.
+
+You get the most out of the kit when you have both halves and you do your work inside your workspace. With the commands alone, the commands still run, but nothing keeps notes, nothing tells you about updates, and the commands cannot find the tools and standards they expect.
+
+### Pick the route that fits you
+
+**Route 1: you are new to the kit (recommended).** This gives you both halves and a workspace in one go.
+
+1. **Download this folder.** Click `Code ▸ Download ZIP` above, unzip it, and put it on your Desktop.
+2. **Open it in VS Code.** Use `File ▸ Open Folder` and pick this folder.
+3. **Open the Claude Code panel** and type **`get started`**.
+
+Claude installs the commands (it asks your permission once), interviews you about your work, and creates your workspace as a new folder **beside this one**, with the background parts already in it. This folder is the kit, and your workspace is its own folder next to it. Say `get started` again whenever you want another workspace.
+
+**Route 2: you already use Claude Code and want a fresh workspace.** Paste this line into a terminal or into Claude Code. It installs the commands and nothing else:
 
 ```
 K=https://raw.githubusercontent.com/ecom-business-team/team-build-kit; curl -fsSL $K/main/install.sh | bash
 ```
 
-**Then you still need a workspace.** That line gives you the commands only. The hooks and tools the commands rely on live inside a workspace folder: the session notes, the daily check that tells you when a newer kit is out, and the tools that measure your session and check links before a move. Without a workspace, none of those run. Get one in either of two ways:
+Then type **`/onboard`** in Claude Code. It interviews you and creates your workspace with the background parts in it. **Do not stop after the first line:** without `/onboard` you have the commands only.
 
-- **To create a new workspace,** type **`/onboard`**. It interviews you and makes the folder with everything in it.
-- **To use a folder you already have,** run this line with your folder's path in place of `<your folder>`. It adds the kit's files beside yours and never touches your own files or your `CLAUDE.md`:
+**Route 3: you already have a folder you work in.** Run this line, with that folder's full path in place of `<your folder>`. It installs the commands and puts the background parts into your folder, beside your own files. It never changes your own files or your `CLAUDE.md`:
 
 ```
 K=https://raw.githubusercontent.com/ecom-business-team/team-build-kit; curl -fsSL $K/main/install.sh | TBK_WORKSPACE="<your folder>" bash
 ```
 
-After that, open the folder in Claude Code and say yes when it asks whether to trust the folder's hooks. Then run `/convert-to-standard` on the folder to have the documents it is missing written.
+Then open that folder in Claude Code and type **`/convert-to-standard`**. It looks at what is already there and writes the documents the folder is missing, so the commands have something to stand on.
 
----
+### After installing, whichever route you took
 
-## Full setup (first time)
-
-1. **Download this folder** — click `Code ▸ Download ZIP` above, unzip it, and put it on your Desktop.
-2. **Open it in VS Code** — `File ▸ Open Folder`, pick this folder.
-3. **Open the Claude Code panel** and type **`get started`**.
-
-Claude installs the commands (it asks permission once), interviews you about your work, and creates your workspace **beside this folder**. This folder is the kit; your workspace is its own folder next to it. Run `get started` again for another workspace.
+- **Always open Claude Code in your workspace folder** when you work. If you open it anywhere else, you have the commands but none of the background parts.
+- **Say yes to the trust question.** The first time Claude Code opens your workspace, it asks once whether to trust the folder's hooks. Say yes: they are the kit's, and they only write notes inside that folder.
+- **To check you are in a workspace,** look for a file called `.claude/kit_receipt` inside the folder. If it is there, the background parts are installed. If it is not, take Route 2 or Route 3 for that folder.
 
 ---
 

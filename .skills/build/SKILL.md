@@ -77,6 +77,7 @@ Verify against the PRD:
 - Does the output match the contract specified for this work item?
 - Run the verification step the PRD defined for it.
 - Run the proof the system's **kind** requires: read the **Kind** line of the system's `CONTEXT.md` and take the proof from the kinds table in `documentation_standard.md` §4 ("The third axis") — an automation replays through its real entry point; a service passes its tests and a live probe and its noticer fires; an application passes browser smoke through the real login and its live invariants; a tool passes tests on fixtures and a check on real data; a procedure passes a cold read in a fresh session; knowledge passes review against its verification table. The method for the code kinds is `testing_standard.md`. No Kind line yet → state the kind from what you observed and add the line in Step 3.
+- When the verification needs a person, name the one thing they do and what counts as a pass ("the owner reads `handoff.html` and says go"), never "the owner reviews".
 - Does it behave as the validation log predicted?
 - If it doesn't match: fix it now. (If the fix requires a design change, that's a scope escalation, not a build fix.)
 

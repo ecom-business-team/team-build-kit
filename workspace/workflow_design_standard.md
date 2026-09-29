@@ -15,7 +15,7 @@ Every step that crosses a system boundary or changes hands between actors must a
 | **Output** | What does it produce? |
 | **Handoff** | What does it trigger next? |
 
-Blank property = under-defined step. Vague output ("brand has overview") needs specificity ("brand has program overview with pricing, lifecycle, and terms summary").
+Blank property = under-defined step. A step a person does names exactly one action they take, said as something a person does (approve the memo, read the report and say go, send the invoice), never a vague "review"; a step that needs two human actions is two steps. Vague output ("brand has overview") needs specificity ("brand has program overview with pricing, lifecycle, and terms summary").
 
 ## Quality review — three questions about the flow as a whole
 
@@ -39,7 +39,7 @@ Any build that holds important state records its history in an append-only event
 
 ## Human review gates
 
-For multi-stage workflows where quality matters more than speed: each stage produces output a human reviews before the next stage consumes it. The intermediate artifact (markdown, JSON, report) IS the communication channel — folder structure is the state machine; no orchestration code.
+For multi-stage workflows where quality matters more than speed: each stage produces output, and exactly one person takes one named action on it (reads the report and approves it, corrects the list, says go) before the next stage consumes it. A vague "review" is not a check. The intermediate artifact (markdown, JSON, report) IS the communication channel — folder structure is the state machine; no orchestration code.
 
 **Use gates for:** hybrid workflows where errors cascade across systems · content going to external stakeholders · multi-step skill sequences where each output feeds the next.
 **Skip gates for:** fully automated system-to-system flows · internal tasks where speed wins · single steps with built-in verification.

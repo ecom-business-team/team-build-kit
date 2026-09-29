@@ -205,7 +205,7 @@ Then the checks:
 | 2 | **State lifecycle** | Every core entity has a `status` field (string/enum, **not** booleans) and a full state map — *including the states you're tempted to skip* (paused, disputed, archived, error). Beginners omit these entirely. |
 | 3 | **Entity lifecycle** | Every entity's create→…→terminal path is mapped. |
 | 4 | **Transition timestamps** | Every state transition has a timestamp field (`matched_at`, `approved_at`). |
-| 5 | **Value stream** | Flow traced end-to-end, trigger to outcome. |
+| 5 | **Value stream** | Flow traced end-to-end, trigger to outcome. Each step is designed by the six-property step schema in `workflow_design_standard.md`. |
 | 6 | **Domain boundaries** | Every system has clear ownership, one interface point (table/webhook/RPC/API), and an explicit contract (produces + consumes, with field shapes). |
 | 7 | **Output isolation** | Each system writes only to its own output; no system mutates another's data. Cross-system reads via views/contracts. |
 | 8 | **Idempotency** | Every operation touching money or critical state can safely run twice. |
@@ -214,6 +214,7 @@ Then the checks:
 | 11 | **Pre-mortem** | "3 months out, this failed badly — what went wrong?" Top 3 failure scenarios with defenses. **Time-window check:** if the design stretches the time between two steps that used to run back-to-back (a draft that persists, a queue that buffers, an approval that waits), explicitly ask "what can change in the world between step A and step B, and does step B re-verify it?" Guards written for a minutes-long window silently break at days. (Lesson, 2026-07-15: a design stretched assemble→push from minutes to days; push never re-checked that its inputs were still in the state assemble had seen; caught only at /ship.) |
 | 12 | **Expand-and-contract** | If modifying existing contracts, the migration path is defined (add new → migrate consumers → remove old). |
 | 13 | **History** | Every state change and meaningful action of the build's entities is recorded by the history rule (`workflow_design_standard.md`, "The history rule"): a named event type from the catalogue, the actor, the time, a correlation id, and a named writer. A replacement writes the same events and proves it by a parallel run. |
+| 14 | **A failing command** | For every command a skill tells Claude to run, the PRD names what the skill does when that command fails or is missing: an error, an old version without the flag, a tool that was never installed. Covering "it runs and finds nothing" is not enough. Why: skills and workspace tools reach a teammate by separate routes, so a new skill can meet an old tool; a PRD once covered only the empty result, and the old tool's error was caught only at the final review, by running it (milestone 9, 2026-09-22). |
 
 If any check fails, fix the design before continuing.
 
@@ -309,7 +310,7 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 - **Produces:** [output contract — explicit shape]
 - **Depends on:** [nothing / WI-N]
 - **Paths:** [the path table, when the rule above applies]
-- **Verification:** [specific test or check]
+- **Verification:** [specific test or check: the proof this work item's kind owes (`documentation_standard.md` §4, the kinds table); for the code kinds, service, application and tool, the method is `testing_standard.md`]
 
 ## 13. Design Rigor Checklist
 | # | Check | Pass |
@@ -326,6 +327,7 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 | 11 | Pre-mortem (top 3 + defenses) | Y/N |
 | 12 | Expand-and-contract (if applicable) | Y/N |
 | 13 | History (events, actor, time, correlation id) | Y/N |
+| 14 | A failing command (each command a skill runs has a written answer for fails or missing) | Y/N |
 
 ## 14. Pre-mortem
 ### Failure Scenario 1: [Name]

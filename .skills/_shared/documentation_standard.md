@@ -60,7 +60,7 @@ Required docs scale with what exists. Never create a doc before it's earned — 
 | **`state.md`** (project) | A PRD is approved | `_admin/prds/<project>/` — the snapshot: position, next, verify block, held, needs the owner; ≤400 words, rewritten in place; archived with the folder |
 | **companion `.html`** | Beside each of the four gate documents (memo, PRD, project log, state file), written by the skill that writes the document | The document's folder; generated, never edited; moved with its source |
 
-**Leaf** = `CONTEXT.md` header only (the opening paragraph with its Kind line, and Proved by). **Procedure** = its `SKILL.md` is the document, plus a row in `SKILLS.md`; it gets no `CONTEXT.md` of its own. **Standalone system** (its own workspace) = `CONTEXT.md` + `change_log.md` + `decision_log.md` as it earns them; contracts/architecture only after it graduates. **Mature workspace** = all of the above.
+**Leaf** = `CONTEXT.md` only: the opening paragraph with its Kind line and Proved by, and the file table (what lives here), like every index (`documentation_standard.md` §5); no other documents. **Procedure** = its `SKILL.md` is the document, plus a row in `SKILLS.md`; it gets no `CONTEXT.md` of its own. **Standalone system** (its own workspace) = `CONTEXT.md` + `change_log.md` + `decision_log.md` as it earns them; contracts/architecture only after it graduates. **Mature workspace** = all of the above.
 
 `flow.html` is not templated here — it has its own base template, named in the workspace's root CLAUDE.md under "Words the skills use". This Standard governs the markdown docs.
 

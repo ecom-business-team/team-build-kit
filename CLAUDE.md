@@ -24,15 +24,15 @@ Confirm the command printed ✅ with its file count and the list of commands. Th
 
 After the interview's handoff card, say:
 
-> "Three things to read before you build anything, all in your new workspace: **why_we_build.html** — why we build this way, in plain words; **lifecycle_map.html** — every door, the three gates and the loop on one page; and **worked_example.html** — one small build followed through every gate. The one idea: complexity is the enemy. If you can't explain it simply, it's probably too complicated.
+> "Three things to read before you build anything, all in your new workspace: **why_we_build.html** — why we build this way, in plain words; **lifecycle_map.html** — every way to start, the three checkpoints and the loop on one page; and **worked_example.html** — one small build followed through every checkpoint. The one idea: complexity is the enemy. If you can't explain it simply, it's probably too complicated.
 >
-> There are two doors. `/new-workspace` is for something new; `/convert-to-standard` is for something you already have. Both end with a card that says what to type next.
+> There are two ways to start. `/new-workspace` is for something new; `/convert-to-standard` is for something you already have. Both end with a card that says what to type next.
 >
 > The first time you open your workspace folder in Claude Code it asks once whether to trust the folder's hooks. Say yes — they are the kit's, and they only write notes inside that folder."
 
 ## Step 5: Leave this folder as it is
 
-This folder is the factory. `.skills/` and `workspace/` are the files it installs from; `README.md` and this file are its front door. Saying `get started` again here makes another workspace. Updates run from inside a workspace with `/update-build-kit`, never from here.
+This folder is the factory. `.skills/` and `workspace/` are the files it installs from; `README.md` and this file are the first files a person opens. Saying `get started` again here makes another workspace. Updates run from inside a workspace with `/update-build-kit`, never from here.
 
 ---
 

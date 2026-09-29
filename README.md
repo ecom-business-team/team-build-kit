@@ -4,7 +4,7 @@
 
 ## What this is
 
-A way of building you can hold in one breath: six kinds of thing you might build (an automation, a service, an application, a tool, a procedure, or knowledge, each defined in one sentence in `workspace/glossary.md`), three gates a build passes through (think it through → design it → make it safe to rely on), and one state layer that says where every piece of work sits. The kit is files and skills: commands you type in Claude Code, the standards they read, and five small hooks that keep notes about your sessions. Nothing is hosted; it all lives on your machine.
+A way of building you can hold in one breath: six kinds of thing you might build (an automation, a service, an application, a tool, a procedure, or knowledge, each defined in one sentence in `workspace/glossary.md`), three checkpoints a build passes through (think it through → design it → make it safe to rely on), and one state layer that says where every piece of work sits. Together these steps are the kit's lifecycle, the path every build follows from an idea to something finished and checked. The kit is files and skills. The skills are commands you type in Claude Code. The standards are three documents the commands read, which say how documents are laid out, how processes are designed and how quality is proved on code. Five small hooks keep notes about your sessions, where a session is one conversation with Claude, from opening the chat to closing it. Nothing is hosted; it all lives on your machine.
 
 ---
 
@@ -57,19 +57,19 @@ Then open that folder in Claude Code and type **`/convert-to-standard`**. It loo
 
 | Command | What it does |
 |---|---|
-| **Doors** | |
+| **Ways to start** | |
 | `/onboard` | Interviews you about your work, creates your workspace beside the kit, and writes your map and skills list. |
 | `/new-workspace` | Sets up a tidy, documented home for something new you are about to build. |
 | `/convert-to-standard` | Looks at something you already have, names what it is, writes the documents it is missing, and hands it into the lifecycle. |
-| **Gates** | |
-| `/memo` | Gate 1: says why this is worth building and what done looks like, before any design or code. |
-| `/prd` | Gate 2: designs the change and checks every dependency live, so the build runs in one go. |
-| `/build` | Carries out an approved design work item by work item, with a handoff card at every stop that says, from a measured number, whether to carry on or start fresh. |
-| `/ship` | Gate 3: the review a build passes before other people, real data or money depend on it. |
-| `/quick-fix` | Fixes something small without the ceremony, and still asks the Gate 3 questions at the end. |
+| **Checkpoints** | |
+| `/memo` | Checkpoint 1: says why this is worth building and what done looks like, before any design or code. |
+| `/prd` | Checkpoint 2: designs the change and checks every dependency live, so the build runs in one go. |
+| `/build` | Carries out an approved design one work item at a time. A work item is one bounded piece of the design that promises one output. At every stop it prints a handoff card, a short summary of where the work stands and exactly what to type next, and the card says, from a measured number, whether to carry on or start fresh. |
+| `/ship` | Checkpoint 3: the review a build passes before other people, real data or money depend on it. |
+| `/quick-fix` | Fixes something small without the ceremony, and still asks the Checkpoint 3 questions at the end. |
 | **Every session** | |
-| `/session-close` | Writes the session's log entry and checks the living documents match what changed. |
-| `/day` | Turns a day's session logs into one digest and files the loose threads. |
+| `/session-close` | Writes the session's log entry and checks that the living documents, the ones kept true at the moment something changes, match what changed. |
+| `/day` | Turns a day's session logs into one digest, a short paragraph that sums up the day, and files the loose threads. |
 | `/week` | Reviews the week's digests and names the one thing that kept getting in the way. |
 | `/doc-audit` | Checks every living document against what actually exists and lists the defects to fix, for one area or the whole workspace. |
 | **Your own skills** | |
@@ -77,23 +77,25 @@ Then open that folder in Claude Code and type **`/convert-to-standard`**. It loo
 | **The kit** | |
 | `/update-build-kit` | Pulls the latest kit and refreshes its files; run it from inside your workspace. |
 
-**Just experimenting?** Play freely. The gates are for building something real.
+**Just experimenting?** Play freely. The checkpoints are for building something real.
 
 ---
 
-## Two doors
+## Two ways to start
+
+There are two ways to start: build something new with `/new-workspace`, or bring something that already exists up to standard with `/convert-to-standard`.
 
 **New work** goes through `/new-workspace`. You describe the thing in plain words; it decides what kind of thing it is and which documents it needs, creates exactly those, and ends with a card saying what to type next.
 
-**Existing work** goes through `/convert-to-standard`. Point it at a folder or a system that already runs. It observes what is actually there, writes only what it can trace to something it saw or you confirmed, and ends with the same card. Both doors lead to the same place: a documented thing the gates can operate on.
+**Existing work** goes through `/convert-to-standard`. Point it at a folder or a system that already runs. It observes what is actually there, writes only what it can trace to something it saw or you confirmed, and ends with the same card. Both ways to start lead to the same place: a documented thing the checkpoints can operate on.
 
 ---
 
 ## Start here
 
 1. **Read [`why_we_build.md`](workspace/why_we_build.md)** — why we build this way, in plain words. Downloaded the kit? Open `workspace/why_we_build.html` for the same document with its diagrams drawn.
-2. **Then [`lifecycle_map.md`](workspace/lifecycle_map.md)** — every door, the three gates and the loop on one page; open `workspace/lifecycle_map.html` for the picture drawn.
-3. **Then read [`worked_example.md`](workspace/worked_example.md)** — one small build followed through every gate (`workspace/worked_example.html` for the drawn version).
+2. **Then [`lifecycle_map.md`](workspace/lifecycle_map.md)** — every way to start, the three checkpoints and the loop on one page; open `workspace/lifecycle_map.html` for the picture drawn.
+3. **Then read [`worked_example.md`](workspace/worked_example.md)** — one small build followed through every checkpoint (`workspace/worked_example.html` for the drawn version).
 
 The one idea: **complexity is the enemy. If you can't explain it simply, it's probably too complicated.**
 
@@ -104,7 +106,7 @@ The one idea: **complexity is the enemy. If you can't explain it simply, it's pr
 Three habits keep your workspace true, and the kit asks for them:
 
 - **At the end of each session**, type `/session-close`. It writes one line in today's log and checks that the documents match what changed.
-- **At the end of the day, or the next morning**, type `/day`. In about five minutes it turns the day's lines into a short digest and files the loose ends in your task manager.
+- **At the end of the day, or the next morning**, type `/day`. In about five minutes it turns the day's lines into a short digest and files the loose ends in your task manager, the one app or file where every task and open question lives.
 - **Once a week**, type `/week`. In about twenty minutes it looks back over the week and names the one thing that kept getting in the way.
 
 From the day after your first session, Claude mentions it when a day or a week has not been reviewed. It only mentions it; nothing runs until you type the command.

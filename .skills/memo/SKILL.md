@@ -146,7 +146,7 @@ Then fill cost, value, why-now, and success. Use judgment — don't interrogate;
 ### Research (if the topic touches the codebase):
 - **Inside an initiative** (a planning folder exists): read its `state.md` first — the milestone table says what shipped and what is queued, the handed-forward tray says what this project inherits and which facts are already verified; then the roadmap entry for this project in `north_star.md` (or `roadmap.md`). Never read the archived PRDs or logs whole; follow the tray's pointers by section. Then print the orientation card (template §4.10) before any other work.
 - Read relevant CONTEXT.md, architecture docs, system contracts — enough to state the problem and cost accurately.
-- Check live state only if it changes the problem statement (you are NOT designing here — resist diagnosing the solution).
+- Check live state only if it changes the problem statement (you are NOT designing here — resist diagnosing the solution). One exception: an input file the memo quotes as fact (an inventory, a count, a list of what exists) is re-checked against live state before it is quoted, because such files go stale silently and a stale count becomes the memo's cost of inaction (2026-09-22).
 - Reference memory for prior decisions or context.
 
 **Compress for the user.** Don't present raw research — synthesize it into the minimum context the memo needs. The author's attention is expensive, and the memo is supposed to be cheap.

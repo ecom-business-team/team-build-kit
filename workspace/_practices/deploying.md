@@ -17,3 +17,7 @@
 So add one step to the pre-flight, next to `git status`: **make one unauthenticated request to the target and look at what comes back.** Not a health check, not an authenticated call — the request a stranger would make, with redirects unfollowed. It takes a second and it is the only thing that distinguishes *deployed* from *reachable*.
 
 Do it again immediately after any change to the access posture, because that change is usually a dashboard toggle with no artifact in the repository and nothing in the build log.
+
+## A branch push proves the deploy path before `main` moves (2026-09-24)
+
+On a git-integrated host, push the branch first and let its preview build: it proves the build, the environment variables and the region settings on the host's own machines, while production still serves the old commit. A failure there costs nothing; the same failure after a merge is an outage. Merge only once the branch deployment is Ready.

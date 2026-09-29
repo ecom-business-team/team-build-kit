@@ -19,6 +19,8 @@ Append to `daily-outputs/YYYY-MM/YYYY-MM-DD.md` (create month folder/file if abs
 **Open:** threads left hanging → file to the task manager, reference the task here
 ```
 
+**An untasked Open item is refused.** Every thread on the **Open:** line carries one of three things: the task id it was filed as, `resolved` with the pointer that shows it, or, for the in-flight project's next step, the exact command (its position already lives in `state.md`). A thread with none of the three is not written until it is filed: file it, then write the id. The log is where threads are found, not where they are kept; a thread that waits for the next `/day` is lost the week `/day` lapses (13 days of backlog found 13 unfiled threads, three of them live defects, 2026-09-28).
+
 Trivial session = one line: `## HH:MM · workspace · quick-fix — shipped X (commit abc123)`. Every session logs; selective logging kills the habit. The log is an index of exhaust — never duplicate content that lives in commits, practices, or the task manager.
 
 **If a project is in flight, end the session with the handoff card** (template §4.10 in `~/.claude/skills/_shared/documentation_standard.md`), whole and as markdown. The log entry points at `state.md`; the card is what the owner reads.

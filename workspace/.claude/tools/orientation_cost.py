@@ -81,10 +81,30 @@ def measure(path):
                 ctx = u.get('input_tokens', 0) + u.get('cache_creation_input_tokens', 0) + u.get('cache_read_input_tokens', 0)
     return ctx, compacted
 
+def last_record(path):
+    rec = None
+    with open(path, errors='ignore') as fh:
+        for line in fh:
+            try: rec = json.loads(line)
+            except Exception: pass
+    return rec if isinstance(rec, dict) else None
+
+def called_from_subagent(main_path):
+    """True when the call running this tool sits in a subagent's transcript. A subagent inherits the
+    parent's CLAUDE_CODE_SESSION_ID and environment, but its records go to <sid>/subagents/*.jsonl
+    (older versions: isSidechain lines in the main file), and the calling tool_use is written to the
+    caller's transcript before the command runs."""
+    files = [main_path, *sorted(main_path.with_suffix('').glob('subagents/*.jsonl'))]
+    callers = [r for r in map(last_record, files) if r and r.get('type') == 'assistant'
+               and 'orientation_cost' in json.dumps((r.get('message') or {}).get('content', ''))]
+    return bool(callers) and all(r.get('isSidechain') for r in callers)
+
 def now_line(step, sid):
     hits = sorted(Path.home().glob(f'.claude/projects/*/{sid}.jsonl')) if sid else []
     if not hits:
         return f'Context: not measured (no session transcript found) → hand off {FRESH}'
+    if called_from_subagent(hits[0]):
+        return f'Context: not measured (run inside a subagent) → hand off {FRESH}'
     ctx, compacted = measure(hits[0])
     if ctx is None:
         return f'Context: not measured (no assistant turn yet) → hand off {FRESH}'

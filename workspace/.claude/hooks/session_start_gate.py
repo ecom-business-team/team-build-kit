@@ -6,6 +6,8 @@ Plain stdout from a SessionStart hook is added to Claude's context, so this is t
   2. days with entries but no /day digest
   3. the last completed ISO week without a /week review
   4. open tasks in the fallback list (tasks.md at the root) whose due date has come
+  5. a newer Team Build Kit than the one installed (the receipt's version line against the
+     published VERSION, fetched at most once a day; silent with no receipt, no line or no network)
 Prints nothing when nothing is pending. Reconstructing missing entries is Claude's standing
 behaviour (session-close); /day and /week are the owner's rituals -> mentioned, never run unasked.
 """
@@ -15,11 +17,15 @@ import json
 import os
 import re
 import sys
+import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.environ.get("CLAUDE_PROJECT_DIR") or os.path.abspath(os.path.join(HERE, "..", ".."))
 OUT = os.path.join(ROOT, "daily-outputs")
 LEDGER = os.path.join(OUT, "sessions.jsonl")
+KIT_REPO = "https://raw.githubusercontent.com/ecom-business-team/team-build-kit"  # the published kit; /main is added below
+KIT_RAW = os.environ.get("TBK_BASE") or KIT_REPO + "/main"
+VERSION_RE = re.compile(r"v\d+\.\d+\.\d+(?:-\d+)?")
 LOOKBACK_DAYS = 14
 MAX_LIST = 6
 
@@ -78,6 +84,38 @@ def tasks_due(today_s):
     return out
 
 
+def kit_update(today_s):
+    """One line when the published kit differs from the installed one. The installed version is the
+    '# version:' line install.sh writes into the skills receipt; the published one is fetched at most
+    once a day and cached with the date, so every session that day repeats the line without a fetch."""
+    m = re.search(r"^# version: (\S+)", read(os.path.expanduser("~/.claude/skills/.kit_receipt")), re.M)
+    if not m:
+        return []
+    marker = os.path.expanduser("~/.claude/state/kit-version-check.json")
+    try:
+        cache = json.loads(read(marker) or "{}")
+    except ValueError:
+        cache = {}
+    latest = cache.get("latest") if cache.get("date") == today_s else None
+    if latest is None:
+        try:
+            with urllib.request.urlopen(f"{KIT_RAW}/VERSION", timeout=3) as r:
+                found = VERSION_RE.search(r.read(4096).decode("utf-8", "ignore"))
+        except Exception:
+            return []  # offline or moved: say nothing, try again next session
+        latest = found.group(0) if found else ""
+        try:
+            os.makedirs(os.path.dirname(marker), exist_ok=True)
+            with open(marker, "w") as fh:
+                json.dump({"date": today_s, "latest": latest}, fh)
+        except OSError:
+            pass
+    if not latest or latest == m.group(1):
+        return []
+    return [f"[Kit gate - SessionStart] A newer Team Build Kit is out: installed {m.group(1)}, published {latest}. "
+            f"-> mention /update-build-kit to the owner in one line (run it from the workspace root); do NOT run it unasked."]
+
+
 def main():
     try:
         payload = json.load(sys.stdin)
@@ -128,7 +166,8 @@ def main():
 
     projects = projects_in_flight()
     due = tasks_due(today_s)
-    if not (unlogged or unprocessed or week_missing or projects or due):
+    kit = kit_update(today_s)
+    if not (unlogged or unprocessed or week_missing or projects or due or kit):
         return
 
     lines = []
@@ -162,6 +201,7 @@ def main():
     if lines and lines[-1].startswith("[Telemetry gate"):
         lines.pop()  # nothing telemetric pending; only the state lines remain
     lines.extend(due)
+    lines.extend(kit)
     print("\n".join(lines))
 
 

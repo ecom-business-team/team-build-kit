@@ -67,6 +67,10 @@ General rule: after any scripted mutation whose success is not self-evident, **r
 - **Orientation instrument:** `python3 .claude/tools/orientation_cost.py <id8> …` reads transcripts and reports, per session, the tool calls before the first mutating call, the tokens added to context before it, the minutes, the files read while orienting, compactions, and the re-reads of the orientation set across the session.
 - **The practices gate keys on command TEXT, not intent.** Writing a document that merely mentions `railway`, `vercel` or `deploying` inside a heredoc loads those practice files into context (2026-09-20, ~4k tokens, harmless). When a big doc-writing command names several tools, expect the gate; it is not a sign anything deployed.
 
+## A skill's text is fixed when it loads (2026-09-29, claude-md-merge)
+
+- **A skill that installs a newer copy of itself runs its old text for the rest of that run.** The session loaded the skill before the install replaced the file, so any step the new version adds does not happen until the next run. A path table for such a command needs the row "first run after the publish", driven by the previous release's text; a fixture that runs the new text cannot see it. `/update-build-kit` now re-reads itself after installing (kit v2026.9.29-10), which fixes this from its next change on; the release that adds the re-read still needs a run-twice announcement (claude-md-merge ship review H1, 2026-09-29).
+
 ## Nested `claude -p` as a proof harness (2026-09-21, onboarding-path build)
 
 - A nested `claude -p` cannot run under a fresh `HOME` (`HOME=$(mktemp -d)`): the login lives in the real home. Prove hooks and skills in a freshly created workspace by starting the nested session **from that folder** with the real login; the project's `.claude/settings.json` hooks fire (the SessionEnd ledger wrote its row) and no trust dialog blocks a non-interactive run.

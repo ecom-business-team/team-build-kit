@@ -22,7 +22,7 @@ Stand up the **documentation foundation** for anything you'll build and operate 
 /new-workspace reports            — name given, interview the rest
 /new-workspace --brownfield payout  — skip the fork question, go straight to extraction
 /new-workspace --initiative platform-rebuild — the planning folder above a sequence of projects (compass, snapshot, index)
-/convert-to-standard <folder>       — the same fork, by its own door
+/convert-to-standard <folder>       — the same fork, as its own way to start
 ```
 
 ## When to Use
@@ -61,7 +61,7 @@ Or, for the fourth level:
 ```
 This is an INITIATIVE (a sequence of milestones, each its own project — e.g. a platform rebuild).
 Per the Standard §4 it needs a planning folder `_admin/<initiative>/`: CONTEXT.md (the index, template 4.9),
-state.md (the snapshot, 4.7) and north_star.md (the compass and the initiative's memo, 4.11). Research inputs
+state.md (the snapshot, 4.7) and north_star.md (the compass, the initiative's founding document, 4.11; each milestone still gets its own memo, which points into it). Research inputs
 land as they arrive; spec appendices when a PRD needs them. Its first milestone then starts at /memo (short form).
 Confirm?
 ```
@@ -165,7 +165,7 @@ Walk the Standard Part 5 checklist explicitly:
 3. Every doc conforms to its template (an outsider couldn't tell who authored it).
 4. Every doc is 100% accurate:
    - Greenfield → accurate to the minimal just-defined reality.
-   - **Brownfield → every line traces to something observed or explicitly confirmed** (the hard gate — no assumed facts).
+   - **Brownfield → every line traces to something observed or explicitly confirmed** (the hard stop — no assumed facts).
 5. Root CLAUDE.md routing updated.
 6. The area's skeleton exists for its level and kind, and `index_check.py <area>` exits 0 (`python3 .claude/tools/index_check.py <area>`).
 

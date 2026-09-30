@@ -5,7 +5,7 @@ description: Execute an approved PRD as pure implementation — no planning, no 
 
 # /build
 
-**Definition of done:** Build turns the PRD into reality through **pure execution.** The PRD has already done the thinking — it verified every dependency live and guaranteed the build can be one-shot with zero scope change. So `/build` does not plan, design, or decide; it implements the work items, verifies each against the PRD's contracts and validation log, and updates living documentation. When the build's blast radius crosses the line, it routes to `/ship` for the Gate-3 review before anything goes live.
+**Definition of done:** Build turns the PRD into reality through **pure execution.** The PRD has already done the thinking — it verified every dependency live and guaranteed the build can be one-shot with zero scope change. So `/build` does not plan, design, or decide; it implements the work items, verifies each against the PRD's contracts and validation log, and updates living documentation. When the build's blast radius crosses the line, it routes to `/ship` for the Checkpoint 3 review before anything goes live.
 
 **`state.md` tells you where you are; the PRD tells you what to build.** A correct PRD is self-contained — you should be able to run this build in a fresh session, from the PRD and the project's `state.md` alone, with nothing from prior conversation. If you find yourself needing context that isn't in either, that's a PRD or snapshot failure: stop and flag it, don't reconstruct it from memory.
 
@@ -28,7 +28,7 @@ description: Execute an approved PRD as pure implementation — no planning, no 
 
 - No approved PRD exists (use `/prd` first)
 - Bug fixes or config tweaks (use `/quick-fix`)
-- The PRD's one-shot readiness gate hasn't passed (finish `/prd` first)
+- The PRD's one-shot readiness check hasn't passed (finish `/prd` first)
 
 ## Prerequisite
 
@@ -129,7 +129,7 @@ Walk the PRD systematically against the live system:
 5. **Value stream check** — trace trigger → outcome end-to-end.
 6. **Validation reconciliation** — every dependency the PRD probed still behaves as logged.
 7. **Work item reconciliation** — every work item complete, every verification confirmed, and the kind's proof run.
-8. **Real entry point, staged** — when the real entry point is a publish (a push to a public repository, a deploy, a release), run the end-to-end check against the **staged** artifact: the exact bytes the publish would send, on disk (a local clone or a staged copy; for the kit, `TBK_BASE=file://` against a copy staged with `kit_promote.shipped()`). The publish itself belongs to `/ship` Phase 5 whenever the router below will fire. Publishing inside a work item so the check can use the live URL puts the build in front of others before Gate 3 has run (found at a ship review, 2026-09-22).
+8. **Real entry point, staged** — when the real entry point is a publish (a push to a public repository, a deploy, a release), run the end-to-end check against the **staged** artifact: the exact bytes the publish would send, on disk (a local clone or a staged copy; for the kit, `TBK_BASE=file://` against a copy staged with `kit_promote.shipped()`). The publish itself belongs to `/ship` Phase 5 whenever the router below will fire. Publishing inside a work item so the check can use the live URL puts the build in front of others before Checkpoint 3 has run (found at a ship review, 2026-09-22).
 9. **Every path proved** — every row of every path table in the PRD's work items has had its proof run and pass; a gap row or an unproved row is a gap here (`testing_standard.md` rule 10).
 10. **Kind documents** — the system's `CONTEXT.md` Kind line names the kind the PRD's Kind field names, and every document that kind owes exists (the "Adds to the doc set" column of the kinds table in `documentation_standard.md` §4, "The third axis", and the `_shared` Part 2 table). A missing owed document is a gap here.
 
@@ -149,7 +149,7 @@ Fix contained gaps now. A gap that requires design work is a scope escalation. T
 
 ## Phase 4: BLAST-RADIUS ROUTER → /ship
 
-**Goal:** Decide whether this build needs the Gate-3 ship review before it goes live.
+**Goal:** Decide whether this build needs the Checkpoint 3 ship review before it goes live.
 
 Check the router. Does **any** of these apply?
 - **Someone other than you depends on it**, or
@@ -157,8 +157,8 @@ Check the router. Does **any** of these apply?
 - **Its output is relied on to make important decisions** (accuracy carries weight even if it persists nothing), or
 - **It touches money / outside parties / business-critical truth.**
 
-- **If any fire → STOP. Do not let it go live.** The build is halted at the router — nothing goes live until `/ship` clears the Gate-3 review (what breaks · who notices · fallback · contingency · how we fix it). Don't auto-advance; ask the user explicitly:
-  **Blast radius crossed the line — nothing goes live until `/ship` (Gate 3) clears.** Print the **handoff card** (template §4.10) and stop. Its values: **Ribbon** = build {N}/{N} ✅ → ship ☐; **Done** = end-of-build verification passed; the router fired ({which conditions}); **Next** = **The Gate-3 review:** run `/ship {project-name}`, with the line from `python3 .claude/tools/orientation_cost.py --now ship`; **Needs {owner}** = the keyboard steps the review will need; **Written** = `state.md` (Router: fired → /ship) · `handoff.html` · `project_log.md` (router result).
+- **If any fire → STOP. Do not let it go live.** The build is halted at the router — nothing goes live until `/ship` clears the Checkpoint 3 review (what breaks · who notices · fallback · contingency · how we fix it). Don't auto-advance; ask the user explicitly:
+  **Blast radius crossed the line — nothing goes live until `/ship` (Checkpoint 3) clears.** Print the **handoff card** (template §4.10) and stop. Its values: **Ribbon** = build {N}/{N} ✅ → ship ☐; **Done** = end-of-build verification passed; the router fired ({which conditions}); **Next** = **The Checkpoint 3 review:** run `/ship {project-name}`, with the line from `python3 .claude/tools/orientation_cost.py --now ship`; **Needs {owner}** = the keyboard steps the review will need; **Written** = `state.md` (Router: fired → /ship) · `handoff.html` · `project_log.md` (router result).
 - **If none fire → ship freely.** Proceed to Close.
 
 State the router result explicitly in the log **and in `state.md`** (Router: fired → `/ship` | clean) so it's auditable and so the next session knows which skill to run; then render the handoff again and open it (Phase 2 Step 4, item 3), whichever way the router went.

@@ -1,6 +1,6 @@
 ---
 name: quick-fix
-description: Diagnose and fix small issues without project scaffolding — and end with the same blast-radius exit gate as /build (if others depend on it or it writes real data, the six Gate-3 questions run inline before it goes live). Use for bug fixes, config tweaks, workflow adjustments, or minor enhancements that don't require new architecture. Emphasizes deep diagnosis over quick action.
+description: Diagnose and fix small issues without project scaffolding — and end with the same blast-radius exit check as /build (if others depend on it or it writes real data, the six Checkpoint 3 questions run inline before it goes live). Use for bug fixes, config tweaks, workflow adjustments, or minor enhancements that don't require new architecture. Emphasizes deep diagnosis over quick action.
 ---
 
 # /quick-fix
@@ -95,12 +95,12 @@ The fix should feel mechanical at this point — the hard thinking was Phase 1.
 
 ---
 
-## Phase 3.5: EXIT GATE — the blast-radius router (the same rule as `/build`)
+## Phase 3.5: EXIT CHECK — the blast-radius router (the same rule as `/build`)
 
-A quick fix skips design; it never skips the exit gate. Before the fix goes live — the deploy, the replay, the bulk write, the workflow re-activation — ask the four router questions: **Does someone other than you depend on it? Does it write or change real data? Is its output relied on for decisions? Does it touch money, outside parties or business-critical truth?**
+A quick fix skips design; it never skips the exit check. Before the fix goes live — the deploy, the replay, the bulk write, the workflow re-activation — ask the four router questions: **Does someone other than you depend on it? Does it write or change real data? Is its output relied on for decisions? Does it touch money, outside parties or business-critical truth?**
 
 - **None fire →** ship it; go to Phase 4.
-- **Any fire →** answer the six Gate-3 questions **inline, in miniature** — a paragraph, not a review document — before anything goes live:
+- **Any fire →** answer the six Checkpoint 3 questions **inline, in miniature** — a paragraph, not a review document — before anything goes live:
   1. **What breaks** if this runs twice, or half-runs? (idempotency, for every write)
   2. **Who notices** if it fails, and how fast? (a noticer with an owner and an action — or "silent", which is a hole)
   3. **What is the fallback** — the manual path if the automated one fails?
@@ -122,7 +122,7 @@ Per the Living Documentation Rule:
 2. Flag proposed updates for approval
 3. Add a changelog entry if the change is meaningful (skip for trivial config tweaks)
 4. If the system's `CONTEXT.md` predates 2026-09-20 and has no **Kind** and **Proved by** lines, add them now — two lines, from what Phase 1 observed.
-5. When the work is a milestone on an initiative's roadmap, set its row in the initiative `state.md` to `shipped {date} (quick-fix)`, and clear the In-flight row if it names this milestone, before any archive step the chore runs. The milestone's outcome check then follows the initiative's rule like any other milestone's. When the chore is the initiative close itself, `_shared/project_close.md` §I is the fix (Phase 2), run after the exit gate's answers because its writes are what goes live, and runs as written: its "every milestone shipped or killed" counts every milestone but the close, the close's own row is set to `shipped {date} (quick-fix)` when §I writes the close record (§I's "table as it stands" keeps every other row), this skill's Phase 4 edits to the planning folder are approved in the same confirmation as the diagnosis (Step 4) and made between §I's close record and its archive move (§I's own later steps run as §I says), and §I's card, which is always printed, replaces this skill's Phase 5.
+5. When the work is a milestone on an initiative's roadmap, set its row in the initiative `state.md` to `shipped {date} (quick-fix)`, and clear the In-flight row if it names this milestone, before any archive step the chore runs. The milestone's outcome check then follows the initiative's rule like any other milestone's. When the chore is the initiative close itself, `_shared/project_close.md` §I is the fix (Phase 2), run after the exit check's answers because its writes are what goes live, and runs as written: its "every milestone shipped or killed" counts every milestone but the close, the close's own row is set to `shipped {date} (quick-fix)` when §I writes the close record (§I's "table as it stands" keeps every other row), this skill's Phase 4 edits to the planning folder are approved in the same confirmation as the diagnosis (Step 4) and made between §I's close record and its archive move (§I's own later steps run as §I says), and §I's card, which is always printed, replaces this skill's Phase 5.
 
 **Do NOT create:** project folders, tickets, PROJECT_LOG, retrospectives, or decision log entries. This is a quick fix.
 
@@ -130,7 +130,7 @@ Per the Living Documentation Rule:
 
 ## Phase 5: HAND OFF (only when something was left)
 
-When this fix filed a task or accepted a hole at the exit gate, end with the **handoff card** (template §4.10): title `standalone · quick fix: {what}` (or the initiative title when the fix belongs to one), no ribbon; **Done** = the fix and how it was proved; **Filed this session** and **Residuals** as §4.10 says; **Next** = the command for the most urgent follow-up, with the line from `python3 .claude/tools/orientation_cost.py --now {its step}`, or `Nothing: the fix is live.` with `Context: no next step`; **Written** = the files changed. When nothing was filed or accepted, print no card: the session-log line is the record.
+When this fix filed a task or accepted a hole at the exit check, end with the **handoff card** (template §4.10): title `standalone · quick fix: {what}` (or the initiative title when the fix belongs to one), no ribbon; **Done** = the fix and how it was proved; **Filed this session** and **Residuals** as §4.10 says; **Next** = the command for the most urgent follow-up, with the line from `python3 .claude/tools/orientation_cost.py --now {its step}`, or `Nothing: the fix is live.` with `Context: no next step`; **Written** = the files changed. When nothing was filed or accepted, print no card: the session-log line is the record.
 
 ---
 

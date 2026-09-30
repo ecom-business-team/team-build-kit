@@ -54,11 +54,11 @@ Required docs scale with what exists. Never create a doc before it's earned — 
 | **`flow.html`** | The system's kind is automation, or a procedure whose steps change hands between people. Never for an application (it is not a process) | The system folder |
 | **Kind + Proved by lines** (inside `CONTEXT.md`) | Always, from 2026-09-20; an index written earlier gains them at its next change by a build or a quick fix | The system's `CONTEXT.md` (template 4.2) |
 | **Parts table** (inside `CONTEXT.md`) | The system is composite — several kinds ship as one unit | The system's `CONTEXT.md`, under the Kind line |
-| **`north_star.md`** | An initiative is declared | The planning folder — the compass and the initiative's memo (template 4.11); decisions only, never progress |
+| **`north_star.md`** | An initiative is declared | The planning folder — the compass, the initiative's founding document (template 4.11); each milestone still gets its own memo, which points into it; decisions only, never progress |
 | **planning-folder `CONTEXT.md`** | An initiative is declared | The planning folder — the index (template 4.9) |
 | **`state.md`** (initiative) | A planning folder exists (`documentation_standard.md` §4) | The planning folder — the snapshot: project in flight, milestone table, handed-forward tray; ≤600 words, rewritten in place |
 | **`state.md`** (project) | A PRD is approved | `_admin/prds/<project>/` — the snapshot: position, next, verify block, held, needs the owner; ≤400 words, rewritten in place; archived with the folder |
-| **companion `.html`** | Beside each of the four gate documents (memo, PRD, project log, state file), written by the skill that writes the document | The document's folder; generated, never edited; moved with its source |
+| **companion `.html`** | Beside each of the four checkpoint documents (memo, PRD, project log, state file), written by the skill that writes the document | The document's folder; generated, never edited; moved with its source |
 
 **Leaf** = `CONTEXT.md` only: the opening paragraph with its Kind line and Proved by, and the file table (what lives here), like every index (`documentation_standard.md` §5); no other documents. **Procedure** = its `SKILL.md` is the document, plus a row in `SKILLS.md`; it gets no `CONTEXT.md` of its own. **Standalone system** (its own workspace) = `CONTEXT.md` + `change_log.md` + `decision_log.md` as it earns them; contracts/architecture only after it graduates. **Mature workspace** = all of the above.
 
@@ -126,7 +126,7 @@ A bulk write's prestate goes in the owning area's `bulk_ops/`, or the workspace 
 4. **Never create empty sections.** Include a section only when it has content. A template section with no content is deleted, not left as a placeholder.
 5. **One canonical home per fact.** If a fact crosses a system boundary it lives at the workspace root (contracts/decisions); if it's internal to one system it lives in that system's `CONTEXT.md`. Everywhere else references it.
 6. **Plain language, fully said.** Write for a non-technical teammate: complete sentences, every idea fully said, the example walked through. Arrows and dots are notation for state sequences, paths and trees, never sentence glue; no colon-labels, no fragments. Use every lifecycle term exactly as the workspace's `glossary.md` defines it, and define any new term where it first appears.
-7. **Two words the workspace supplies.** Skills, templates and standards say **the owner** (the person whose word the gates wait on) and **the task manager** (where every task and date lives). Wherever a document is written for a person, write the names the workspace's root `CLAUDE.md` declares under "Words the skills use", so a card reads "Needs Maria" in one workspace and "Needs Sam" in another; a `{owner}` slot in a template means the same. If the CLAUDE.md declares nothing, write the words themselves. Nothing in these templates or in the skills names a person or a tool directly; the check `.claude/tools/names_check.py`, run from the workspace root, derives the names from that section and the workspace's own folders and prints every line of the box that still carries one.
+7. **Two words the workspace supplies.** Skills, templates and standards say **the owner** (the person whose word the checkpoints wait on) and **the task manager** (where every task and date lives). Wherever a document is written for a person, write the names the workspace's root `CLAUDE.md` declares under "Words the skills use", so a card reads "Needs Maria" in one workspace and "Needs Sam" in another; a `{owner}` slot in a template means the same. If the CLAUDE.md declares nothing, write the words themselves. Nothing in these templates or in the skills names a person or a tool directly; the check `.claude/tools/names_check.py`, run from the workspace root, derives the names from that section and the workspace's own folders and prints every line of the box that still carries one.
 
 ---
 ## Part 4 — The Templates (one per doc type)
@@ -403,7 +403,7 @@ An item leaves when it is decided (→ north_star / decision_log), homed (→ a 
 ### 4.8 — Project `state.md` (the snapshot inside a build)
 
 **Purpose:** Answer "where is this build, what is next, and how do I know the snapshot is true?" in at most 400 words, so a fresh session resumes in minutes. Rewritten at every work-item boundary and every session end, never appended. The record is `project_log.md`.
-**Maintained by:** `/prd` (creates it at approval), `/build` and `/ship` (rewrite per work item and per Gate-3 round), `session-close`.
+**Maintained by:** `/prd` (creates it at approval), `/build` and `/ship` (rewrite per work item and per Checkpoint 3 round), `session-close`.
 
 ```markdown
 # State — {project}
@@ -414,7 +414,7 @@ An item leaves when it is decided (→ north_star / decision_log), homed (→ a 
 ## Position
 - **Stage:** {memo ✅ · PRD ✅ · build k/N · ship ☐ · close ☐ · outcome ☐}
 - **Done:** {WI-1 … WI-k — verified; proof in the log}
-- **Next:** {WI-k+1 — name (PRD §12) | end-of-build verification | Gate 3 round n | close}
+- **Next:** {WI-k+1 — name (PRD §12) | end-of-build verification | Checkpoint 3 round n | close}
 - **Blocked:** {none | what · on whom · task id}
 - **Router:** {not yet run | fired → /ship | clean}
 
@@ -463,7 +463,7 @@ An item leaves when it is decided (→ north_star / decision_log), homed (→ a 
 
 ### 4.10 — The handoff card and the orientation card
 
-**Purpose:** Every stop — a gate cleared, a work item done, a session ending, work waiting on the owner — prints the handoff card, and every session that resumes earlier work opens with the orientation card, in the same shape. The owner sees at a glance how far the whole piece of work has come, what this session left behind and whether each leftover needs them now, and exactly what to type next. A misread caught by the orientation card at the top of a session costs a sentence; one found at the end costs the session. The same Stage and Next live in the project `state.md` (its **Stage** and **Next** fields), so the SessionStart gate prints them at the top of the next session: the card at the end of one session and the gate line at the start of the next say the same thing.
+**Purpose:** Every stop — a checkpoint cleared, a work item done, a session ending, work waiting on the owner — prints the handoff card, and every session that resumes earlier work opens with the orientation card, in the same shape. The owner sees at a glance how far the whole piece of work has come, what this session left behind and whether each leftover needs them now, and exactly what to type next. A misread caught by the orientation card at the top of a session costs a sentence; one found at the end costs the session. The same Stage and Next live in the project `state.md` (its **Stage** and **Next** fields), so the SessionStart gate prints them at the top of the next session: the card at the end of one session and the gate line at the start of the next say the same thing.
 
 **Who prints which.** The handoff card: `/memo`, `/prd`, `/build`, `/ship`, `/quick-fix` (only when it filed a task or accepted a hole), `/new-workspace`, `/convert-to-standard`, `/onboard`, `session-close` and the project close (`project_close.md`). The orientation card: `/memo`, `/prd`, `/build` and `/ship`, when they run on existing work (an initiative `state.md` holds the work, or the project's `state.md` exists): it is the first thing printed, after the state files are read and their verify block is run, and before any other work. Each printer supplies only its own values (the ribbon, Done, Next, the step it measures, what it wrote); this section supplies the shape and where every other value comes from.
 
@@ -544,11 +544,11 @@ The orientation card:
 - **Milestones.** One row per row of the initiative `state.md` milestone table, every row every time: ✅ for shipped or reached, ▶ for the one in flight, ☐ for the rest, with the status cell shortened (paused and killed rows keep their word).
 - **Work items.** One per `### Work Item` heading in the PRD §12: ✅ for those the project `state.md` Done names, ▶ for the one Next names, ☐ for the rest. No PRD yet, no list. With neither a table nor a list, the Progress block is left out.
 - **Filed this session.** Every task this session filed in the task manager, by its id, in its three parts, including tail items the owner chose to file; a filed follow-up is listed here and not under Residuals. The rule, and the session-tail offer that comes first, live in the `session-close` skill, "Follow-ups".
-- **Residuals.** Everything noticed and left unresolved: a hole accepted at a gate, a defect deferred, a follow-up left for later. A residual that was filed appears here with its id and not again under Filed. Every part is a full sentence.
+- **Residuals.** Everything noticed and left unresolved: a hole accepted at a checkpoint, a defect deferred, a follow-up left for later. A residual that was filed appears here with its id and not again under Filed. Every part is a full sentence.
 - **Empty blocks.** Filed this session, Residuals and Needs {owner} print `None.` when empty; they never disappear, because an empty block is information.
 - **Written.** Every file this stop wrote, one per line.
 
-**At a gate, a TLDR above the card.** When the stop closes a gate (a memo cleared, a PRD approved, a ship review written), the card is preceded in the session by the gate document's TLDR in four sentences: the constraint, what it is and what it is not, the calls that need the owner, and success in one line. A path to the document is never the whole presentation.
+**At a checkpoint, a TLDR above the card.** When the stop closes a checkpoint (a memo cleared, a PRD approved, a ship review written), the card is preceded in the session by the checkpoint document's TLDR in four sentences: the constraint, what it is and what it is not, the calls that need the owner, and success in one line. A path to the document is never the whole presentation.
 
 **Next** is always the exact command the owner types, verbatim: a skill call with its argument (`/build {project}`, `/ship {project}`), never "any prompt" — the owner should never have to know where the state file lives.
 
@@ -558,7 +558,7 @@ The orientation card:
 
 ### 4.11 — `north_star.md` (the initiative's compass, and its memo)
 
-**Purpose:** The one place every decision about an initiative lives — what it is for, what it must never do, how it will be built, in what order, and what is still open. It is the initiative's memo: the thesis, principles and journeys are the proposition, the non-goals are the boundary, the roadmap is the ordered set of milestones; every project memo points into it instead of restating it. It never carries progress — that is `state.md`. Written from the first two initiatives that used it (2026-09).
+**Purpose:** The one place every decision about an initiative lives — what it is for, what it must never do, how it will be built, in what order, and what is still open. It is the initiative's founding document, and each milestone still gets its own memo, which points into it: the thesis, principles and journeys are the proposition, the non-goals are the boundary, the roadmap is the ordered set of milestones; every project memo points into it instead of restating it. It never carries progress — that is `state.md`. Written from the first two initiatives that used it (2026-09).
 **Maintained by:** the session in which a decision is made — edited first, the same session. Open points become tasks in the task manager and are struck through here with the dated resolution when decided.
 
 ```markdown

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gate-cost instrument — what a gate document costs the owner.
+"""Gate-cost instrument — what a checkpoint document costs the owner.
 
 For each session id prefix given, read its transcript and report, for every write of a memo,
 a PRD or a project log: the minutes until the owner's next turn, whether that turn reads as an
@@ -35,7 +35,7 @@ APPROVAL_RE = re.compile(r"\b(approved?|proceed|go ahead|looks? (?:great|good)|s
 
 
 def doc_path(text: str) -> str | None:
-    """The gate-document path in `text`, from `_admin/` onwards when that folder is named."""
+    """The checkpoint-document path in `text`, from `_admin/` onwards when that folder is named."""
     m = DOC_RE.search(text or "")
     if not m:
         return None
@@ -43,7 +43,7 @@ def doc_path(text: str) -> str | None:
 
 
 def doc_written(name: str, inp: dict) -> str | None:
-    """The gate document this tool call writes, or None. Reads (cat, grep) never count."""
+    """The checkpoint document this tool call writes, or None. Reads (cat, grep) never count."""
     if not isinstance(inp, dict):
         return None
     if name in WRITE_TOOLS:

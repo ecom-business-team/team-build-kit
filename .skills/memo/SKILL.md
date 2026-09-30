@@ -1,13 +1,13 @@
 ---
 name: memo
-description: The one door for every build intent — it sends small work down to /quick-fix, large multi-milestone builds up to /new-workspace --initiative (the initiative test), and writes the build-intent memo for everything in between (Gate 1 — "I intend to build this"). Forces the author to prove a build is worth doing BEFORE any design or code, using the business proposition — problem, cost of inaction, value if solved, why now — plus a one-sentence scope boundary and an observable success definition. WHAT and WHY only, never HOW. First step in the /memo → /prd → /build lifecycle.
+description: The one starting point for every build intent — it sends small work down to /quick-fix, large multi-milestone builds up to /new-workspace --initiative (the initiative test), and writes the build-intent memo for everything in between (Checkpoint 1 — "I intend to build this"). Forces the author to prove a build is worth doing BEFORE any design or code, using the business proposition — problem, cost of inaction, value if solved, why now — plus a one-sentence scope boundary and an observable success definition. WHAT and WHY only, never HOW. First step in the /memo → /prd → /build lifecycle.
 ---
 
 # /memo
 
-**Definition of done:** A memo proves a build is worth doing **before** any design or code exists. It answers **WHAT** (the problem in one sentence — and what it is deliberately NOT) and **WHY** (cost of inaction, value if solved, why now), and defines what "solved" looks like. It explicitly does **NOT** describe **HOW** — we don't know how yet; that's the PRD's job. The memo is **Gate 1**: if you can't write the problem in one sentence and say what success looks like, you fail the gate yourself — you're not ready to build.
+**Definition of done:** A memo proves a build is worth doing **before** any design or code exists. It answers **WHAT** (the problem in one sentence — and what it is deliberately NOT) and **WHY** (cost of inaction, value if solved, why now), and defines what "solved" looks like. It explicitly does **NOT** describe **HOW** — we don't know how yet; that's the PRD's job. The memo is **Checkpoint 1**: if you can't write the problem in one sentence and say what success looks like, you fail the checkpoint yourself — you're not ready to build.
 
-**Self-administered — the artifact IS the proof.** Can't articulate the problem in one sentence? You're not ready. Can't name what you'd gain? It's not worth building. Nobody has to grade this; the gate grades itself. The emitted doc is also the **audit surface** — it lets a teammate (or a fresh session) verify the thinking was sound in one read, without reverse-engineering a half-built system.
+**Self-administered — the artifact IS the proof.** Can't articulate the problem in one sentence? You're not ready. Can't name what you'd gain? It's not worth building. Nobody has to grade this; the checkpoint grades itself. The emitted doc is also the **audit surface** — it lets a teammate (or a fresh session) verify the thinking was sound in one read, without reverse-engineering a half-built system.
 
 **The problem this prevents:** building far outside your depth, realizing it mid-flight, and needing someone to reverse-engineer and clean up afterward. The memo is the point of friction that forces you to clearly state the specific outcome you want *before* you start — because groundbreaking opportunities are almost never discovered in the middle of development.
 
@@ -40,9 +40,9 @@ The skip list above sends work *down* to `/quick-fix`. This sends it *up*. Befor
 2. **Does it replace or kill systems that run today, over months?** A cutover needs cutover rules and an order — a compass, not a memo.
 3. **Does "what it is NOT" keep growing because the thing is really several things?** A boundary that cannot be drawn in a paragraph is a roadmap in disguise.
 
-**Two of three → this is an initiative.** Say so plainly — "this is a large build, and we treat it as one: a north star and a roadmap of milestones before any project memo" — and do not write a project memo. Run **`/new-workspace --initiative <name>`**: it creates the planning folder and interviews the owner for the north star (the initiative's memo) and the milestones. Then come back here for the **first milestone's** memo, in the short form ("Two forms" below).
+**Two of three → this is an initiative.** Say so plainly — "this is a large build, and we treat it as one: a north star and a roadmap of milestones before any project memo" — and do not write a project memo. Run **`/new-workspace --initiative <name>`**: it creates the planning folder and interviews the owner for the north star (the initiative's founding document; each milestone still gets its own memo, which points into it) and the milestones. Then come back here for the **first milestone's** memo, in the short form ("Two forms" below).
 
-`/memo` is therefore one door with three exits, after one look: `/quick-fix` below, a project memo here, an initiative above. The owner never has to pick the size; they describe the thing and the door decides.
+`/memo` is therefore one starting point with three exits, after one look: `/quick-fix` below, a project memo here, an initiative above. The owner never has to pick the size; they describe the thing and `/memo` decides.
 
 ---
 
@@ -76,7 +76,7 @@ The skip list above sends work *down* to `/quick-fix`. This sends it *up*. Befor
 
 **Standalone build** (no planning folder): the full memo below — every row of the input contract in the owner's words.
 
-**A project on an initiative's roadmap:** the initiative's `north_star.md` **is** its memo. The thesis, principles and journeys are the proposition; the non-goals are the boundary; the roadmap is the ordered set of milestones. So a project's memo does **not** restate the proposition — it inherits it by pointer and writes only what a one-line roadmap entry cannot carry:
+**A project on an initiative's roadmap:** the initiative's `north_star.md` is its founding document, and each milestone still gets its own memo, which points into it. The thesis, principles and journeys are the proposition; the non-goals are the boundary; the roadmap is the ordered set of milestones. So a project's memo does **not** restate the proposition — it inherits it by pointer and writes only what a one-line roadmap entry cannot carry:
 
 1. **The milestone in one sentence** — what will be true when this project ships (the roadmap item, by pointer).
 2. **What it is NOT** — the boundary. The roadmap entry is one line, so this is where sprawl is killed: which of the defects and asks assigned to the milestone are in, and which wait.
@@ -92,7 +92,7 @@ Problem, cost of inaction and value are one pointer line each into the north sta
 
 ## The Required Input Contract
 
-This is the gate. Before a memo can be written, every input below must be known. If the author supplies them, structure them. If any is missing, **that** is what the GATHER interview targets — do not write around a gap.
+This is the checkpoint. Before a memo can be written, every input below must be known. If the author supplies them, structure them. If any is missing, **that** is what the GATHER interview targets — do not write around a gap.
 
 | Input | The question it answers |
 |-------|------------------------|
@@ -122,7 +122,7 @@ The memo is WHAT + WHY. There is no HOW.
 
 ### Core Rules
 
-1. **WHAT and WHY only — never HOW.** If you find yourself writing steps, mechanics, data schemas, component names, or "first we'll… then we'll…" — stop. You don't know the how yet, and pretending you do is exactly the failure this gate prevents. The how is the PRD.
+1. **WHAT and WHY only — never HOW.** If you find yourself writing steps, mechanics, data schemas, component names, or "first we'll… then we'll…" — stop. You don't know the how yet, and pretending you do is exactly the failure this checkpoint prevents. The how is the PRD.
 2. **Name what it is NOT.** Every memo states an explicit non-goal. Scope sprawl — "while we're here, let's also…" — is the number-one way builds blow past their depth. The boundary is load-bearing.
 3. **The business proposition must hold.** Problem → cost → value → why-now, in that order. If a reader can't see why the gain justifies the build, the memo isn't done (or the build isn't worth it).
 4. **Success must be observable.** "We'll know it's solved when X," where X is something you can actually check — not "it works better."
@@ -194,7 +194,7 @@ The single bottleneck this addresses. If you can't name it in one sentence, the 
 ```markdown
 # [Title]
 
-_Build-intent memo (Gate 1). [Author] | [Date]_
+_Build-intent memo (Checkpoint 1). [Author] | [Date]_
 
 **Constraint:** [One sentence naming the specific bottleneck this addresses.]
 **Initiative:** [planning folder `state.md` + roadmap item, or "standalone"]
@@ -263,9 +263,9 @@ Present the memo to the user for review. Flag any thin section and suggest the f
 
 Once approved, the memo lives as a standalone artifact at `{workspace}/_admin/memos/{slug}.md` — a fresh session can pick it up from the file alone. Don't auto-advance.
 
-Print the gate document's TLDR, then the **handoff card** (template §4.10 in `~/.claude/skills/_shared/documentation_standard.md`), and stop. Its values:
+Print the checkpoint document's TLDR, then the **handoff card** (template §4.10 in `~/.claude/skills/_shared/documentation_standard.md`), and stop. Its values:
 - **Ribbon:** memo ✅ → PRD ☐ → build ☐ → ship ☐ → close ☐ → outcome ☐ (standalone: title `standalone · {slug}`, no milestone table).
-- **Done:** The memo cleared Gate 1: `{workspace}/_admin/memos/{slug}.md`.
+- **Done:** The memo cleared Checkpoint 1: `{workspace}/_admin/memos/{slug}.md`.
 - **Next:** **Design it:** run `/prd {workspace}/_admin/memos/{slug}.md`, with the line from `python3 .claude/tools/orientation_cost.py --now prd`.
 - **Needs {owner}:** the inputs the memo could not settle, with their task ids.
 - **Written:** the memo and its page; the initiative `state.md` milestone row → "memo cleared {date} → /prd".

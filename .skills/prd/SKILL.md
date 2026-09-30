@@ -5,7 +5,7 @@ description: Design a system change as a verified bridge from a 100%-resolved be
 
 # /prd
 
-**Definition of done:** A PRD makes the gap between **where we are** and **where we want to be** so completely understood and verified that the build cannot surprise us. Its exit condition is a hard guarantee: **`/build` can be executed in one shot, with zero scope change.** Every assumption about the current state is resolved to 100%, every cross-system dependency is probed live and confirmed to respond as assumed, and every design check has passed — *before a single build action is taken.* This is **Gate 2: "I've designed it right."**
+**Definition of done:** A PRD makes the gap between **where we are** and **where we want to be** so completely understood and verified that the build cannot surprise us. Its exit condition is a hard guarantee: **`/build` can be executed in one shot, with zero scope change.** Every assumption about the current state is resolved to 100%, every cross-system dependency is probed live and confirmed to respond as assumed, and every design check has passed — *before a single build action is taken.* This is **Checkpoint 2: "I've designed it right."**
 
 Why the bar is this high: if anything is discovered mid-build that forces a course change, it triggers rework that cascades through everything downstream. The cheapest place to find that problem is here, in the PRD, before anything is committed. We do **all** the verification up front so `/build` becomes pure execution — no planning, no scope decisions, no surprises.
 
@@ -30,7 +30,7 @@ Why the bar is this high: if anything is discovered mid-build that forces a cour
 
 ## When to Use
 
-- After a `/memo` has cleared Gate 1 and recommended a build
+- After a `/memo` has cleared Checkpoint 1 and recommended a build
 - When a significant system change needs architectural design before implementation
 - When multiple systems, entities, or boundaries will be affected
 
@@ -94,7 +94,7 @@ Open assumptions still unverified: [list — must be empty before Phase 6 comple
 
 **Walk the picture with the user.** Confirm understanding. Flag anything that contradicts the memo's assumed solution — revise the memo now, don't carry assumptions forward.
 
-**Gate:** zero assumptions remain about what exists. If any fact is inferred rather than observed, go verify it.
+**Check:** zero assumptions remain about what exists. If any fact is inferred rather than observed, go verify it.
 
 ---
 
@@ -107,7 +107,7 @@ Open assumptions still unverified: [list — must be empty before Phase 6 comple
 
 ---
 
-## Phase 3: MINIMUM-VIABLE DERIVATION (mandatory gate)
+## Phase 3: MINIMUM-VIABLE DERIVATION (mandatory step)
 
 **The most important step. Do not skip. Do not let the memo's proposed solution carry forward unchallenged.**
 
@@ -224,7 +224,7 @@ If any check fails, fix the design before continuing.
 
 ---
 
-## Phase 8: ONE-SHOT READINESS GATE
+## Phase 8: ONE-SHOT READINESS CHECK
 
 **Goal:** The final test before handing to `/build`.
 
@@ -246,7 +246,7 @@ If anything is unresolved, name it and resolve it. Only when the answer is an un
 
 ### PRD Format
 
-**Write a section in full only when it holds something a builder needs.** Every `##` section keeps its heading and number, because other documents cite them, and opens with its plain-words line (`> **In plain words:**`). Sections 2, 4 and 15 stop at that line, and section 13 adds a row only for a check that changed the design (no such check, no table): the desired state is the memo's success definition in this project's terms, the narrative is the chosen path told plainly, and the checks and the readiness gate are run in Phases 7 and 8, where a line of "Y" marks proves nothing. Each of sections 5 to 8 is written in full only when the change creates or changes its own subject: stored data, meaning a table, field or file shape rather than the rows a job writes (5), a state (6), a handoff between systems, including a message to people sent through another system (7), a contract, meaning a shape another system or person relies on such as fields, a payload or a file format, while a shared word list is knowledge (8); otherwise its plain line says none, and why, and the section's subheadings and blocks are dropped. The header fields and sections 1, 3, 9, 10, 11, 12 and 14 are always written in full; section 10 stays because `/ship` reads it as the blast-radius map. Why: an evidence pass over sixteen PRDs (2026-09-29) found that sections 2, 4, 13 and 15 restated other text in all sixteen, that sections 5 to 8 earned their words only when the change created the thing each one describes, and that every defect the method caught came from sections 1, 3, 9, 11, 12 and 14.
+**Write a section in full only when it holds something a builder needs.** Every `##` section keeps its heading and number, because other documents cite them, and opens with its plain-words line (`> **In plain words:**`). Sections 2, 4 and 15 stop at that line, and section 13 adds a row only for a check that changed the design (no such check, no table): the desired state is the memo's success definition in this project's terms, the narrative is the chosen path told plainly, and the checks and the readiness check are run in Phases 7 and 8, where a line of "Y" marks proves nothing. Each of sections 5 to 8 is written in full only when the change creates or changes its own subject: stored data, meaning a table, field or file shape rather than the rows a job writes (5), a state (6), a handoff between systems, including a message to people sent through another system (7), a contract, meaning a shape another system or person relies on such as fields, a payload or a file format, while a shared word list is knowledge (8); otherwise its plain line says none, and why, and the section's subheadings and blocks are dropped. The header fields and sections 1, 3, 9, 10, 11, 12 and 14 are always written in full; section 10 stays because `/ship` reads it as the blast-radius map. Why: an evidence pass over sixteen PRDs (2026-09-29) found that sections 2, 4, 13 and 15 restated other text in all sixteen, that sections 5 to 8 earned their words only when the change created the thing each one describes, and that every defect the method caught came from sections 1, 3, 9, 11, 12 and 14.
 
 ```markdown
 # PRD: [Project Name]
@@ -360,9 +360,9 @@ The PRD must be approved before `/build`. Confirm with the user:
 
 The approved PRD at `{workspace}/_admin/prds/{project-name}/{project_name}_prd.md` is self-contained — it carries everything `/build` needs, with nothing load-bearing left in chat. Don't auto-advance.
 
-Print the gate document's TLDR, then the **handoff card** (template §4.10), and stop. Its values:
+Print the checkpoint document's TLDR, then the **handoff card** (template §4.10), and stop. Its values:
 - **Ribbon:** memo ✅ → PRD ✅ → build 0/N → ship ☐ → close ☐ → outcome ☐; WI-1 ▶ (the one `state.md` Next names), the rest ☐.
-- **Done:** PRD approved at Gate 2, one-shot ready, with {N} work items. Proved by the validation log, every row ✅.
+- **Done:** PRD approved at Checkpoint 2, one-shot ready, with {N} work items. Proved by the validation log, every row ✅.
 - **Next:** **Build it:** run `/build {project-name}` (Phase 1-B creates the log; `state.md` already exists), with the line from `python3 .claude/tools/orientation_cost.py --now build`.
 - **Needs {owner}:** the keyboard steps or decisions the PRD names as theirs, with task ids.
 - **Written:** `{workspace}/_admin/prds/{project-name}/state.md` (Next = WI-1) · `{project_name}_prd.html` · the initiative `state.md` (In flight → this project).

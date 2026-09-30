@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""render.py — write an HTML companion beside a gate document.
+"""render.py — write an HTML companion beside a checkpoint document.
 
 Usage:
   python3 render.py <path> [<path> ...]   render each markdown file; print the written path
@@ -481,7 +481,7 @@ def fields_dl(fields: dict, order: list, skip=(), pills=()) -> str:
 
 
 # ----------------------------------------------------------------------------
-# Plan: memo (Gate 1)
+# Plan: memo (Checkpoint 1)
 # ----------------------------------------------------------------------------
 
 def boundary_block(body):
@@ -542,7 +542,7 @@ def plan_memo(blocks, src: Path) -> tuple[str, str]:
     pre, secs = split_sections(blocks, 2)
     title, subtitle, fields, order, notes = header_parts(pre)
     title = title or src.stem
-    out = ['<header class="doc-head">', '<p class="eyebrow">Gate 1 · Build-intent memo</p>', f"<h1>{esc(title)}</h1>"]
+    out = ['<header class="doc-head">', '<p class="eyebrow">Checkpoint 1 · Build-intent memo</p>', f"<h1>{esc(title)}</h1>"]
     if subtitle:
         out.append(f'<p class="subtitle">{inline(subtitle)}</p>')
     if "constraint" in fields:
@@ -591,7 +591,7 @@ def plan_memo(blocks, src: Path) -> tuple[str, str]:
 
 
 # ----------------------------------------------------------------------------
-# Plan: PRD (Gate 2)
+# Plan: PRD (Checkpoint 2)
 # ----------------------------------------------------------------------------
 
 WI_RE = re.compile(r"^work item\s+(\d+)\s*[:—–-]\s*(.*)$", re.I)
@@ -693,7 +693,7 @@ def plan_prd(blocks, src: Path) -> tuple[str, str]:
     title, subtitle, fields, order, notes = header_parts(pre)
     title = title or src.stem
     kind_key = next((k for k in fields if k.startswith("kind")), None)
-    out = ['<header class="doc-head">', '<p class="eyebrow">Gate 2 · PRD</p>', f"<h1>{esc(title)}</h1>"]
+    out = ['<header class="doc-head">', '<p class="eyebrow">Checkpoint 2 · PRD</p>', f"<h1>{esc(title)}</h1>"]
     if subtitle:
         out.append(f'<p class="subtitle">{inline(subtitle)}</p>')
     if "constraint" in fields:
@@ -805,7 +805,7 @@ def relative_doc(src: Path, pointer: str) -> Path | None:
 
 
 # ----------------------------------------------------------------------------
-# Plan: the project log's last ship review (Gate 3)
+# Plan: the project log's last ship review (Checkpoint 3)
 # ----------------------------------------------------------------------------
 
 SHIP_RE = re.compile(r"^ship review", re.I)
@@ -907,7 +907,7 @@ def plan_ship(blocks, src: Path) -> tuple[str, str]:
     pre, secs = split_sections(blocks, 2)
     title, subtitle, fields, order, notes = header_parts(pre)
     title = title or src.parent.name
-    out = ['<header class="doc-head">', '<p class="eyebrow">Gate 3 · Ship review</p>', f"<h1>{esc(title)}</h1>"]
+    out = ['<header class="doc-head">', '<p class="eyebrow">Checkpoint 3 · Ship review</p>', f"<h1>{esc(title)}</h1>"]
     if subtitle:
         out.append(f'<p class="subtitle">{inline(subtitle)}</p>')
     status = last_status(blocks)

@@ -3,7 +3,7 @@
 Every workspace is entered through its CONTEXT.md — the local index: what this is, what lives here, which practices it depends on (contract: `documentation_standard.md` §5).
 
 **Canonical standards** (tier 2 — load when the activity starts):
-`documentation_standard.md` — how workspaces/docs are structured (MVA) · `workflow_design_standard.md` — how processes are designed · `testing_standard.md` — how quality is proven on code projects (the layer split; assert properties, not values) · `glossary.md` — every lifecycle term in one plain sentence · `why_we_build.md` — why the method is shaped this way · `worked_example.md` — one build walked through every gate · `lifecycle_map.md` — every door, the three gates and the loop on one page · `_practices/` — per-tool knowledge: **load the files for whatever stack your task touches** (see `_practices/CONTEXT.md`) · `SKILLS.md` — skill reference.
+`documentation_standard.md` — how workspaces/docs are structured (MVA) · `workflow_design_standard.md` — how processes are designed · `testing_standard.md` — how quality is proven on code projects (the layer split; assert properties, not values) · `glossary.md` — every lifecycle term in one plain sentence · `why_we_build.md` — why the method is shaped this way · `worked_example.md` — one build walked through every checkpoint · `lifecycle_map.md` — every way to start, the three checkpoints and the loop on one page · `_practices/` — per-tool knowledge: **load the files for whatever stack your task touches** (see `_practices/CONTEXT.md`) · `SKILLS.md` — skill reference.
 
 ## Routing
 
@@ -11,9 +11,9 @@ Every workspace is entered through its CONTEXT.md — the local index: what this
 | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
 | {a task in plain words} | {the folder, and its CONTEXT.md} |
 | New project                                                                                               | `/new-workspace` (builds from `documentation_standard.md`) |
-| Any build intent, small fix to multi-milestone rebuild                                                 | `/memo` — the one door; it routes down to `/quick-fix` or up to `/new-workspace --initiative` |
+| Any build intent, small fix to multi-milestone rebuild                                                 | `/memo` — the one starting point; it routes down to `/quick-fix` or up to `/new-workspace --initiative` |
 
-**Lifecycle:** `/memo` (worth doing?) → `/prd` (designed right?) → `/build` (execute) → `/ship` (Gate 3 — runs when blast radius crosses: someone else depends on it · writes real data · output drives decisions · touches money/outside parties) → outcome check (did the memo's success definition come true? a milestone is `reached` only then). Contained fixes: `/quick-fix`, which ends with the same blast-radius exit gate. Initiatives (multi-project efforts) start with a planning folder (`_admin/<initiative>/`, `documentation_standard.md` §4) whose roadmap of milestones feeds the project memos and whose `state.md` is the only home of position; CONTEXT files, the north star, memory and the logs only point at it. Inside a build a session is one work item: it ends at the boundary with the project's `state.md` rewritten and a handoff card (`/build` Phase 2 Step 5). Skills close only when memos/PRDs are physically **moved** to `_done`/`_archive` — filing is enforcement, not ceremony.
+**Lifecycle:** `/memo` (worth doing?) → `/prd` (designed right?) → `/build` (execute) → `/ship` (Checkpoint 3 — runs when blast radius crosses: someone else depends on it · writes real data · output drives decisions · touches money/outside parties) → outcome check (did the memo's success definition come true? a milestone is `reached` only then). Contained fixes: `/quick-fix`, which ends with the same blast-radius exit check. Initiatives (multi-project efforts) start with a planning folder (`_admin/<initiative>/`, `documentation_standard.md` §4) whose roadmap of milestones feeds the project memos and whose `state.md` is the only home of position; CONTEXT files, the north star, memory and the logs only point at it. Inside a build a session is one work item: it ends at the boundary with the project's `state.md` rewritten and a handoff card (`/build` Phase 2 Step 5). Skills close only when memos/PRDs are physically **moved** to `_done`/`_archive` — filing is enforcement, not ceremony.
 
 <!-- The first-run interview fills the table. -->
 
@@ -39,7 +39,7 @@ Every workspace is entered through its CONTEXT.md — the local index: what this
 - Before any deploy → `git status`; deploy-truth is the running system → `_practices/deploying.md`
 - Fanning out subagents → `_practices/subagents.md` (facts-agents vs simplest-solution agents; pick, never merge)
 - A true close — the session ending, a project archived, a batch done — → run the `session-close` skill (log entry + living-docs check); not after every step inside a larger flow
-- Corrected by the owner → capture the lesson and apply immediately. **Where it goes:** a lesson that changes how a skill, gate, document or tool behaves is architecture → the standard, skill, template or `_practices/` file that owns that behavior. Memory holds only facts about the owner as a person (how they review, reads and decides) and pointers to where a rule lives
+- Corrected by the owner → capture the lesson and apply immediately. **Where it goes:** a lesson that changes how a skill, checkpoint, document or tool behaves is architecture → the standard, skill, template or `_practices/` file that owns that behavior. Memory holds only facts about the owner as a person (how they review, reads and decides) and pointers to where a rule lives
 
 ## Standing behaviors (every session)
 

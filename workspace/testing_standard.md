@@ -41,7 +41,7 @@ These are deterministic without fixtures, they hold today and must hold forever,
 7. **Green is not proof.** A build compiling says nothing about whether a page renders. The last layer is always a real request to a real deployment.
 8. **A test takes its input's shape from the real writer, never from itself.** A test that writes the line its reader parses proves only that the test and the reader agree. When one part writes what another reads (a template and a parser, a client and a service), the test reads the writer's shape from its real source and feeds that to the reader, so the two cannot drift apart unseen.
 9. **Check the artifact that ships, not the source it is cut from.** When a step transforms the source before it leaves (a seam that ships only part of a file, a build, a generator), run the check on the transformed bytes. A check on the source raises alarms about text that never ships, and it misses anything the transformation adds.
-10. **End to end means every path.** A door or process that branches (on an answer, a level, a kind, a fallback) is tested end to end only when every branch has run. List every path the design creates and name the persona or fixture that covers each one, so a path nobody covers is visible in the plan rather than found at the last gate.
+10. **End to end means every path.** A command or process that branches (on an answer, a level, a kind, a fallback) is tested end to end only when every branch has run. List every path the design creates and name the persona or fixture that covers each one, so a path nobody covers is visible in the plan rather than found at the last checkpoint.
 
 ## What goes in CI, and what cannot
 

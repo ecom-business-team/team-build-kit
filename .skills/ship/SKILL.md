@@ -1,13 +1,13 @@
 ---
 name: ship
-description: Gate 3 — "others can rely on it". The resilience review a build must clear before it goes live, triggered when the blast radius crosses the line (someone else depends on it, it writes/changes real data, its output is relied on for important decisions, or it touches money / outside parties / business-critical truth). Surfaces what breaks / who notices / fallback / contingency / how-we-fix / what it concludes without testing, dispositions every hole (fix / escalate / accept), then takes the build live and closes the project. Invoked by /build when the router fires.
+description: Checkpoint 3 — "others can rely on it". The resilience review a build must clear before it goes live, triggered when the blast radius crosses the line (someone else depends on it, it writes/changes real data, its output is relied on for important decisions, or it touches money / outside parties / business-critical truth). Surfaces what breaks / who notices / fallback / contingency / how-we-fix / what it concludes without testing, dispositions every hole (fix / escalate / accept), then takes the build live and closes the project. Invoked by /build when the router fires.
 ---
 
 # /ship
 
-**Definition of done:** Ship proves a build is safe for **others to rely on** before it goes live, then takes it live and closes the project. It is **Gate 3** — and it only triggers when the blast radius is real. The build already works (that's `/build`); ship answers a different question: *when this runs in production and something goes wrong, what happens?* If you can't answer what breaks, who notices, the fallback, the contingency, how we fix it, and what it concludes without testing — it does not go live.
+**Definition of done:** Ship proves a build is safe for **others to rely on** before it goes live, then takes it live and closes the project. It is **Checkpoint 3** — and it only triggers when the blast radius is real. The build already works (that's `/build`); ship answers a different question: *when this runs in production and something goes wrong, what happens?* If you can't answer what breaks, who notices, the fallback, the contingency, how we fix it, and what it concludes without testing — it does not go live.
 
-**This is the human review gate.** For your own builds, it's a deliberate self-review before exposing something real. For the team, this is the point where they bring the build to you — the resilience review is exactly the judgment a non-technical builder can't self-administer. **The written review is the audit surface:** it's what lets you (or a fresh session) verify the gate was cleared honestly, not rubber-stamped.
+**This is the human review checkpoint.** For your own builds, it's a deliberate self-review before exposing something real. For the team, this is the point where they bring the build to you — the resilience review is exactly the judgment a non-technical builder can't self-administer. **The written review is the audit surface:** it's what lets you (or a fresh session) verify the checkpoint was cleared honestly, not rubber-stamped.
 
 ## Trigger
 
@@ -39,7 +39,7 @@ If none fire, there is no `/ship` — `/build` ships freely and closes the proje
 
 ## Prerequisite
 
-A `/build` that passed end-of-build verification, with `state.md` recording the router result. **Orient from the project's `state.md` first** (`/build` Phase 1-A: read it, run its verify block, print the orientation card, template §4.10, with **Doing** = the Gate-3 review of {project}; **Checked** = the verify block's results; **Inherits** = Held and Needs {owner}; **Next** = the review written, and the stop for the owner's sign-off and go) — it names the held steps and what needs the owner. Then read the PRD's pre-mortem and impact map by section, and the project log only where `state.md` points. This review builds on them.
+A `/build` that passed end-of-build verification, with `state.md` recording the router result. **Orient from the project's `state.md` first** (`/build` Phase 1-A: read it, run its verify block, print the orientation card, template §4.10, with **Doing** = the Checkpoint 3 review of {project}; **Checked** = the verify block's results; **Inherits** = Held and Needs {owner}; **Next** = the review written, and the stop for the owner's sign-off and go) — it names the held steps and what needs the owner. Then read the PRD's pre-mortem and impact map by section, and the project log only where `state.md` points. This review builds on them.
 
 ---
 
@@ -54,14 +54,14 @@ This sets the depth of the review. A workflow that moves money to creators gets 
 
 ---
 
-## Phase 2: RESILIENCE REVIEW (the Gate-3 content)
+## Phase 2: RESILIENCE REVIEW (the Checkpoint 3 content)
 
-Answer all six in writing. This is the heart of the gate — reuse the CLAUDE.md Workflow Design Standard quality lens.
+Answer all six in writing. This is the heart of the checkpoint — reuse the CLAUDE.md Workflow Design Standard quality lens.
 
 | Question | What to answer |
 |----------|----------------|
 | **What breaks?** | Every failure mode. For every handoff: what if the next step never fires — how long until someone notices? For every write: what happens if it runs twice? (idempotency) **And: which collaborators does the test suite supply itself, and does the real one have the same shape?** A hand-made stub is fine for values and dangerous for interfaces — a suite that builds its own resolver, client or config object can pass green while production throws on the first call, because the fixture's *shape* was invented rather than taken from the thing it stands in for. **And: what do all the tests have in common?** The same fixture factory, the same creation path, the same kind of actor. Build one fixture the other way production also makes it: a suite whose every record is born by one route hides exactly the records production creates differently. (Lesson, 2026-09-08: every check created its admin through one route, which always wrote a profile row; admins made the older way had none, and finalizing a record threw a foreign-key error that four work items of green tests never met.) |
-| **Who notices?** | For each failure: does someone get notified (owner + specific next action), or does it fail silently? Where is the source of truth, and can it drift? **And: when the build splits, isolates or extracts a component, what used to fail loudly and now fails quietly?** Isolation improves resilience and degrades observability at the same time, because the coupling removed is often what was doing the alerting. (Lesson, 2026-08-20: splitting one worker into two lanes meant a dead lane no longer stopped the daily report, so the system looked healthy while its jobs sat waiting; a new detector had to be built at this gate.) |
+| **Who notices?** | For each failure: does someone get notified (owner + specific next action), or does it fail silently? Where is the source of truth, and can it drift? **And: when the build splits, isolates or extracts a component, what used to fail loudly and now fails quietly?** Isolation improves resilience and degrades observability at the same time, because the coupling removed is often what was doing the alerting. (Lesson, 2026-08-20: splitting one worker into two lanes meant a dead lane no longer stopped the daily report, so the system looked healthy while its jobs sat waiting; a new detector had to be built at this checkpoint.) |
 | **What's the fallback?** | For each automated step that fails: is there a manual path forward? For each human step: is a system sitting idle waiting, and does anyone know? |
 | **What's the contingency?** | If it goes wrong in production: what's the rollback or kill switch? Can we undo go-live in one step? |
 | **How do we fix it?** | The recovery procedure, written down concretely — so the person on the hook at 2am can follow it. |
@@ -81,13 +81,13 @@ Finding holes is worthless if nothing happens to them. **First, write every hole
 | **Escalate** | The hole is a *design flaw*, not a missing safeguard — a silent-drift source of truth, two systems writing one field, an architecture that can't support the needed fallback | Stop. Return to `/prd` (or `/memo` if the underlying problem was mis-framed). You do not bolt a safeguard onto a broken design. |
 | **Accept** | A real but acceptable residual — the cost to close it exceeds the risk, it is reversible, and the contingency is written down | **First, name what this problem is called in the field that has had it longest** — a name usually comes with a mechanism, and a hole that looked too costly to close often turns out to be a solved problem (a tool that overwrote a person's edits at update was the package managers' managed-file problem, fixed in an hour once named). Only then record the decision and the contingency. **Requires explicit human sign-off.** For the team, this is the call they bring to the owner — it is not theirs to make alone. |
 
-**Go-live gate:** every hole is now either **Fixed** or **Accepted-with-sign-off.** An undispositioned hole blocks go-live — no exceptions. A hole you quietly tolerate is exactly the failure this gate exists to prevent (Surface, don't sweep).
+**Go-live check:** every hole is now either **Fixed** or **Accepted-with-sign-off.** An undispositioned hole blocks go-live — no exceptions. A hole you quietly tolerate is exactly the failure this check exists to prevent (Surface, don't sweep).
 
 Record each hole and its disposition in the Ship Review (Phase 6).
 
 **Follow-ups: the session tail.** A follow-up found during the review is handled by the rule in the `session-close` skill, "Follow-ups": a small one goes on the session tail and is done before the stop unless the owner chooses to file it; substantial or people-dependent work is filed and announced in three parts. Everything still open at the close comes back to the owner at the residual review (Phase 6, Step 2).
 
-**A Gate-3 round ends at a stop.** When a round ends (review written, blockers fixed, or waiting on the owner), rewrite `state.md` (Position: Gate 3 round N done; Next: …; Held; Needs {owner}), run `python3 .claude/tools/orientation_cost.py --now ship`, print the ship review's TLDR, then the handoff card (template §4.10) with its Context line; its Residuals block carries every hole this round accepted or left open, in its five parts, and follow the verdict exactly as `/build` Phase 2 Step 5: continue into the next round here, or stop for a fresh session. A round waiting on the owner stops regardless.
+**A Checkpoint 3 round ends at a stop.** When a round ends (review written, blockers fixed, or waiting on the owner), rewrite `state.md` (Position: Checkpoint 3 round N done; Next: …; Held; Needs {owner}), run `python3 .claude/tools/orientation_cost.py --now ship`, print the ship review's TLDR, then the handoff card (template §4.10) with its Context line; its Residuals block carries every hole this round accepted or left open, in its five parts, and follow the verdict exactly as `/build` Phase 2 Step 5: continue into the next round here, or stop for a fresh session. A round waiting on the owner stops regardless.
 
 ---
 
@@ -118,11 +118,11 @@ If the smoke test fails: execute the contingency from Phase 2, do not leave it h
 
 `/ship` owns the close for builds that cross the line (we don't use `/close-project`).
 
-### Step 1: Record the Gate-3 review
+### Step 1: Record the Checkpoint 3 review
 Append to `project_log.md`:
 
 ```markdown
-## Ship Review (Gate 3)
+## Ship Review (Checkpoint 3)
 **Blast radius:** [which conditions fired + who/what is exposed]
 **What breaks:** …
 **Who notices:** …
@@ -157,5 +157,5 @@ Everything after the review is **one shared procedure**, `~/.claude/skills/_shar
 - **The router sets the ceremony.** Internal and reversible → no ship. Real blast radius → full review, no exceptions.
 - **Silent failure is the enemy.** Every failure mode must have a noticer with an action. If nobody finds out, it isn't shippable.
 - **Every hole gets a disposition.** Fix it, escalate it, or consciously accept it with sign-off — but never just note it and ship. An undispositioned hole blocks go-live.
-- **The review is the audit surface.** A written Gate-3 review is what proves the gate was cleared honestly — for the team, that's what you actually review.
+- **The review is the audit surface.** A written Checkpoint 3 review is what proves the checkpoint was cleared honestly — for the team, that's what you actually review.
 - **Cut over, don't mutate.** Build alongside and swap the entry point, so go-live is reversible in one step.

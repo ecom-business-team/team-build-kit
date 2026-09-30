@@ -1,15 +1,21 @@
 # The lifecycle map
 
-_Every door in, the three gates, one loop that closes only when the problem is solved._
+_How work starts, the three checkpoints every build must pass, and one loop that closes only when the problem is solved._
 
-This page is the map of the kit: the commands and standards you install, and the loop every piece of work moves through. You come in once, through one of two doors.
+This page is the map of the kit. The kit is a set of commands you type in Claude Code, such as `/memo`, together with standards, which are the written rules for how documents and folders are laid out, and a few pages like this one that explain them. The map shows every command you install and the loop every piece of work moves through. There are two ways to start, and you use one of them once for each thing: build something new with `/new-workspace`, or bring something that already exists up to standard with `/convert-to-standard`.
 
-1. You want to build something new. The first door makes a place for it to live.
-2. You already have something, and you want to bring it up to the standard. The second door looks at what you have and writes down what is missing.
+1. You want to build something new. `/new-workspace` makes a place for it to live inside your workspace, which is the folder that holds all your work.
+2. You already have something, and you want to bring it up to the standard. `/convert-to-standard` looks at what you have and writes down what is missing.
 
-Either way you arrive at the memo, a short written case for the build. The memo decides how big the work is, so you never have to. A small fix goes straight to a quick fix. A build that fits one project gets designed in a PRD, the design document, then built, and, if other people will rely on it, reviewed before it goes live. A build too big for one project becomes an initiative: a roadmap of projects, where each project runs the whole loop on its own. Every build passes the gates it needs, and nothing is finished until the outcome check says the problem the memo named is gone. Open any stage below to see what it asks, what it produces, and what goes wrong without it.
+Either way you arrive at the memo, a short written case for the build, which you start with `/memo`. The memo decides how big the work is, so you never have to. A small fix goes straight to a quick fix, which is a contained change made with `/quick-fix` that needs no design. A build that fits one project, meaning one build taken from its memo to its finish on its own, gets designed in a PRD, short for product requirements document, which is the design written down before anything is built. Then it is built and, if other people will rely on it, reviewed before it goes live. Whether they will is measured by the blast radius, which means how far a mistake would travel. A build too big for one project becomes an initiative: a roadmap of milestones, each one a point where one more thing is true, and each reached by a project that runs the whole loop on its own.
+
+Every project, and every initiative as a whole, keeps a state file. The state file is a short note that says where the work stands right now: what is done, what is next, and what is waiting on someone. It is rewritten every time something moves, so it never grows into a history.
+
+Every build passes the checkpoints it needs. A checkpoint is a question a build must answer before it moves on, and there are three, numbered in order (1, 2 and 3): Checkpoint 1, the memo, asks whether the thing should exist; Checkpoint 2, the PRD, asks whether it is designed right; and Checkpoint 3, the ship review, asks whether other people can rely on it. Nothing is finished until the outcome check, which is run on a set date after launch, says the problem the memo named is gone. Open any stage below to see what it asks, what it produces, and what goes wrong without it.
 
 ## The map
+
+The key right after the map explains every label on it, so read the two together.
 
 ```map
 node I   1,2       :: install / then /onboard
@@ -29,6 +35,7 @@ node S   8,3 gate  :: /ship / safe to rely on?
 node CL  9,2       :: close / and archive
 node OC  10,2      :: outcome check / on its date
 node D   10,1 end  :: reached
+node QD  7,1 end   :: live / quick fix done
 I -> N
 I -> C
 N -> M
@@ -42,7 +49,7 @@ M2 -> M3
 INI ..> M :: each milestone runs the full loop from the memo
 P -> B
 B -> R
-Q -> R
+Q -> QD :: its own blast-radius check
 R -> CL :: only you
 R -> S :: others rely on it
 S -> CL
@@ -53,23 +60,27 @@ OC ..> M :: not reached: back to the memo
 
 ```map
 node K1 1,1       :: a command / what it does
-node K2 2,1 gate  :: a gate / a person clears it
+node K2 2,1 gate  :: a checkpoint / a person clears it
 node K3 3,1 check :: a question
 node K4 4,1 end   :: reached
 ```
 
 - A plain box is a command you run, with what it does under its name.
-- A dark box is a gate. A person clears it, in writing, before anything continues. There are three.
+- A dark box is a checkpoint. A person clears it, in writing, before anything continues, and that person is the owner, the person whose workspace this is. There are three.
 - A diamond is a question the kit answers for you. The first asks how big the work is; the second asks how far a mistake would travel.
-- The outlined pill is the only end state. Reached means the memo's success definition came true in real use.
+- An outlined pill is an end state. A quick fix ends when it goes live; a project ends at reached. Reached means the memo's success definition came true in real use. The success definition is the memo's sentence "we will know this is solved when…", written so it can be checked.
 
-The dashed lines are the returns. Each milestone of an initiative comes back to the memo and runs the full loop as a project of its own, unless the memo finds it is a chore and sends it to a quick fix. An outcome check that finds the problem still there sends you back to the memo too: a defect becomes a quick fix or a new project, and a wrong success definition corrects the memo. A quick fix leaves the map after the blast-radius question; close, archive and the outcome check belong to projects.
+The first box, install then /onboard, is where everything begins. Installing places the kit's files on your computer, and the kit's README gives the one-line command that does it. `/onboard` is then a short interview that turns those files into a workspace of your own. Near the end of the loop, close means the shared finishing steps every project runs, and archive means filing the finished project folder away so it no longer sits among the live work.
+
+The dashed lines are the returns. Each milestone of an initiative comes back to the memo and runs the full loop as a project of its own, unless the memo finds it is a chore, which is a known routine with no design question, and sends it to a quick fix. An outcome check that finds the problem still there sends you back to the memo too: a defect becomes a quick fix or a new project, and a wrong success definition corrects the memo. A quick fix leaves the map after the blast-radius question; close, archive and the outcome check belong to projects.
+
+Around the loop runs a rhythm of sessions, days and weeks. A session is one conversation with Claude, from opening the chat to closing it.
 
 ```chain
 Every session, every day, every week: /session-close → /day → /week
 ```
 
-Every session ends the same way: a log line, and when a project is in flight, the state file rewritten and a handoff card printed. The day's log is processed once a day and the week's once a week, so what one session learned is where the next one will look.
+Every session ends the same way: a line in the day's log, and when a project is in flight, the state file rewritten and a handoff card printed. A handoff card is a short summary Claude prints at every stop: where the work sits, what just got done and how it was proved, what only you can do, and exactly what to type next. The day's log is processed once a day and the week's once a week, so what one session learned is where the next one will look. Processing means a short routine reads the log, files its loose ends as tasks and writes a one-paragraph summary.
 
 ## Install, then /onboard — the whole way of working in one conversation
 
@@ -78,18 +89,18 @@ Every session ends the same way: a log line, and when a project is in flight, th
 **Asks.**
 
 - The install asks nothing. It places every file on the kit's list, all of them or none, and keeps a receipt of what it placed.
-- The interview asks who you are and what you build, what to call you, where your tasks live, and where shared keys will live.
+- The interview asks who you are and what you build, what to call you, where your tasks live, and where shared keys will live. Shared keys are the passwords and access keys your tools use, kept together in one private file.
 - It shows you the plan of folders before it creates anything, and waits for your yes.
-- The first time the folder is opened, one prompt asks whether to trust the folder's hooks.
+- The first time the folder is opened, one prompt asks whether to trust the folder's hooks. A hook is a small script Claude Code runs by itself at set moments, such as the start or end of a session.
 
 **Produces.**
 
 - A workspace of your own, beside the kit, never inside it.
-- In it, the standards, the glossary, the explainer, the worked example, the practice notes, and five small hooks that keep notes about sessions and read your own additions to a command.
-- Your map, the file that tells every session where things live, with one routing row per area of your work. And your skills list.
+- In it are the standards; the glossary, which is the page that defines every term in one plain sentence; the explainer, which is the page that says why the kit works this way; the worked example, which walks one build from install to outcome check so you see each step before you run it; the practice notes, which are short notes on how each tool behaves; and five small hooks. The hooks keep notes about sessions and pick up any file of your own rules that you add to a command, which the kit reads and never overwrites. That file lives in your workspace at `.claude/skills.d/<command>.md`.
+- Your CLAUDE.md, the file that tells every session where things live, with one routing row per area of your work. An area is a folder in your workspace for one part of your work, such as `money/`, and each area has its own index. And your skills list, a file named SKILLS.md that lists your commands. A skill and a command are the same thing: something you type, such as /memo, whose written steps Claude follows.
 - Each area of your work, created to the standard.
-- The folders every workspace has from its first day, before any document goes in them: one for bulk changes with its index, and a task list when your tasks live in a file rather than a tool.
-- A check that your task manager works: one test task filed, read back and completed, or a task list in a file when that fails.
+- The folders every workspace has from its first day, before any document goes in them. One is for bulk changes, which are changes to more than ten records at once, each recorded with a copy of the records taken first so it can be undone. That folder starts with its index, the short page at the front of a folder that says what it is, what lives in it and how to pick it up. There is also a task list when your tasks live in a file rather than a tool.
+- A check that your task manager, the one app or file where all your tasks live, works: one test task filed, read back and completed, or a task list in a file when that fails.
 - The whole workspace saved once in version control, so every later change can be undone in one step.
 - A receipt, so a later update refreshes what you left alone and keeps what you changed, with the kit's new version placed beside it.
 - A handoff card that names the first thing to do.
@@ -106,14 +117,14 @@ Every session ends the same way: a log line, and when a project is in flight, th
 
 **Asks.**
 
-- How big the thing is. A whole workspace, a system, a small leaf inside one, or an initiative, which is a sequence of milestones that build on each other.
-- What kind of thing it is made of. The kind decides which documents it owes and how it is proved, and the kind is checked again at every PRD and build, because a thing can outgrow it. There are six kinds.
-  - An automation is tools you rent, wired together, such as a workflow tool, a board and a chat app.
-  - A service is your own code that runs on its own with no screen, such as a worker, a scheduled job or a bot.
-  - An application is your own code with a screen that people sign into.
-  - A tool is your own code that a person runs by hand to produce an output, such as a report or a file.
-  - A procedure is instructions that Claude follows, such as a skill, a hook or a ritual.
-  - Knowledge is something people read, such as a runbook, a lesson or a reference shelf.
+- How big the thing is. It may be a whole workspace; a system, which is something that does one job; a small leaf, which is one part inside a system; or an initiative, which is a sequence of milestones that build on each other.
+- What kind of thing it is made of. The kind decides which documents it owes and how it is proved, and the kind is checked again at every PRD and build, because a thing can outgrow it. There are six kinds, and each sentence below ends with how that kind is proved.
+  - An automation is tools you rent, wired together, such as a workflow tool, a board and a chat app. It is proved by a replay through its real entry point.
+  - A service is your own code that runs on its own with no screen, such as a worker, a scheduled job or a bot. It is proved by tests, a live probe, and a forced failure that its alert reports.
+  - An application is your own code with a screen that people sign into. It is proved by a real browser going through the real login, plus checks on live data.
+  - A tool is your own code that a person runs by hand to produce an output, such as a report or a file. It is proved by tests on sample data plus one check against real data.
+  - A procedure is instructions that Claude follows, such as a skill, a hook or a ritual, which is a routine a person runs on a rhythm, such as a weekly review. It is proved by a cold read, in which a fresh session reads it and reports what it understood.
+  - Knowledge is something people read, such as a runbook (step-by-step instructions for a recurring job), a lesson or a reference shelf. It is proved by a review against a table that lists where each claim is confirmed.
   - A thing made of several kinds that ship together is a composite system, and several systems that share a database or exchange data are a system of systems.
 - For an initiative, a different interview: what will be true when it is finished, whose day changes, which systems are retired and what must never get worse, and the big steps in order.
 
@@ -121,15 +132,15 @@ Every session ends the same way: a log line, and when a project is in flight, th
 
 - Exactly the document set the level and the kind call for. Nothing missing, nothing extra.
 - The area's folders, created empty on the first day: a place for memos, a place for designs and an archive, and for an automation a starting page for its flow diagram.
-- An index at the door that says what the thing is, what kind it is, and how it is proved.
-- A routing row in your map.
+- An index at the front of the folder that says what the thing is, what kind it is, and how it is proved.
+- A routing row in your CLAUDE.md.
 - A handoff card that points at the memo.
 
 **Without it.**
 
 1. **First:** code lands in a folder with no index, and the next session reads the whole tree to learn what is there.
 2. **Then:** documents describe what someone assumed was deployed, which is worse than no document at all.
-3. **In the end:** two systems quietly write the same field, and nobody can say which one is the source of truth.
+3. **In the end:** two systems quietly write the same field, and nobody can say which one is the source of truth, the one place whose value counts.
 
 ## /convert-to-standard — something you already have
 
@@ -151,7 +162,7 @@ Every session ends the same way: a log line, and when a project is in flight, th
 
 1. **First:** existing work stays undocumented, or gets documents written from memory that state guesses as facts.
 2. **Then:** the next builder designs on a description that was never true.
-3. **In the end:** a change breaks a consumer nobody knew existed, because no document named it.
+3. **In the end:** a change breaks a consumer, meaning something that reads or depends on the thing, that nobody knew existed, because no document named it.
 
 ## /memo — worth doing?
 
@@ -159,19 +170,19 @@ Every session ends the same way: a log line, and when a project is in flight, th
 
 **Asks.**
 
-- First, it looks for the thing. It reads your map, your skills list, the memos and designs already written, and the area's index. If what you describe already exists or is already being built, it names the file and asks whether this is that thing or a different one.
+- First, it looks for the thing. It reads your CLAUDE.md, your skills list, the memos and designs already written, and the area's index. If what you describe already exists or is already being built, it names the file and asks whether this is that thing or a different one.
 - What the problem is, what doing nothing costs, what solving it is worth, and why now.
 - What the thing is, in one sentence, and what it is deliberately not.
-- How you will know it is solved, written so it can be checked later.
+- How you will know it is solved, written so it can be checked later. This sentence is the success definition.
 - How big it is. A throwaway, a thing only you depend on, or a change you can undo in one step is waved through with no memo; the map does not draw these, you simply do them. A contained fix, or a chore (a known procedure with no design question, even a milestone on a roadmap), is sent to a quick fix.
-- Whether it is really several things. Three signs: success takes several releases that build on each other; systems are replaced or retired over months; the boundary keeps growing. Two of the three make it an initiative.
+- Whether it is really several things. Three signs: success takes several releases that build on each other; systems are replaced or retired over months; the boundary, which is the memo's line saying what the thing is not, keeps growing. Two of the three make it an initiative.
 
 **Produces.**
 
-- A short memo the owner approves. It says what and why, never how.
+- A short memo the owner approves; the owner, as the key said, is the person whose workspace this is and whose word the checkpoints wait on. The memo says what and why, never how.
 - Its honest answer may be "do not build". That is a good memo, not a failed one.
-- A route: down to a quick fix, on to the design gate, or up to an initiative.
-- Inside an initiative, each milestone comes back through this same door with a short memo that points into the north star instead of repeating it; a milestone that is a chore goes down to a quick fix instead.
+- A route: down to a quick fix, on to Checkpoint 2 and the PRD, or up to an initiative.
+- Inside an initiative, each milestone comes back through `/memo` with a short memo that points into the north star, the initiative's compass document, instead of repeating it; a milestone that is a chore goes down to a quick fix instead.
 
 **Without it.**
 
@@ -192,7 +203,7 @@ Every session ends the same way: a log line, and when a project is in flight, th
 **Produces.**
 
 - A verified fix.
-- The living documents it touched, brought up to date. No project folder, no log, no decision entries.
+- The living documents it touched, brought up to date. A living document is one that is kept true at the moment something changes, such as a folder's index. It creates no project folder, no project log and no decision entries. The project log is a project's diary, added to and never edited, and it is separate from the daily log of sessions; decision entries are the lines in a decision log that record why a choice was made.
 - Before go-live, the same blast-radius question as a full build. If a mistake would travel, the six questions of the ship review, described below, are answered right there, in a paragraph, and every "nothing" or "don't know" is fixed now or sent to the memo.
 
 **Without it.**
@@ -212,16 +223,16 @@ Every session ends the same way: a log line, and when a project is in flight, th
 
 **Produces.**
 
-- A planning folder with three documents. The north star, which also serves as the initiative's memo. One state file for the whole initiative. An index.
+- A planning folder with three documents. The north star, the initiative's founding document, which says why the whole effort exists and lists every project it will build, in order, each with its own memo. One state file for the whole initiative. An index.
 - One project per milestone, except a chore milestone, which goes through a quick fix. Each project has its own memo, its own PRD, its own build, its own blast-radius check, and its own outcome check.
 - The roadmap holds the order and the reasons, never status. Status lives in the state file's milestone table. A milestone moves from queued, to memo cleared, to PRD approved, to building, to shipped, and only after the outcome check, to reached.
-- A tray, handed from each finished project to the next. What is live, what is held, what is undecided, what is verified.
+- A tray, handed from each finished project to the next. It lists what is live, what is held (switched off, or waiting on someone's word before it goes live), what is undecided and what is verified.
 
 **Without it.**
 
 1. **First:** a multi-month effort runs as one giant project, and nothing ships until everything is done.
 2. **Then:** decisions made in project two are argued again in project four, because they lived in a chat, not in the north star.
-3. **In the end:** every session rebuilds its position from six to ten history-shaped documents, re-reading the same files up to twenty-nine times.
+3. **In the end:** every session rebuilds its position from six to ten history-shaped documents, which pile up past events instead of saying where things stand now, re-reading the same files up to twenty-nine times.
 
 ## /prd — designed right?
 
@@ -233,25 +244,25 @@ Every session ends the same way: a log line, and when a project is in flight, th
 - What done looks like.
 - The smallest path that reuses what already exists. This is asked before any grander design is allowed.
 - Whether every dependency on another system really responds the way the design assumes. Each one is called or inspected.
-- Who consumes any value the design changes, including the platform's own automations that nobody lists.
-- The rigor pass, which includes the blast radius and a pre-mortem.
+- Who consumes any value the design changes, including the platform's own automations, which are the rules built into the tools you use, such as a board that moves a card on its own, and which nobody lists.
+- The rigor pass, a final run of the design through a fixed list of checks. It includes the blast radius and a pre-mortem, which imagines the build has failed badly three months from now and asks what went wrong.
 
 **Produces.**
 
-- A PRD that a fresh session can build from alone, with work items that build in one shot and no scope decision left over.
+- A PRD that a fresh session can build from alone. It is split into work items, each a bounded piece of the build that promises one output, and each builds in one shot, meaning in one go with no scope decision left over.
 - A validation log of every dependency probed.
-- An impact map and a pre-mortem, which the ship review reuses later.
-- Its companion page, and the project's state file.
+- An impact map, which lists everything the change touches and everything confirmed untouched, and a pre-mortem. The ship review reuses both later.
+- Its companion page, a web page generated beside the PRD so a person can read and approve it without opening the markdown, and the project's state file.
 
 **Without it.**
 
-1. **First:** the build discovers the real schema, the real contract, and the real consumer halfway through.
+1. **First:** the build discovers the real schema (how the data is laid out), the real contract (what each system promised the other), and the real consumer halfway through.
 2. **Then:** scope changes mid-build, and each change is a design decision made without the design's context.
 3. **In the end:** things nobody can explain get built, and when they break nobody can fix them.
 
 ## /build — make it work
 
-> **In plain words:** The build is pure execution. It builds one work item at a time, measures the session after each one to decide whether to carry on or start fresh, proves each one the way its kind is proved, and ends by asking the blast-radius question.
+> **In plain words:** The build is pure execution. It builds one work item at a time, measures how full the conversation is after each one to decide whether to carry on or start fresh (a very full conversation costs more and forgets detail, so past a set size a fresh one is cheaper), proves each one the way its kind is proved, and ends by asking the blast-radius question.
 
 **Asks.**
 
@@ -261,9 +272,9 @@ Every session ends the same way: a log line, and when a project is in flight, th
 
 **Produces.**
 
-- Each work item proved the way its kind is proved. A test, a replay through the real entry point, a browser check through the real login, or a cold read.
-- The living documents updated as the territory changes.
-- At every work-item boundary: the log appended, the state file rewritten in place, and the handoff card printed with its measured Context line, which decides whether the session carries on or stops there.
+- Each work item proved the way its kind is proved. A test, a replay through the real entry point, which is the way a real user or trigger actually starts the thing, a browser check through the real login, or a cold read, in which a fresh session with no memory reads the documents and reports back what it understood.
+- The living documents updated as the territory, the real system they describe, changes.
+- At every work-item boundary, the project log is appended, the state file is rewritten in place, and the handoff card is printed with its Context line. The Context line measures how full the conversation is and says whether the session carries on or starts fresh.
 - A route: close itself when a mistake would travel nowhere, or hand to the ship review.
 
 **Without it.**
@@ -279,21 +290,21 @@ Every session ends the same way: a log line, and when a project is in flight, th
 **Asks.**
 
 - It runs only when the blast-radius question says a mistake would travel: someone else depends on it, it writes real data, its output drives decisions, or it touches money or people outside. Otherwise there is no ship review.
-- Six questions, in writing. What breaks. Who notices. What the fallback is. What the contingency is. How we fix it. And what a test that checked a sample tells us about the items it never looked at.
+- Six questions, in writing. What breaks. Who notices. What the fallback is, meaning what you do if it breaks. What the contingency is, meaning what you do if the fallback fails too. How we fix it. And what a test that checked a sample tells us about the items it never looked at.
 - For every hole: fix it now, send the design back to the PRD or the memo, or accept it with the owner's explicit sign-off. A hole with no decision blocks go-live.
-- Before the close, every task the project filed along the way is brought to the owner in one list, each with its next action, and ruled: do it now, schedule it, or drop it. A small follow-up goes on the session tail and is done before the stop unless the owner chooses to file it.
+- Before the close, every task the project filed along the way is brought to the owner in one list, each with its next action, and ruled: do it now, schedule it, or drop it. A small follow-up goes on the session tail, the short list of small things to finish before the session stops, and is done before the stop unless the owner chooses to file it.
 
 **Produces.**
 
 - A written review that a fresh reader can audit.
-- A go-live that can be undone in one step, a smoke test in production, and monitoring confirmed to have fired.
-- The shared close: provisional lessons, living documents brought current, the project archived, the milestone marked shipped, the tray refilled, the outcome check scheduled, and a handoff card.
+- A go-live that can be undone in one step, a smoke test in production, which is a real browser walking the real screens through the real login, and monitoring confirmed to have fired, meaning the alert was set off once on purpose and seen to arrive.
+- The shared close: provisional lessons, which are lessons written down now and confirmed only after real use, living documents brought current, the project archived, inside an initiative the milestone marked shipped and the tray refilled, the outcome check scheduled, and a handoff card. A standalone project, one that is not part of an initiative, records its stage in its own state file instead.
 
 **Without it.**
 
 1. **First:** something fails in production and nobody is told.
 2. **Then:** a number someone acted on was wrong, and the decision it drove stands.
-3. **In the end:** a hole that was quietly tolerated becomes exactly the failure the gate existed to prevent.
+3. **In the end:** a hole that was quietly tolerated becomes exactly the failure the checkpoint existed to prevent.
 
 ## The outcome check — on its date
 
@@ -307,7 +318,7 @@ Every session ends the same way: a log line, and when a project is in flight, th
 
 **Produces.**
 
-- Reached: the milestone row reads reached, and the archived log gains an Outcome section with the evidence.
+- Reached: inside an initiative the milestone row reads reached (a standalone project marks it in its own state file), and the archived log gains an Outcome section with the evidence.
 - Not reached: a defect goes to a quick fix or a new project. A wrong success definition is corrected in the memo. "Not yet" is rescheduled once, with the reason given. Until then the milestone stays shipped.
 
 **Without it.**
@@ -323,8 +334,8 @@ Every session ends the same way: a log line, and when a project is in flight, th
 **Asks.**
 
 - At every close: at least one log line, the state file rewritten if a project is in flight, and the living documents checked against what changed.
-- Once a day: which learnings move to their canonical home, and which open threads become tasks. A learning without a document change or a filed task did not happen.
-- Once a week: what repeats, the biggest recurring friction and one action for it, and what to propose for your map or for the kit. Proposals only, never edits.
+- Once a day: which learnings move to their canonical home, the one document where each lesson belongs, and which open threads become tasks. A learning without a document change or a filed task did not happen.
+- Once a week: what repeats, the biggest recurring friction and one action for it, and what to propose for your CLAUDE.md or for the kit. Proposals only, never edits.
 
 **Produces.**
 
@@ -339,20 +350,20 @@ Every session ends the same way: a log line, and when a project is in flight, th
 
 ## Also in the kit, off the loop
 
-Three commands sit beside the loop rather than on it. Run `/doc-audit` before a big build, after a long gap, or whenever the workspace feels drifty. It checks every living document against what is really there and proposes fixes. Run `/new-workflow` when a process repeats. It turns the steps into a command of your own, or, when a person checks the output of more than one stage and the process has run at least twice, into a pipeline of numbered stage folders, each with its one human check. Run `/update-build-kit` to refresh the kit's files without touching your map, your skills list, or the folders you made.
+Three commands sit beside the loop rather than on it. Run `/doc-audit` before a big build, after a long gap, or whenever the workspace feels drifty. It checks every living document against what is really there and proposes fixes. Run `/new-workflow` when a process repeats. It turns the steps into a command of your own, or, when a person checks the output of more than one stage and the process has run at least twice, into a pipeline of numbered stage folders, each with its one human check. Run `/update-build-kit` to refresh the kit's files without touching your CLAUDE.md, your skills list, or the folders you made.
 
 ## Where each stage comes from
 
 | Claim | Source that confirms it |
 |---|---|
-| Two doors in: one for something new, one for something you already have; both end at the same place | `convert-to-standard/SKILL.md`, opening paragraph ("the door for existing work; `/new-workspace` is the door for new work; both end at the same place") |
-| The memo decides the size: down to a quick fix, on to a project, up to an initiative | `memo/SKILL.md`, "When the memo is too small — the initiative test" ("the one door with three exits"); `glossary.md`, "The door" |
+| Two ways to start: one for something new, one for something you already have; both end at the same place | `convert-to-standard/SKILL.md`, opening paragraph (the sentence naming the two ways to start: "both end at the same place") |
+| The memo decides the size: down to a quick fix, on to a project, up to an initiative | `memo/SKILL.md`, "When the memo is too small — the initiative test" (the sentence giving `/memo` "three exits"); `glossary.md`, "Where every idea starts" |
 | Nothing is finished until the outcome check confirms the memo's success definition; shipped is not reached | `glossary.md`, "Outcome check", "Milestone"; `why_we_build.md`, "Why shipped is not reached" |
-| There are three gates, each cleared in writing by a person: the memo and the PRD are approved before the next step, and the written ship review is the audit surface | `memo/SKILL.md`, "Close: hand off or pause" ("Once approved"); `prd/SKILL.md`, "Present for approval"; `ship/SKILL.md`, "Definition of done" ("This is the human review gate… The written review is the audit surface") |
+| There are three checkpoints, each cleared in writing by a person: the memo and the PRD are approved before the next step, and the written ship review is the audit surface | `memo/SKILL.md`, "Close: hand off or pause" ("Once approved"); `prd/SKILL.md`, "Present for approval"; `ship/SKILL.md`, "Definition of done" ("This is the human review checkpoint… The written review is the audit surface") |
 | Each milestone of an initiative runs the full loop from the memo as its own project | `documentation_standard.md`, §4 "Planning folder" ("Each project runs `/memo` → `/prd` → `/build` → `/ship`"); `memo/SKILL.md`, "Two forms" |
 | An outcome check that is not reached sends you back to the memo: a defect becomes a quick fix or a new project, a wrong definition amends the memo, and only "not yet" reschedules | `_shared/project_close.md`, §5 "Running the check" item 3 |
 | The blast-radius question decides whether the ship review runs at all; it asks how far a mistake would travel | `ship/SKILL.md`, "Trigger" ("If none fire, there is no `/ship`"); `glossary.md`, "Blast radius", "Router" |
-| The memo's three exits are by size: a small fix, one project, several projects | `memo/SKILL.md`, "When you can SKIP the memo" (a contained fix → `/quick-fix`); "The initiative test" ("the one door with three exits") |
+| The memo's three exits are by size: a small fix, one project, several projects | `memo/SKILL.md`, "When you can SKIP the memo" (a contained fix → `/quick-fix`); "The initiative test" (the sentence giving `/memo` "three exits") |
 | The ship branch is taken when others rely on the build; when only you do, the build closes itself | `ship/SKILL.md`, "Trigger"; `build/SKILL.md`, "Phase 4: BLAST-RADIUS ROUTER" ("If none fire → ship freely") |
 | Every session ends with a log line, and when a project is in flight the state file is rewritten and a handoff card printed; the day and the week are processed on a rhythm | `session-close/SKILL.md`, §1 and §2 item 9; `day/SKILL.md` and `week/SKILL.md`, "When" (the rhythm) and "Steps" |
 | The install places every listed file or nothing, and keeps a receipt of what it placed; an update refreshes unchanged files and keeps changed ones, writing the kit's version beside them | `install.sh`, header comment (atomic; receipts; `.kit-new`, "the package-manager rule") |
@@ -360,7 +371,7 @@ Three commands sit beside the loop rather than on it. Run `/doc-audit` before a 
 | The interview asks who you are and what you build, what to call you, where your tasks live, and where shared keys live; it shows the plan before creating anything | `onboard/SKILL.md`, "Phase 2: UNDERSTAND THE PERSON" (questions 1–6); "Phase 4: CONFIRM AND CREATE" 4a |
 | The workspace holds the skeleton folders from its first day, the task manager is proved by one test task (or a task list in a file), and the workspace is committed once | `onboard/SKILL.md`, "Phase 4" 4b step 3 ("Create the skeleton"), step 5 ("Prove the task manager"), step 8 ("Commit"); `_shared/documentation_standard.md`, "The skeleton — folders that exist from day one" |
 | One prompt asks once whether to trust the folder's hooks | `onboard/SKILL.md`, "Phase 4" 4b step 9 |
-| The workspace holds the standards, the glossary, the explainer, the worked example, the practice notes and five hooks; your map with a routing row per area; your skills list; each area created to the standard; a handoff card naming the next step | `onboard/SKILL.md`, "Phase 4" (the folder map, the five-hooks sentence, 4b steps 2, 4, 6 and 7, the handoff `Next:` line); `update-build-kit/SKILL.md`, the paragraph naming the workspace files; the kit's MANIFEST (`workspace/worked_example.md` and its page) |
+| The workspace holds the standards, the glossary, the explainer, the worked example, the practice notes and five hooks; your CLAUDE.md with a routing row per area; your skills list; each area created to the standard; a handoff card naming the next step | `onboard/SKILL.md`, "Phase 4" (the folder map, the five-hooks sentence, 4b steps 2, 4, 6 and 7, the handoff `Next:` line); `update-build-kit/SKILL.md`, the paragraph naming the workspace files; the kit's MANIFEST (`workspace/worked_example.md` and its page) |
 | Without the kit's files the commands point at files that are not there | `update-build-kit/SKILL.md`, the sentence on the four core skills depending on the shared standard being present |
 | The levels are workspace, system, leaf and initiative; the level question includes "one build, or a sequence of shippable milestones"; the kind decides the documents and the proof | `new-workspace/SKILL.md`, "The three things this skill resolves"; "Phase 1: DISCERN — level, fork, kind"; `documentation_standard.md`, §4 "The third axis: kind" |
 | The six kinds are automation, service, application, tool, procedure, knowledge | `documentation_standard.md`, §4 "The third axis: kind" (the kinds table) |
@@ -369,51 +380,51 @@ Three commands sit beside the loop rather than on it. Run `/doc-audit` before a 
 | It provisions exactly the document set for the level and kind, nothing missing and nothing unearned, with the kind and proof stated; a routing row is added; the handoff points at the memo | `new-workspace/SKILL.md`, "Phase 3: PROVISION" items 1–5; "Phase 5: HANDOFF"; `convert-to-standard/SKILL.md`, "Phase 3" (the Kind and Proved-by lines, the routing row) |
 | The area's folders are created empty by level and kind, with a flow page for an automation, and the index check passes | `new-workspace/SKILL.md`, "Phase 3: PROVISION" item 3 ("Create the area's folders"); "Phase 4: VERIFY" item 6 |
 | A document that describes what you assume is deployed is worse than no document | `new-workspace/SKILL.md`, "Principles" ("Accurate or cut") |
-| Every built thing has an index that says what it is and how to pick it up; without one the tree has to be read | `documentation_standard.md`, §5 "CONTEXT.md — the required local index"; `why_we_build.md`, "Why two ladders, and why a door" |
+| Every built thing has an index that says what it is and how to pick it up; without one the tree has to be read | `documentation_standard.md`, §5 "CONTEXT.md — the required local index"; `why_we_build.md`, "Two questions about size, and where every idea starts" |
 | Two systems writing one field is a design flaw; one writer per object | `ship/SKILL.md`, "Phase 3: DISPOSITION" (Escalate: "two systems writing one field"); the initiative's north star, §7 ("a writer registry, one writer per object") |
 | Convert asks only the level; never the fork, never the kind; the kind is observed | `convert-to-standard/SKILL.md`, "Phase 1: Confirm the target and its level" |
 | It asks the person only what the files and the live system cannot say; every line traces to something observed or confirmed; a line with no source is cut | `convert-to-standard/SKILL.md`, "Phase 2: Observe, then fill gaps"; "Phase 3: Provision and verify"; "Safety Rules" item 5 ("Never lower the bar") |
 | Its handoff sends the next change through the memo or a quick fix | `convert-to-standard/SKILL.md`, opening paragraph; "Phase 4: Hand off" (the `Next:` line) |
 | An untraced consumer breaks when a change lands | `prd/SKILL.md`, "Phase 6" (the 2026-07-24 lesson: a consumer declared unaffected was never traced) |
-| The memo asks the problem, cost of inaction, value, why now, one sentence plus what it is not, and a checkable success definition; it never says how | `memo/SKILL.md`, "The Required Input Contract"; "Definition of done"; `glossary.md`, "Gate 1, the memo", "Success definition" |
-| The memo first looks for the thing in the map, the skills list, the memos, the designs and the area's index, and asks whether it is that thing or a different one | `memo/SKILL.md`, "First: does it already exist?" |
+| The memo asks the problem, cost of inaction, value, why now, one sentence plus what it is not, and a checkable success definition; it never says how | `memo/SKILL.md`, "The Required Input Contract"; "Definition of done"; `glossary.md`, "Checkpoint 1, the memo", "Success definition" |
+| The memo first looks for the thing in your CLAUDE.md, the skills list, the memos, the designs and the area's index, and asks whether it is that thing or a different one | `memo/SKILL.md`, "First: does it already exist?" |
 | Five cases skip the memo: throwaway, only-you, trivially reversible, a contained fix, a chore (even a roadmap milestone) | `memo/SKILL.md`, "When you can SKIP the memo" |
 | Three initiative questions; two of three make it an initiative | `memo/SKILL.md`, "When the memo is too small — the initiative test"; `documentation_standard.md`, §4 "Planning folder" (the contract paragraph) |
-| The memo is approved by the owner and its correct conclusion may be "do not build" | `memo/SKILL.md`, "Close: hand off or pause" ("Once approved"); "The Required Input Contract" ("the memo's correct conclusion is don't build"); "The Framework" (The Ask: go/no-go); `why_we_build.md`, "Why gates, and why they check themselves" |
+| The memo is approved by the owner and its correct conclusion may be "do not build" | `memo/SKILL.md`, "Close: hand off or pause" ("Once approved"); "The Required Input Contract" ("the memo's correct conclusion is don't build"); "The Framework" (The Ask: go/no-go); `why_we_build.md`, "Why three checkpoints, and why they check themselves" |
 | Inside an initiative each milestone's memo is the short form pointing into the north star | `memo/SKILL.md`, "Two forms" ("a project on an initiative's roadmap") |
-| A quick fix skips design and never the exit gate; it reads the live system first, stops at more than about three things or several systems (a chore excepted from both), and refuses new tables, new architecture, or multi-session work | `quick-fix/SKILL.md`, "Phase 3.5" opening sentence; "When NOT to Use"; "Phase 1" Step 2 and Step 3; `glossary.md`, "Quick fix" |
+| A quick fix skips design and never the exit check; it reads the live system first, stops at more than about three things or several systems (a chore excepted from both), and refuses new tables, new architecture, or multi-session work | `quick-fix/SKILL.md`, "Phase 3.5" opening sentence; "When NOT to Use"; "Phase 1" Step 2 and Step 3; `glossary.md`, "Quick fix" |
 | A quick fix is verified before it goes live, and it has no close, archive or outcome check of its own | `quick-fix/SKILL.md`, "Phase 3: VERIFY"; "Phase 3.5" ("a quick fix has no project log"); "Phase 4" ("Do NOT create: project folders…"); `_shared/project_close.md`, opening ("Who points here: `/build` Phase 5 … and `/ship` Phase 6") |
 | A quick fix creates no project folder, log or decision entries, and updates the living documents it touched | `quick-fix/SKILL.md`, "Phase 4: UPDATE LIVING DOCS" |
-| A quick fix ends with the same four questions; if any fires, the six answers are given inline in a paragraph; every "nothing" is fixed now or escalated | `quick-fix/SKILL.md`, "Phase 3.5: EXIT GATE" |
-| Quick fixes wrote real data on discipline alone before the exit gate | `quick-fix/SKILL.md`, "Phase 3.5" ("Why this exists") |
+| A quick fix ends with the same four questions; if any fires, the six answers are given inline in a paragraph; every "nothing" is fixed now or escalated | `quick-fix/SKILL.md`, "Phase 3.5: EXIT CHECK" |
+| Quick fixes wrote real data on discipline alone before the exit check | `quick-fix/SKILL.md`, "Phase 3.5" ("Why this exists") |
 | A fix that turns out bigger escalates to the memo instead of designing inside the fix | `quick-fix/SKILL.md`, "Scope Escalation" |
 | The north star holds decisions, never progress | `glossary.md`, "North star"; `documentation_standard.md`, §4 "Planning folder" (the tree comment on `north_star.md`) |
-| The planning folder holds the north star, one state file for the whole and an index; the north star is also the initiative's memo; the roadmap holds order and rationale, never status | `documentation_standard.md`, §4 "Planning folder" and its contract paragraph ("The north star is the initiative's memo"); `glossary.md`, "Initiative", "North star" |
+| The planning folder holds the north star, one state file for the whole and an index; the north star is the initiative's founding document, and each project on it gets its own memo; the roadmap holds order and rationale, never status | `documentation_standard.md`, §4 "Planning folder" and its contract paragraph ("The north star is the initiative's founding document"); `glossary.md`, "Initiative", "North star" |
 | One project per milestone, each with its own memo, PRD, build, blast-radius check, ship review when needed, and outcome check; a chore milestone goes through a quick fix instead | `documentation_standard.md`, §4 "Planning folder" (the contract paragraph); `glossary.md`, "Project"; `memo/SKILL.md`, "Two forms" |
 | A milestone moves queued → memo cleared → PRD approved → building → shipped → reached | `documentation_standard.md`, §4 "Planning folder" ("A milestone's states") |
 | The tray lists what is live, what is held, what is undecided, what is verified, and is handed from each project to the next | `glossary.md`, "The tray"; `documentation_standard.md`, §4 "Where an initiative fact lives" ("What a project inherits") |
 | Decisions belong in the compass, not in chat | `documentation_standard.md`, §4 "Where an initiative fact lives" ("Decisions" row); `glossary.md`, "North star" |
-| Before the state split, sessions rebuilt position from six to ten history-shaped documents, re-reading the same files up to twenty-nine times | `documentation_standard.md`, §4 "Planning folder" (the state-split note); `why_we_build.md`, "Why one state layer" |
-| The PRD locks the beginning state from live systems, never from documents or memory alone, then defines what done looks like | `prd/SKILL.md`, "Core disciplines"; "Phase 1: LOCK THE BEGINNING STATE"; "Phase 2: DEFINE THE DESIRED STATE"; `glossary.md`, "Gate 2, the PRD" |
-| The minimal path that reuses what exists is a mandatory gate | `prd/SKILL.md`, "Phase 3: MINIMUM-VIABLE DERIVATION (mandatory gate)" |
+| Before the state split, sessions rebuilt position from six to ten history-shaped documents, re-reading the same files up to twenty-nine times | `documentation_standard.md`, §4 "Planning folder" (the state-split note); `why_we_build.md`, "Why one short note says where the work stands" |
+| The PRD locks the beginning state from live systems, never from documents or memory alone, then defines what done looks like | `prd/SKILL.md`, "Core disciplines"; "Phase 1: LOCK THE BEGINNING STATE"; "Phase 2: DEFINE THE DESIRED STATE"; `glossary.md`, "Checkpoint 2, the PRD" |
+| The minimal path that reuses what exists is a mandatory step | `prd/SKILL.md`, "Phase 3: MINIMUM-VIABLE DERIVATION (mandatory step)" |
 | Every cross-system dependency is probed live; the platform's own automations are traced as consumers | `prd/SKILL.md`, "Phase 6: MAP COMPONENTS + VERIFY EVERY DEPENDENCY LIVE" |
 | The rigor pass covers boundaries, contracts, lifecycles, blast radius and a pre-mortem | `prd/SKILL.md`, "Phase 7: DESIGN RIGOR PASS" (rows 10 and 11); "PRD Format" (§§5–8, 13–14) |
-| The PRD is self-contained and one-shot: a fresh session builds from it alone, with no scope decision left | `prd/SKILL.md`, "Definition of done"; "The PRD must be self-contained"; "Phase 8: ONE-SHOT READINESS GATE"; `glossary.md`, "One-shot" |
+| The PRD is self-contained and one-shot: a fresh session builds from it alone, with no scope decision left | `prd/SKILL.md`, "Definition of done"; "The PRD must be self-contained"; "Phase 8: ONE-SHOT READINESS CHECK"; `glossary.md`, "One-shot" |
 | The PRD produces a validation log, an impact map, a pre-mortem, its companion page, and the project's state file | `prd/SKILL.md`, "PRD Format" (§§10, 11, 14); "Where to save"; `ship/SKILL.md`, "Prerequisite" (reads the pre-mortem and impact map) |
 | Scope changes mid-build are design decisions made without the design's context; the build stops and escalates | `build/SKILL.md`, opening ("Scope decisions during build are failure signals"); "Scope Escalation"; `prd/SKILL.md`, "Phase 6" (the dated lessons) |
-| Building what you cannot explain is how you end up unable to fix it | `why_we_build.md`, "Why gates, and why they check themselves" |
+| Building what you cannot explain is how you end up unable to fix it | `why_we_build.md`, "Why three checkpoints, and why they check themselves" |
 | The build orients from the state file (≤400 words, at most three checks) and reads the PRD by section | `build/SKILL.md`, "Phase 1: ORIENT"; `documentation_standard.md`, §6 (the 400-word budget) |
 | Each work item is proved the way its kind is proved | `build/SKILL.md`, "Phase 2" Step 2; the initiative's north star, §2 principle 7 |
 | Living documents are updated as the territory changes; at every work-item boundary the log is appended, the state file rewritten, the handoff rendered and printed, and the session carries on or stops as the card's measured Context line decides | `build/SKILL.md`, "Phase 2" Step 3, Step 4 and Step 5; "Principles" ("Update the map when you change the territory"); `glossary.md`, "Work item", "Handoff card" |
 | The build ends with the four router questions and either closes itself or hands to the ship review | `build/SKILL.md`, "Phase 4: BLAST-RADIUS ROUTER"; "Phase 5: CLOSE"; `glossary.md`, "Router" |
 | Position not written to the state file is position lost, and a session that rebuilds it from history re-reads the same documents many times | `session-close/SKILL.md`, §2 item 9 ("Position written only in the log entry is position lost"); `build/SKILL.md`, opening ("don't reconstruct it from memory"); `documentation_standard.md`, §4 "Planning folder" ("rebuilt their position from six to ten history-shaped documents … re-read 15–29 times") |
-| Ship runs only when one of the four conditions fires; otherwise there is no ship review | `ship/SKILL.md`, "Trigger"; `glossary.md`, "Blast radius", "Gate 3, ship" |
-| The six questions: what breaks, who notices, fallback, contingency, how we fix it, what it concludes without testing | `ship/SKILL.md`, "Phase 2: RESILIENCE REVIEW"; `glossary.md`, "Gate 3, ship" |
-| Every hole is fixed now, escalated, or accepted with the owner's sign-off; an undispositioned hole blocks go-live | `ship/SKILL.md`, "Phase 3: DISPOSITION" (the table and the go-live gate) |
+| Ship runs only when one of the four conditions fires; otherwise there is no ship review | `ship/SKILL.md`, "Trigger"; `glossary.md`, "Blast radius", "Checkpoint 3, the ship review" |
+| The six questions: what breaks, who notices, fallback, contingency, how we fix it, what it concludes without testing | `ship/SKILL.md`, "Phase 2: RESILIENCE REVIEW"; `glossary.md`, "Checkpoint 3, the ship review" |
+| Every hole is fixed now, escalated, or accepted with the owner's sign-off; an undispositioned hole blocks go-live | `ship/SKILL.md`, "Phase 3: DISPOSITION" (the table and the go-live check) |
 | A small follow-up goes on the session tail and is offered at the close, do now or file; filed work is announced as What / Why / Expect; before a ship's close every open item is ruled do now, schedule or drop | `session-close/SKILL.md`, "Follow-ups"; `ship/SKILL.md`, "Phase 6" Step 2 ("Residual review") |
 | Go-live is undoable in one step, smoke-tested in production, with monitoring confirmed to have fired | `ship/SKILL.md`, "Phase 4: PRE-FLIGHT CHECKS" (Reversibility); "Phase 5: GO LIVE" |
 | The shared close: provisional lessons, living documents current, archive, milestone shipped and tray refilled, outcome check scheduled, handoff card | `ship/SKILL.md`, "Phase 6" Step 3; `_shared/project_close.md`, §§1–6 |
-| A silent failure is a hole; a quietly tolerated hole is the failure the gate exists to prevent | `ship/SKILL.md`, "Phase 2" ("Who notices?" row and the sentence that every "nothing" is a hole); "Phase 3" (the go-live gate sentence) |
+| A silent failure is a hole; a quietly tolerated hole is the failure the checkpoint exists to prevent | `ship/SKILL.md`, "Phase 2" ("Who notices?" row and the sentence that every "nothing" is a hole); "Phase 3" (the go-live check sentence) |
 | A wrong number someone acted on is exactly the case the "drives decisions" condition covers | `ship/SKILL.md`, "Trigger" (the third condition and its parenthetical) |
 | The outcome check copies the success definition and verifies each point through the real entry point, never the test suite alone, the day after the named date or 14 days after go-live | `_shared/project_close.md`, §5 items 1–3 |
 | The check is a task in the task manager, run in any session, moved with the launch and never closed unmet | `_shared/project_close.md`, §5 item 3 and "Running the check" |
@@ -422,14 +433,14 @@ Three commands sit beside the loop rather than on it. Run `/doc-audit` before a 
 | Ship proves safety, not that the memo's problem was solved; nothing else checks that | `_shared/project_close.md`, §5 opening sentence |
 | Every session logs at least one line; the state file is rewritten if a project is in flight; living documents are checked; the handoff card is what the owner reads | `session-close/SKILL.md`, §1 ("Every session logs"), §2 item 9 |
 | Daily: learnings move to their canonical home, open threads become tasks; a learning without a doc change or filed action did not happen | `day/SKILL.md`, "Steps" items 2–3 |
-| Weekly: what repeats, one recurring friction and one action, and proposals, never edits, for your map or the kit | `week/SKILL.md`, "Steps" items 2 and 4; "Rules" ("Propose, don't apply, anything touching tier 1 or team-build-kit") |
+| Weekly: what repeats, one recurring friction and one action, and proposals, never edits, for your CLAUDE.md or the kit | `week/SKILL.md`, "Steps" items 2 and 4; "Rules" ("Propose, don't apply, anything touching tier 1 or team-build-kit") |
 | The daily log is an index of exhaust, never a copy of what lives in commits, practices or the task manager | `session-close/SKILL.md`, §1 |
 | The digest and the summary each end with one section of what needs the owner | `day/SKILL.md`, "Steps" item 5; `week/SKILL.md`, "Steps" item 6 |
-| Five small hooks keep notes about sessions and read your own additions to a command | `onboard/SKILL.md`, "Phase 4" 4a (the five-hooks sentence); the kit's MANIFEST (the five `.claude/hooks/` lines) |
+| Five small hooks keep notes about sessions and pick up any file of your own rules added to a command | `onboard/SKILL.md`, "Phase 4" 4a (the five-hooks sentence); the kit's MANIFEST (the five `.claude/hooks/` lines) |
 | Recurring unfiled threads are the leak the capture layer exists to close | `week/SKILL.md`, "Steps" item 3 |
 | `/doc-audit` runs before major builds, after long gaps, or whenever the workspace feels drifty, and proposes fixes | `doc-audit/SKILL.md`, description |
 | `/new-workflow` turns a repeating process into a command of your own | `new-workflow/SKILL.md`, description |
 | It builds the pipeline form, numbered stage folders each with one human check, when more than one stage is checked and the process has run twice | `new-workflow/SKILL.md`, "Phase 2: MAP THE STEPS" (the shape question); "Phase 4P: BUILD THE PIPELINE" |
-| `/update-build-kit` refreshes the kit's files and never touches your map, your skills list or your folders | `update-build-kit/SKILL.md`, description |
+| `/update-build-kit` refreshes the kit's files and never touches your CLAUDE.md, your skills list or your folders | `update-build-kit/SKILL.md`, description |
 | The build makes it work; the ship review makes it safe to rely on | `ship/SKILL.md`, "Principles" |
 | Every command the kit ships appears once on this page: eleven on the loop or in the capture strip, three off the loop | the kit's MANIFEST (the `.skills/` lines) |

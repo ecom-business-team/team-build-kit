@@ -1,11 +1,11 @@
 ---
 name: convert-to-standard
-description: Bring an existing folder or running system up to the standard with one command: observe what actually runs, name what kind of thing it is and how its parts fit, create exactly the documents it is missing, and hand it into the lifecycle with a handoff card. The door for existing work; /new-workspace is the door for new work.
+description: Bring an existing folder or running system up to the standard with one command: observe what actually runs, name what kind of thing it is and how its parts fit, create exactly the documents it is missing, and hand it into the lifecycle with a handoff card. The way to start from existing work; /new-workspace is the way to start something new.
 ---
 
 # /convert-to-standard
 
-You already have something: a folder of scripts, a workflow that runs every night, a spreadsheet with a process around it, a whole system nobody wrote down. This command looks at what is actually there, names what kind of thing it is, writes exactly the documents the standard says it is missing, and hands it into the lifecycle so the next change to it goes through `/memo` or `/quick-fix` like everything else. It is the door for existing work. `/new-workspace` is the door for new work; both end at the same place.
+You already have something: a folder of scripts, a workflow that runs every night, a spreadsheet with a process around it, a whole system nobody wrote down. This command looks at what is actually there, names what kind of thing it is, writes exactly the documents the standard says it is missing, and hands it into the lifecycle so the next change to it goes through `/memo` or `/quick-fix` like everything else. It is the way to start from existing work. `/new-workspace` is the way to start something new; both end at the same place.
 
 ## Usage
 

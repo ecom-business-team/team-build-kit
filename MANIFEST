@@ -21,6 +21,8 @@
 .skills/_shared/documentation_standard.md
 .skills/_shared/project_close.md
 .skills/_shared/claude_md_template.md
+.skills/_shared/map_update.py
+.skills/_shared/claude_md_template.retired
 .skills/_shared/companion/render.py
 .skills/_shared/companion/companion.css
 .skills/_shared/flow_base.html

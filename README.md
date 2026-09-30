@@ -35,7 +35,7 @@ Claude installs the commands (it asks your permission once), interviews you abou
 K=https://raw.githubusercontent.com/ecom-business-team/team-build-kit; curl -fsSL $K/main/install.sh | bash
 ```
 
-Then type **`/onboard`** in Claude Code. It interviews you and creates your workspace with the background parts in it, in the folder where you ran the install, because with this route there is no downloaded kit folder for it to sit beside. **Do not stop after the first line:** without `/onboard` you have the commands only.
+Then type **`/onboard`** in Claude Code. It interviews you and creates your workspace with the background parts in it, as a new folder on your Desktop named after you. It shows you the folder before creating anything, and you can accept it or give another place. It goes on the Desktop because with this route there is no downloaded kit folder for it to sit beside. **Do not stop after the first line:** without `/onboard` you have the commands only.
 
 **Route 3: you already have a folder you work in.** Run this line, with that folder's full path in place of `<your folder>`. It installs the commands and puts the background parts into your folder, beside your own files. It never changes your own files or your `CLAUDE.md`, the file that tells every Claude Code session where things live in that folder (the kit calls it your map):
 
@@ -49,7 +49,7 @@ Then open that folder in Claude Code and type **`/convert-to-standard`**. It loo
 
 - **Always open Claude Code in your workspace folder** when you work. If you open it anywhere else, you have the commands but none of the background parts.
 - **Say yes to the trust question.** The first time Claude Code opens your workspace, it asks once whether to trust the folder's hooks. Say yes: they are the kit's, and they only write notes inside that folder.
-- **To check you are in a workspace,** look for a file called `.claude/kit_receipt` inside the folder. If it is there, the background parts are installed. If it is not, take Route 2 or Route 3 for that folder.
+- **To check you are in a workspace,** look for a file called `.claude/kit_receipt` inside the folder. If it is there, the background parts are installed. If it is not, you have opened the wrong folder, so open your workspace folder instead. If this is a folder you already work in and want to keep, take Route 3 to put the background parts into it.
 
 ---
 

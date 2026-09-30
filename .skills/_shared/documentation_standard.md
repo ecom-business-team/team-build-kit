@@ -25,7 +25,7 @@ Before any doc is created, place the thing on the spectrum. The level decides th
 
 **The interview decides the level — not the user.** `/new-workspace` diagnoses the level from what the user describes and states it back ("This is a *system* — here's the doc set it needs and why"). The user confirms; they never have to know the taxonomy.
 
-**The second question is the kind** (`documentation_standard.md` §4, "The third axis"; definitions in `glossary.md`). The level says how big the thing is; the kind says what it is made of, and it decides the documents a tier does not, the proof, and the practices. Ask in plain words about what runs:
+**The second question is the kind** (the workspace root's `documentation_standard.md` §4, "The third axis"; definitions in `glossary.md`). The level says how big the thing is; the kind says what it is made of, and it decides the documents a tier does not, the proof, and the practices. Ask in plain words about what runs:
 
 | Kind | Ask |
 |------|-----|
@@ -46,7 +46,7 @@ Required docs scale with what exists. Never create a doc before it's earned — 
 
 | Doc | Required when | Level it lives at |
 |-----|--------------|-------------------|
-| **`CONTEXT.md`** | Always — every workspace, system, and leaf | The thing itself |
+| **`CONTEXT.md`** | Always — every workspace, system, and leaf | The thing itself; at the workspace root the map (`CLAUDE.md`, as `/onboard` writes it) is the index, and no `CONTEXT.md` is written there |
 | **`change_log.md`** | The first build ships | Workspace (or system if standalone) |
 | **`decision_log.md`** | The first non-obvious decision is made | Workspace root (cross-cutting) |
 | **`system_contracts.md`** | The moment a **second** system shares a boundary with the first | Workspace root (cross-cutting) |
@@ -66,7 +66,7 @@ Required docs scale with what exists. Never create a doc before it's earned — 
 
 ### The skeleton — folders that exist from day one
 
-Documents are created when their phase starts (lazy); the folders they go into exist from creation (eager). `/onboard` creates the root skeleton; `/new-workspace` Phase 3 creates an area's.
+Documents are created when their phase starts (lazy); the folders they go into exist from creation (eager). `/onboard` creates the root skeleton, and `/convert-to-standard` creates whatever part of it is missing when it converts a whole workspace; `/new-workspace` Phase 3 creates an area's.
 
 **Root** (the workspace folder):
 
@@ -608,7 +608,7 @@ Delete any section without content. A first version with only §1, §3, §7 and 
 
 ### 4.12 — `bulk_ops/INDEX.md` (the undo register)
 
-**Purpose:** One row per bulk write, so every large change can be found and undone from its prestate. Part of the skeleton (Part 2): created empty, with its header, by `/onboard` at the root and by `/new-workspace` for a workspace-level area.
+**Purpose:** One row per bulk write, so every large change can be found and undone from its prestate. Part of the skeleton (Part 2): created empty, with its header, by `/onboard` at the root (and by `/convert-to-standard` when it converts a whole workspace) and by `/new-workspace` for a workspace-level area.
 **Maintained by:** the session that runs the bulk write — the prestate folder and the row are written before the write.
 
 ```markdown

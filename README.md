@@ -58,7 +58,7 @@ Then open that folder in Claude Code and type **`/convert-to-standard`**. It loo
 | Command | What it does |
 |---|---|
 | **First run** | |
-| `/onboard` | Interviews you about your work, creates your workspace (the one folder for all your work) beside the kit, or where you ran the install if you downloaded nothing, and writes your map (your `CLAUDE.md`) and your skills list (`SKILLS.md`, the list of the commands your workspace has). |
+| `/onboard` | Interviews you about your work, creates your workspace (the one folder for all your work) beside the kit, or on your Desktop if you downloaded nothing, and writes your map (your `CLAUDE.md`) and your skills list (`SKILLS.md`, the list of the commands your workspace has). |
 | **Ways to start** | |
 | `/new-workspace` | Sets up a tidy, documented folder inside your workspace for one new thing you are about to build, or a whole new workspace when you ask for one. |
 | `/convert-to-standard` | Looks at something you already have, names what it is, writes the documents it is missing, and hands it into the lifecycle. |

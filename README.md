@@ -43,7 +43,7 @@ Then type **`/onboard`** in Claude Code. It interviews you and creates your work
 K=https://raw.githubusercontent.com/ecom-business-team/team-build-kit; curl -fsSL $K/main/install.sh | TBK_WORKSPACE="<your folder>" bash
 ```
 
-Then open that folder in Claude Code and type **`/convert-to-standard`**. It looks at what is already there and writes the documents the folder is missing, which are the index and the few documents each command reads to know what exists there, so the commands have something to stand on.
+Then open that folder in Claude Code and type **`/convert-to-standard`**. It looks at what is already there and writes the documents the folder is missing, which are the index and the few documents each command reads to know what exists there, so the commands have something to stand on. `/convert-to-standard` then offers the kit's rules for your map, section by section; nothing is written that you do not take.
 
 ### After installing, whichever route you took
 
@@ -119,14 +119,14 @@ From the day after your first session, Claude mentions it when a day or a week h
 - **Your Claude Code's skills folder** gets the commands above; Route 2's one-line install touches nothing else.
 - **Your workspace** (created by `/onboard`, or an existing folder named with `TBK_WORKSPACE`) gets the kit-owned files: the three standards, the glossary, the explainer (`why_we_build`, the page that says why the kit works this way) and worked example, the practice notes (short notes on how each tool behaves, in `_practices/`), and the five small hooks together with the settings file that tells Claude Code when to run them. These refresh when you update the kit. A small receipt in `.claude/` records what the kit placed, so an update can tell its own files from your edits: a file you changed is kept, and the kit's new version is put beside it as `.kit-new` with a note. The same holds for the commands in your skills folder.
 - **Your own rules for a kit command** go in `.claude/skills.d/<command>.md` in your workspace (for example `.claude/skills.d/prd.md`). Claude reads that file whenever you run the command; the kit never writes there, so your rules survive every update.
-- **Your map (`CLAUDE.md`), your skills list and every folder you make are yours.** The kit never touches them after the interview.
+- **Your map (`CLAUDE.md`), your skills list and every folder you make are yours.** The kit never changes them after the interview, except the kit's own lines in your map, and only in the sections you approve when an update offers them.
 - **One question, once.** The first time Claude Code opens your workspace it asks whether to trust the folder's hooks. Say yes; they are the kit's and only write notes inside that folder.
 
 ---
 
 ## Keeping it current
 
-Run `/update-build-kit` from inside your workspace. It pulls the latest kit, refreshes the commands and the kit-owned files there, and touches nothing of yours. Once a day, at the start of a session in your workspace, Claude checks whether a newer kit has been published and tells you in one line; it never updates on its own.
+Run `/update-build-kit` from inside your workspace. It pulls the latest kit, refreshes the commands and the kit-owned files there, touches nothing else of yours, and offers any of the kit's newer rules for your map, section by section, for you to take or decline. Once a day, at the start of a session in your workspace, Claude checks whether a newer kit has been published and tells you in one line; it never updates on its own.
 
 Looking for `HOW_WE_BUILD.md` or `flow.html`? The kit's earlier explainer files were replaced by `workspace/why_we_build.md`, which carries the same why.
 

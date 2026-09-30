@@ -139,7 +139,7 @@ YOUR WORKSPACE
 Explain briefly:
 - "The CLAUDE.md at the top is your home base. It tells me where everything is, how you work, and what to call you."
 - "Each area has a CONTEXT.md that describes what happens there."
-- "The last line is the kit's own files — the standards the commands read, the practice notes, and five small hooks that keep notes about sessions and read your own additions to a command. They update when you run /update-build-kit; your map and your folders are never touched by that."
+- "The last line is the kit's own files — the standards the commands read, the practice notes, and five small hooks that keep notes about sessions and read your own additions to a command. They update when you run /update-build-kit; your folders are never touched by that, and your map changes only in the sections you approve."
 - "When you work in a specific area, I only load what's relevant to that area. Everything else stays available but not active."
 
 **Wait for approval before creating anything.**

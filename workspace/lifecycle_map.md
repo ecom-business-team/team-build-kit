@@ -350,7 +350,7 @@ Every session ends the same way: a line in the day's log, and when a project is 
 
 ## Also in the kit, off the loop
 
-Three commands sit beside the loop rather than on it. Run `/doc-audit` before a big build, after a long gap, or whenever the workspace feels drifty. It checks every living document against what is really there and proposes fixes. Run `/new-workflow` when a process repeats. It turns the steps into a command of your own, or, when a person checks the output of more than one stage and the process has run at least twice, into a pipeline of numbered stage folders, each with its one human check. Run `/update-build-kit` to refresh the kit's files without touching your CLAUDE.md, your skills list, or the folders you made.
+Three commands sit beside the loop rather than on it. Run `/doc-audit` before a big build, after a long gap, or whenever the workspace feels drifty. It checks every living document against what is really there and proposes fixes. Run `/new-workflow` when a process repeats. It turns the steps into a command of your own, or, when a person checks the output of more than one stage and the process has run at least twice, into a pipeline of numbered stage folders, each with its one human check. Run `/update-build-kit` to refresh the kit's files and to offer the kit's newer rules for your CLAUDE.md, section by section; your skills list and the folders you made are never touched.
 
 ## Where each stage comes from
 
@@ -441,6 +441,6 @@ Three commands sit beside the loop rather than on it. Run `/doc-audit` before a 
 | `/doc-audit` runs before major builds, after long gaps, or whenever the workspace feels drifty, and proposes fixes | `doc-audit/SKILL.md`, description |
 | `/new-workflow` turns a repeating process into a command of your own | `new-workflow/SKILL.md`, description |
 | It builds the pipeline form, numbered stage folders each with one human check, when more than one stage is checked and the process has run twice | `new-workflow/SKILL.md`, "Phase 2: MAP THE STEPS" (the shape question); "Phase 4P: BUILD THE PIPELINE" |
-| `/update-build-kit` refreshes the kit's files and never touches your CLAUDE.md, your skills list or your folders | `update-build-kit/SKILL.md`, description |
+| `/update-build-kit` refreshes the kit's files, offers the kit's newer rules for your CLAUDE.md section by section, and never touches your skills list or your folders | `update-build-kit/SKILL.md`, description |
 | The build makes it work; the ship review makes it safe to rely on | `ship/SKILL.md`, "Principles" |
 | Every command the kit ships appears once on this page: eleven on the loop or in the capture strip, three off the loop | the kit's MANIFEST (the `.skills/` lines) |

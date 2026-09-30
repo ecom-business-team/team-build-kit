@@ -129,7 +129,7 @@ The kit's content sits in four layers, and each layer has one home, so nobody ha
 
 The **method** lives in the skills, the commands such as `/memo` and `/build`. They are written once for everyone and the kit refreshes them when it updates, so they are best left unedited. Your own rules for a command go in a file of your own, `.claude/skills.d/<command>.md` in your workspace, that the kit reads and never writes.
 
-Your **judgment** lives in your folders: your map, the `CLAUDE.md` file that tells every session where things live, each folder's index, and your additions to a command. An update never touches them.
+Your **judgment** lives in your folders: your map, the `CLAUDE.md` file that tells every session where things live, each folder's index, and your additions to a command. An update never touches them, except the kit's own lines in your map, which it offers for you to take or decline.
 
 The **proof** lives at the checkpoints, in writing, and a person approves it. Before building, that means the memo and the PRD. Before anything is called done, it means the proof its kind requires, the tests or the cold read, written down where the owner can approve it. No checkpoint is cleared without a document someone approves.
 
@@ -190,7 +190,7 @@ Say what you are trying to do, answer the checkpoints honestly, and the kit does
 | You decide what is worth building, what done means, what it is not, whether the stakes are acceptable; the skills design, check, write and keep the documents | the June explainer, "What you bring vs. what the skills handle" |
 | When something turns out too big, a skill stops and points back to `/memo` | the June explainer, "When it gets too big"; `build/SKILL.md`, "Scope Escalation"; `glossary.md`, "Where every idea starts" |
 | The kit's own files are refreshed by its updater and a file you changed is kept, with the kit's version written beside it; your own rules for a command go in a file the kit reads and never writes | `update-build-kit/SKILL.md`, "What ships" and "Step 2: Verify"; the initiative's north star, §5 (the box) |
-| Your map, your skills list and the folders you made are never read or written by an update | `update-build-kit/SKILL.md`, description and "How it works" |
+| Your skills list and the folders you made are never read or written by an update; your map changes only in the sections you approve | `update-build-kit/SKILL.md`, description and "How it works" |
 | The skills are written once for everyone | the initiative's north star, §2 principle 4 and §7 milestone 2 ("written once") |
 | An update once overwrote a person's edits; the installer's receipt now records every kit-placed file so the kit's files and yours can be told apart | `ship/SKILL.md`, "Phase 3: DISPOSITION" (the Accept row's managed-file example); `install.sh`, header comment (receipts, the package-manager rule) |
 | A checkpoint is cleared in writing by a person, and nothing is done without the proof its kind requires | `memo/SKILL.md`, "Close: hand off or pause"; `prd/SKILL.md`, "Present for approval"; `ship/SKILL.md`, "Definition of done"; `build/SKILL.md`, Phase 2 "Step 2: Per-Item Verification"; the initiative's north star, §2 principle 7 |

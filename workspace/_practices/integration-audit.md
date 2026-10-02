@@ -30,3 +30,7 @@ Any endpoint that forwards a **caller-supplied identifier** to an upstream API u
 **Verify with two tiers, against production, using minted tokens** — one ordinary user and one admin. Assert both directions: every legitimate `(resource, tab/list/key)` pair the frontend requests still returns 200, and each cross-boundary attempt returns a *named* 403. Enumerate the legitimate set from the frontend (`grep` the call sites) rather than from memory; in the sheets pass that caught a sixth workbook that would otherwise have broken. Delete the temp users afterwards.
 
 **The tell that you are looking at this bug:** a comment in the file already explaining why it is currently safe. Someone saw it, wrote it down, and it stayed a comment instead of becoming a decision. A latent-risk note with a trigger condition in it is a filed bug that was never filed — grep for them.
+
+## A push whose apply time grows with its size (2026-10-02)
+
+When we send a batch to an outside system that acts on each item before it replies (gives roles, sends messages, writes rows), its reply time grows with the number of changes, and a fixed timeout that fits a quiet day fails on the first big push. Before the first live push, read the change count from the dry run, time one real item or ask the system's owner for its per-item cost, and size the timeout to fit, or ask for an asynchronous reply. A timeout then does not mean nothing happened: the other side may finish after we stop waiting, so the recovery step is a dry run that shows what remains, never a blind re-send.

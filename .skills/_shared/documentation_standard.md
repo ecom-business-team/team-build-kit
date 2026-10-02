@@ -419,7 +419,7 @@ An item leaves when it is decided (→ north_star / decision_log), homed (→ a 
 - **Router:** {not yet run | fired → /ship | clean}
 
 ## Verify before continuing (≤3 commands, expected results)
-1. `{git -C … log -1 --format=%h {branch}}` → `{hash}`
+1. `{git -C … merge-base --is-ancestor {hash} origin/main && echo ok}` → `ok` (a commit on `main`, never a branch name: a branch deleted at cleanup breaks the check for the next session)
 2. `{the fast test layer}` → {green, N checks}
 3. `{one live probe}` → {expected}
 

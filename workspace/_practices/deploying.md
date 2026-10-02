@@ -23,3 +23,7 @@ Do it again immediately after any change to the access posture, because that cha
 ## A branch push proves the deploy path before `main` moves (2026-09-24)
 
 On a git-integrated host, push the branch first and let its preview build: it proves the build, the environment variables and the region settings on the host's own machines, while production still serves the old commit. A failure there costs nothing; the same failure after a merge is an outage. Merge only once the branch deployment is Ready.
+
+## A value written at login is missing for every session already open at the deploy (2026-10-02)
+
+When a release makes a page depend on something the login step stores (a claim in the auth user's metadata, a cookie, a cached flag), everyone who is already signed in keeps their session and never runs the new login code. Unless the release fills the value for them, they get whatever "missing" means. When "missing" means "no access", paying users are locked out with nothing logged. So when a release adds a login-written value, count the open sessions that lack it and backfill them in the same ship step, or make "missing" fetch the value once, before the deploy goes live.

@@ -238,6 +238,7 @@ Ask, explicitly: **Could a fresh session — given only this PRD file, with zero
 - Does every end-to-end work item over something that branches carry a path table, with no gap row left unresolved?
 - When Phase 6 required the owner's read of a rendered draft, is their verdict in the validation log?
 - Is there any "we'll figure that out during build" anywhere? (If yes — it isn't done. Figure it out now.)
+- **When the build waits on another project, does its gate name the specific step it depends on, verified live, rather than "that project closed"?** A whole-project gate ties this build to every unrelated step left in the other project. (Lesson, 2026-10-03: a build was gated on another project closing, which then waited on an outside party's webhook step the build never touches; the step it really needed, the old system turned off, was already done.)
 
 If anything is unresolved, name it and resolve it. Only when the answer is an unqualified **yes** is the PRD done.
 

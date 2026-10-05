@@ -1,6 +1,6 @@
 # Deploying — cross-host truths
 
-**CLI deploys ship the working tree, not git HEAD.** `railway up` and `vercel --prod` deploy the current working directory. Uncommitted work from another feature or owner sitting in the tree WILL ship. **Run `git status` before every deploy**; when foreign WIP is present, surface it before shipping it.
+**CLI deploys ship the working tree, not git HEAD.** `railway up` and `vercel --prod` deploy the current working directory. Uncommitted work from another feature or owner sitting in the tree WILL ship. **Run `git status` before every deploy**; when foreign WIP is present, surface it before shipping it. The builder's side of the same rule: work you have built but are holding back (for example, a new scheduled job whose table is not applied yet) must not sit in a folder someone else deploys from, committed or not, because their next deploy ships it. Build it on a branch in a separate `git worktree` outside the deployed folder.
 
 **Deploy-state truth lives in the running system, never in `git log`.** Verify via the job queue, `/healthz`, or a new-endpoint probe (a route that flips 404→401 when new code is live). Some repos deploy without a git remote at all — commits are irrelevant to what ships.
 

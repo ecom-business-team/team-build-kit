@@ -27,6 +27,7 @@ DEFAULT_TRANSCRIPTS = os.path.expanduser(os.path.join("~/.claude/projects", re.s
 STATE_DIR = os.path.expanduser("~/.claude/state/practices-gate")
 
 WRITE_TOOLS = {"Edit", "Write", "MultiEdit", "NotebookEdit"}
+SUPABASE_SQL_RE = re.compile(r"^mcp__(claude_ai_)?supabase[^_]*__execute_sql$", re.I)
 MCP_WRITE_RE = re.compile(
     r"^mcp__.*__(add|update|complete|uncomplete|delete|reschedule|manage|move|reorder|apply|deploy"
     r"|create|insert|write|send|trigger|merge|reset|rebase)", re.I)
@@ -47,7 +48,7 @@ def is_write(name, inp):
         return True
     if name == "Bash":
         return bool(BASH_WRITE_RE.search(inp.get("command", "") or ""))
-    if name == "mcp__supabase__execute_sql":
+    if SUPABASE_SQL_RE.match(name):  # any Supabase server: supabase, supabase-prod, claude_ai_Supabase
         return bool(SQL_WRITE_RE.search(inp.get("query", "") or ""))
     return bool(MCP_WRITE_RE.match(name))
 

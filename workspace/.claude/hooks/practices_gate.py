@@ -3,7 +3,9 @@
 
 On the FIRST call to a tool family in a session (Supabase MCP, n8n MCP/REST, Railway, Vercel,
 Google APIs, ClickUp, Discord, Supabase REST/psql; any other MCP server loads
-_practices/<server>.md and <server>_conventions.md when they exist), inject the matching _practices/<tool>.md
+_practices/<server>.md and <server>_conventions.md when they exist, the server name lowercased,
+a claude.ai connector's claude_ai_ prefix stripped, and a hyphenated name with no file of its own
+read as the family before the hyphen), inject the matching _practices/<tool>.md
 into Claude's context via additionalContext. Once per file per session (marker files under
 ~/.claude/state/practices-gate/<session>/). Replaces reliance on CONTEXT.md pointers alone,
 which most CONTEXT.md files turned out not to carry when audited.
@@ -40,7 +42,13 @@ def files_for(tool_name, tool_input):
         out.append("n8n")
     elif tool_name.startswith("mcp__"):
         # Any other MCP server: its same-named practice file and conventions file, when they exist.
-        server = tool_name.split("__")[1]
+        # The name is lowercased with any claude.ai connector prefix stripped (mcp__claude_ai_ClickUp__ -> clickup);
+        # a name with no practice file of its own falls back to its family before the first hyphen (supabase-prod -> supabase).
+        server = tool_name.split("__")[1].lower()
+        if server.startswith("claude_ai_"):
+            server = server[len("claude_ai_"):]
+        if "-" in server and not os.path.exists(os.path.join(PRACTICES, server + ".md")):
+            server = server.split("-")[0]
         out.extend([server, server + "_conventions"])
     elif tool_name == "Bash":
         cmd = tool_input.get("command", "") or ""

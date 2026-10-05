@@ -7,7 +7,8 @@ directory) that holds a CONTEXT.md, not descending into dot-folders, node_module
 or _archive.  For each folder the index text is CONTEXT.md plus INDEX.md when present; an entry
 is every name in the folder except dot-entries, __pycache__, node_modules, CONTEXT.md, INDEX.md,
 and X.html when X.md exists (a rendered page beside its source); an entry is unnamed when its
-name does not appear anywhere in the index text.
+name does not appear as a whole name anywhere in the index text (inside a longer name does not
+count: test/ is not named by testing.md).
 Exit 0 when every index names everything, 1 on any unnamed entry, 2 when a folder named on the
 command line has no CONTEXT.md.
 --links also resolves every explicit relative path (one starting ./ or ../) written in a backtick
@@ -56,9 +57,15 @@ def unnamed(folder: Path):
             continue
         if name.endswith(".html") and name[:-5] + ".md" in names:
             continue
-        if name not in text:
+        if not named(name, text):
             missing.append(name)
     return missing
+
+
+def named(name: str, text: str) -> bool:
+    """The name appears as a whole name: not inside a longer one (test in testing.md, plan in plan-v2/).
+    A trailing / or sentence punctuation is allowed; a further extension is not (stray in stray.py)."""
+    return re.search(r"(?<![\w.-])" + re.escape(name) + r"(?![\w-]|\.\w)", text) is not None
 
 
 DECLARED_BASE = re.compile(r"paths?\b[^.\n]*\brelative to `([^`]+)`", re.IGNORECASE)

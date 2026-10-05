@@ -10,9 +10,10 @@
 #   as yours (nothing overwritten). Workspace files with no entry are always treated as yours.
 #   Refuses three targets and changes nothing: a path that is not a folder, your home folder, the kit folder itself.
 # Atomic: downloads everything to a temp folder first; installs only if every listed file arrives.
-# TBK_BASE overrides where the kit is fetched from (default: GitHub main; a local clone is TBK_BASE="file://$PWD").
+# TBK_BASE overrides where the kit is fetched from (default: GitHub main; a local clone is TBK_BASE="file://$PWD"; spaces in the path are encoded here).
 set -u
 BASE="${TBK_BASE:-https://raw.githubusercontent.com/ecom-business-team/team-build-kit/main}"
+case "$BASE" in file://*) BASE="${BASE// /%20}" ;; esac  # curl refuses a file:// URL with a raw space
 TMP=$(mktemp -d); ok=1; W=""
 if command -v sha256sum >/dev/null 2>&1; then hsum() { sha256sum "$1" | cut -d' ' -f1; }
 elif command -v shasum >/dev/null 2>&1; then hsum() { shasum -a 256 "$1" | cut -d' ' -f1; }

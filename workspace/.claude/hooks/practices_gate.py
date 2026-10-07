@@ -25,6 +25,7 @@ CAP = 9000  # additionalContext is capped at 10,000 chars by Claude Code
 BASH_RULES = [
     (r"N8N_API|n8n\.cloud|/api/v1/(workflows|executions|credentials)|/webhook(-test)?/", ["n8n"]),
     (r"\brailway\b", ["railway", "deploying"]),
+    (r"frame\.io|\bf\.io/", ["frameio"]),
     (r"\bvercel\b", ["vercel", "deploying"]),
     (r"googleapis\.com|\bgcloud auth\b|GOOGLE_APPLICATION_CREDENTIALS", ["google-apis"]),
     (r"api\.clickup\.com|CLICKUP_API", ["clickup"]),

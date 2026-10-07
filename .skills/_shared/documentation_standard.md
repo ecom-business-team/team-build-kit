@@ -522,6 +522,8 @@ The orientation card:
 ````markdown
 ## ORIENTATION · {initiative} · milestone {n}, {name}
 
+**Name this session:** `/rename M{n} {project-name}`
+
 **Doing:** {the ask, in one sentence}.
 
 **project** memo ✅ → PRD ▶ → build ☐ → ship ☐ → close ☐ → outcome ☐
@@ -541,6 +543,7 @@ The orientation card:
 
 **Filling the blocks.** Every value is read from a file that already holds it; nothing is recalled.
 - **Title and ribbon.** The initiative and milestone come from the initiative `state.md` (In flight; after a close or a kill empties it, the milestone just closed); the ribbon is the project `state.md` **Stage**, or, before that file exists, the stages as this step leaves them. Work outside an initiative titles itself `## HANDOFF · standalone · {what}` and has no milestone table; work outside a project has no ribbon.
+- **Name this session.** Work on an initiative's milestone opens with the exact rename the owner types, built from the milestone number and the project folder name (`/rename M3 payout-disputes`); a session that runs several milestones' steps from one list joins the numbers and names the list (`/rename M2+3 cutover`). The session cannot rename itself (no tool, hook or skill can; only `/rename`, or **Rename Session Tab** in the VS Code command palette), so the card hands the owner the command, first, where it costs one paste. The owner asked for it because milestones do not run in numeric order and parallel sessions were otherwise told apart by their auto-titles (2026-10-07). Work outside an initiative leaves the line out.
 - **Milestones.** One row per row of the initiative `state.md` milestone table, every row every time: ✅ for shipped or reached, ▶ for the one in flight, ☐ for the rest, with the status cell shortened (paused and killed rows keep their word).
 - **Work items.** One per `### Work Item` heading in the PRD §12: ✅ for those the project `state.md` Done names, ▶ for the one Next names, ☐ for the rest. No PRD yet, no list. With neither a table nor a list, the Progress block is left out.
 - **Filed this session.** Every task this session filed in the task manager, by its id, in its three parts, including tail items the owner chose to file; a filed follow-up is listed here and not under Residuals. The rule, and the session-tail offer that comes first, live in the `session-close` skill, "Follow-ups".

@@ -27,6 +27,10 @@ Verified against the hooks reference (https://code.claude.com/docs/en/hooks) on 
 
 - **The classifier refuses bulk DELETE loops against external APIs even after the owner's explicit go** (2026-09-04: 227 Gemini Files API deletes, refused inline and again as a saved script). It is not swayed by comments or descriptions. What worked: stop, hand the owner the exact command, and re-run only after they say "run the script" in their own message — that third attempt passed. Do not route around it via subagents or test runners.
 
+- **A classifier block can land after the action already ran (2026-09-29).** After a feature-branch `git push`, auto mode blocked the follow-on command as "Out-of-Place Publication" while the push had already reached origin. Read the remote (`git fetch` then `git log origin/<branch>`, or `git ls-remote origin <branch>`) to learn what happened, never the block message, and hold further pushes of that kind until the owner allows them.
+
+- **Railway writes are refused, Railway reads pass (2026-10-03).** `railway variables --set` (a secret-store write) and `railway up` (a deploy) were refused, while `railway variables --kv` and `railway status` went through. Plan those steps as owner hand-offs in the ship order, with the exact command printed.
+
 ## Transcripts (`~/.claude/projects/<escaped-cwd>/<session_id>.jsonl`)
 
 - One JSON object per line; `type` ∈ user / assistant / ai-title / attachment / file-history-* / queue-operation / system / mode / last-prompt …

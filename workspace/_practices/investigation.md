@@ -26,6 +26,10 @@ When you build a rule that keys on *observed* failure signatures — an error-me
 
 A failure that passes on retry is called transient only when the retry used the same input: the same window, record, page and credential. A pipeline's nightly read failed for one account; a re-read passed and the badge was written off as self-healing, but the re-read used the next day's window. The failing window failed every time it was re-run, so the next nightly run would have failed the same way on Monday's larger window. Re-run the exact failing call first; when it fails again, it is a defect, and the passing neighbour is the first clue to its cause.
 
+## A trend read from one period is split by week before it reaches the owner (2026-10-01)
+
+"Brand X stopped tagging its ads" was drawn from one month of code-less ads. Split by week, it was a single nine-day batch from one brand with a clean record after it. Before telling anyone a behaviour started or stopped, break the evidence into weeks and say whether it is still going on.
+
 ## An outage: ask first whether we caused it
 
 "The provider went down" is a hypothesis like any other. The cheapest test is our own record: today's session log, the recent deploys, and any load tests or bulk jobs that ran just before the first error. Read those before anything else. The cause changes the answers. A self-inflicted outage can recur the next time the same job runs, so the recovery must include the rule that stops it happening again, and the handoff must not tell the owner that a vendor failed.

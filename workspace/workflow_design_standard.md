@@ -23,6 +23,8 @@ Blank property = under-defined step. A step a person does names exactly one acti
 2. **Who knows?** For every failure: notified, or silent? For every piece of state: where is the source of truth, and can it drift?
 3. **What's the fallback?** For every automated step: does a human have a manual path? For every human step: is a system idle waiting, and does anyone know?
 
+**A notice someone must receive is found by state, not by a cursor.** When a person has to be told about an outcome (their work was rejected, their payment failed), the sender looks for every outcome that has no notice yet, not for the events that arrived after its last position. A cursor moves past anything a failed or skipped pass missed, and that miss is permanent and silent; a read by state heals it on the next pass, and an invariant ("every outcome older than N minutes has its notice") proves it held. (2026-10-08, brand-reject ship H2: a worker rolled back while the app stayed live would have left rejected creators untold for good.)
+
 ## The history rule: every change is recorded
 
 Any build that holds important state records its history in an append-only event log. Important state is anything with a lifecycle, anything touching money or access, and any data other people rely on. The rule has five parts.

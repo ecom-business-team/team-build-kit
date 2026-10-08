@@ -27,3 +27,7 @@ On a git-integrated host, push the branch first and let its preview build: it pr
 ## A value written at login is missing for every session already open at the deploy (2026-10-02)
 
 When a release makes a page depend on something the login step stores (a claim in the auth user's metadata, a cookie, a cached flag), everyone who is already signed in keeps their session and never runs the new login code. Unless the release fills the value for them, they get whatever "missing" means. When "missing" means "no access", paying users are locked out with nothing logged. So when a release adds a login-written value, count the open sessions that lack it and backfill them in the same ship step, or make "missing" fetch the value once, before the deploy goes live.
+
+## Rebase onto what runs at each deploy step, not at build (2026-10-08)
+
+On a shared system, other projects deploy between your build and your ship. The base you built on can be one or more releases behind what is live by the time you deploy, so a deploy from that branch silently removes their work, and a fast-forward of `main` fails while a forced push drops their commits. Before each deploy step, read what the target runs now (the running deployment's commit, never `git log`), confirm your branch contains it, rebase if it does not, and re-run the suites on the rebased head. brand-reject's branches were rebased four times between build and go-live, because three other projects deployed in that window; the first check found the worker branch would have removed another project's matcher fix.

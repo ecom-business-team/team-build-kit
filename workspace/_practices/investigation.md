@@ -22,6 +22,10 @@ When you build a rule that keys on *observed* failure signatures — an error-me
 
 **Then say which way the rule fails.** An allowlist that fails CLOSED (no match → no action → status quo) can be extended lazily and is safe to ship incomplete. One that fails OPEN cannot. Put that sentence in the doc, next to the rule.
 
+## "Transient" is proved by re-running the failing input, not a neighbouring one (2026-10-08)
+
+A failure that passes on retry is called transient only when the retry used the same input: the same window, record, page and credential. A pipeline's nightly read failed for one account; a re-read passed and the badge was written off as self-healing, but the re-read used the next day's window. The failing window failed every time it was re-run, so the next nightly run would have failed the same way on Monday's larger window. Re-run the exact failing call first; when it fails again, it is a defect, and the passing neighbour is the first clue to its cause.
+
 ## An outage: ask first whether we caused it
 
 "The provider went down" is a hypothesis like any other. The cheapest test is our own record: today's session log, the recent deploys, and any load tests or bulk jobs that ran just before the first error. Read those before anything else. The cause changes the answers. A self-inflicted outage can recur the next time the same job runs, so the recovery must include the rule that stops it happening again, and the handoff must not tell the owner that a vendor failed.

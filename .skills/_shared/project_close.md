@@ -6,6 +6,7 @@ A project has three end states. **Complete** — it shipped; the normal path, §
 
 ## 1. Learning capture (provisional)
 Ask the owner: what worked · what was painful · what to do differently. Append to `project_log.md` under **Lessons Learned** and mark them *provisional — written before real use; the outcome check (§5) adds what real use showed*. If a lesson suggests a change to a mental model, a checklist or a skill, propose the specific change now; these compound.
+Then, before the archive move in §3, place every tool or system fact the log records (a gotcha met during the build, a limit measured, a rule a test proved) in its canonical home by the portability test: tool-general to `_practices/{tool}.md`, system-specific to that system's CONTEXT.md. The archived log is a record, not a home, and a future session never reads it.
 
 ## 2. Final documentation
 - Close the register entries this build satisfied (the missing-wires / open-inputs table the workspace's PRDs read first): mark each built wire closed with what built it; downgrade any that turned out to be a data or decision problem rather than a missing wire.

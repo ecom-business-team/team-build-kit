@@ -67,7 +67,7 @@ project/
 ├── change_log.md       # Keep a Changelog format
 ├── kpis.md             # only when metrics exist
 ├── data_dictionary.md  # only when it owns a schema
-└── _admin/             # memos/, prds/, _archive/ (+ backlog lives in the task manager, NOT here)
+└── _admin/             # memos/ (+ memos/_done/), prds/, _archive/{project}/ (+ backlog lives in the task manager, NOT here)
 ```
 
 ### Full — multi-system program (team, money, cross-system contracts)
@@ -173,7 +173,7 @@ A planning folder's CONTEXT.md keeps items 1–3 and a three-line *How to resume
 - **State is a snapshot, history is a log.** `state.md` is rewritten in place under a word budget (initiative 600, project 400) and never appended; `project_log.md` and `daily-outputs/` are appended and never read for position. A date-led bullet in a snapshot is history in the wrong home. The PostToolUse state gate (`.claude/hooks/state_budget_gate.py`) warns when a snapshot grows past its budget or starts collecting dated bullets.
 - **Build progress never lives in system docs.** A system's CONTEXT.md says what is deployed and how it is wired; where a build stands is the project's `state.md`. One project wrote its progress into six homes and then had to correct one fact in all six.
 - **Naming:** folders are `kebab-case`, docs are `snake_case.md`, automation workflows are named `{{System}} | {{Trigger + Action}}`, and changelogs follow Keep-a-Changelog.
-- **Files (filing) as enforcement:** `/build`/`/ship` do not close until memos/PRDs are physically **moved** (never copied) to `_done`/`_archive`.
+- **Files (filing) as enforcement:** `/build`/`/ship` do not close until memos/PRDs are physically **moved** (never copied): a memo to `_admin/memos/_done/`, a PRD with its project folder (log, reviews, artifacts) to `_admin/_archive/{project}/`. There is no `prds/_done/`.
 
 ## 7. Living-document rule
 

@@ -16,14 +16,16 @@ user_invocable: true
 
 2. **Promotion pass over the day's "Learned" entries.** For each capture pointer, verify the capture actually landed in its canonical home (`_practices/{tool}.md` or the project CONTEXT.md). **A learning without a doc change or filed action didn't happen** — if one is only prose in the log, place it now (portability test: tool-general → `_practices/`; project-specific → CONTEXT.md). Flag anything that looks tier-1-worthy (universal + behavioral + silent-failure) for `/week` — don't promote to CLAUDE.md daily.
 
-3. **Open-threads sweep.** Every "Open:" item either has a task reference or gets one now, labelled as the workspace's CLAUDE.md task rules say, in the matching project. Markdown holds no live state overnight.
+3. **Open-threads sweep.** Every "Open:" item either has a task reference or gets one now, labelled as the workspace's CLAUDE.md task rules say, in the matching project. Markdown holds no live state overnight. **File into an existing parent:** each thread is a subtask of the project, initiative, milestone, quick-fix batch or task it belongs to, and one session's related threads go under one parent. A new top-level task only for a new project, a new batch, or a new person to ask (asks are one task per person, each ask a subtask). Titles say what the task does in plain words, never an id or shorthand.
+
+3b. **Backlog tidy (~2 min).** List, in one list, what was filed or changed in the task manager today, plus anything loose: a task outside any parent that is not a project, batch or person; a task with no due date; a subtask dated before its parent (a milestone that moved without its gates). For each, propose one of **group** (under which parent), **merge** (into which task), **close** (why), or **reschedule** (to when). Apply on the owner's yes, item by item if they say so; nothing moves without it. Nothing loose → `Tidy: nothing.`
 
 4. **Append the digest** to the bottom of the day's file:
 
 ```
 ## Digest (/day, run HH:MM)
 One paragraph: what the day actually was — the through-line, not a list.
-Promotions: {n} to _practices, {n} to CONTEXT, {n} flagged for /week · Threads filed: {n} · Sessions: {n}
+Promotions: {n} to _practices, {n} to CONTEXT, {n} flagged for /week · Threads filed: {n} · Tidied: {n} · Sessions: {n}
 ```
 
 5. **One line to the owner:** the paragraph + anything flagged. No ceremony. Then a dedicated **`Needs {owner}:`** section — every item that requires their word (an approval, a decision, a question), one full sentence each with the outcome of each answer, and nothing else in it. Never bury an ask inside a digest paragraph. If there is nothing, write `Needs {owner}: nothing.` (Owner's ruling, 2026-09-15.)

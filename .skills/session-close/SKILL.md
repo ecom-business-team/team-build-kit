@@ -11,14 +11,17 @@ description: Close out a working session — append the session-log entry to dai
 
 **During the session.** A small follow-up of this work that the session can do, but that would break the flow if done now, goes on the session's **tail**: a plain list kept in the conversation, never the task manager. (A document that misled you or contradicts the live system is still fixed at once, by the workspace's doc-friction rule; the tail is for what can wait until the end.) Work that is substantial or standalone (its own quick fix or memo), or that waits on a person, an outside party or a date, is filed in the task manager when it is seen, by the workspace's task-capture rule.
 
+**Filing goes into an existing parent.** Every item this session files is a subtask of the project, initiative, milestone, quick-fix batch or task it belongs to, and one session's related items go under **one** parent, never several. A new top-level task is created only for a new project, a new quick-fix batch, or a new person to ask (one task per person, each ask a subtask). A check goes only under its milestone's ship task or its batch. Titles say what the task does in plain words, never an id or shorthand. Why: filing each loose end as its own top-level task left a backlog where every finished task spawned about three more nobody knew to act on (the owner, 2026-10-15).
+
 **At the end, before the log entry:**
 1. **Offer the tail.** List each tail item in one line with its minutes, and ask the owner: "These N items take about X minutes. Do them now, or file them for later?" The answer decides, for all of them or item by item: done now, or filed. Nothing on the tail is filed without that answer.
-2. **Announce what was filed.** Every task this session filed, including tail items the owner chose to file, is shown to the owner at the end, before the log entry and even if it was mentioned when filed (on the handoff card's Filed block when the stop prints one), in three parts:
+2. **Announce what was filed.** Every task this session filed, including tail items the owner chose to file, is shown to the owner at the end, before the log entry and even if it was mentioned when filed (on the handoff card's Filed block when the stop prints one), by its title and the title of the parent it sits under, in four parts:
    - **What:** the task in one plain sentence.
+   - **Where:** the parent's title (the id after, for lookup).
    - **Why:** what was seen, and why it is not part of this work.
    - **Expect:** who acts, when, and the exact command or step.
 
-   A title alone is not an announcement.
+   A title alone is not an announcement, and an id alone never is.
 
 Why: filing costs the session nothing and moves the cost to the owner, who has to remember the item, come back to it and rebuild its context. A series of small filed items once took about three hours of sessions to clear (the owner, 2026-09-29). Other stops point here: the handoff card's Filed block (template §4.10), `/ship`'s residual review, and the workspace `CLAUDE.md`.
 

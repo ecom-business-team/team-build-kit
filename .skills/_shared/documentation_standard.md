@@ -493,7 +493,7 @@ The handoff card:
 {What just finished, in one sentence.} Proved by {the check and its result}.
 
 ### Filed this session
-**{task id} {task title}**
+**{task title}**, under {parent task title} ({task id})
 - *What:* {the task in one plain sentence}.
 - *Why:* {what was seen, and why it is not part of this work}.
 - *Expect:* {who acts, when, and the exact command or step}.
@@ -504,7 +504,7 @@ The handoff card:
 - *The issue:* {what is wrong}.
 - *If left:* {what leaving it costs, including the second-order effect}.
 - *The fix:* {simple, and what it is | not simple, and why}.
-- *Recommend:* {now | later, and why}. {Filed as {task id}.}
+- *Recommend:* {now | later, and why}. {Filed as {task title}, under {parent task title}.}
 
 ### Needs {owner}
 {One full sentence per decision or keyboard step only the owner can take, with its task id and due date.}
@@ -546,8 +546,8 @@ The orientation card:
 - **Name this session.** Work on an initiative's milestone opens with the exact name the owner gives the tab, built from the milestone number and the project folder name (`M3 payout-disputes`); a session that runs several milestones' steps from one list joins the numbers and names the list (`M2+3 cutover`). The session cannot rename itself (no tool, hook or skill can), so the card hands the owner the name, first, where it costs one paste. In VS Code it is **Rename Session Tab** in the command palette: `/rename` there renames the session but leaves the tab's title unchanged (tested 2026-10-07). In a terminal, `/rename {name}`. The owner asked for it because milestones do not run in numeric order and parallel sessions were otherwise told apart by their auto-titles (2026-10-07). Work outside an initiative leaves the line out.
 - **Milestones.** One row per row of the initiative `state.md` milestone table, every row every time: ✅ for shipped or reached, ▶ for the one in flight, ☐ for the rest, with the status cell shortened (paused and killed rows keep their word).
 - **Work items.** One per `### Work Item` heading in the PRD §12: ✅ for those the project `state.md` Done names, ▶ for the one Next names, ☐ for the rest. No PRD yet, no list. With neither a table nor a list, the Progress block is left out.
-- **Filed this session.** Every task this session filed in the task manager, by its id, in its three parts, including tail items the owner chose to file; a filed follow-up is listed here and not under Residuals. The rule, and the session-tail offer that comes first, live in the `session-close` skill, "Follow-ups".
-- **Residuals.** Everything noticed and left unresolved: a hole accepted at a checkpoint, a defect deferred, a follow-up left for later. A residual that was filed appears here with its id and not again under Filed. Every part is a full sentence.
+- **Filed this session.** Every task this session filed in the task manager, by its title and its parent's title (id after), in its three parts, including tail items the owner chose to file; a filed follow-up is listed here and not under Residuals. The rule, and the session-tail offer that comes first, live in the `session-close` skill, "Follow-ups".
+- **Residuals.** Everything noticed and left unresolved: a hole accepted at a checkpoint, a defect deferred, a follow-up left for later. A residual that was filed appears here with its title and parent and not again under Filed. Every part is a full sentence.
 - **Empty blocks.** Filed this session, Residuals and Needs {owner} print `None.` when empty; they never disappear, because an empty block is information.
 - **Written.** Every file this stop wrote, one per line.
 

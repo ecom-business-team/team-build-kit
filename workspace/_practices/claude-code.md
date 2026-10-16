@@ -87,3 +87,15 @@ General rule: after any scripted mutation whose success is not self-evident, **r
 ## A page is read the way its reader will use it, before it is published (2026-09-24)
 
 Open a page you are about to hand someone and use it as they will, including anything it saves. A review page's form kept each reader's words in that reader's own browser storage, so the owner would never have seen the reviewer's answers; it was found only by filling the form once as the reviewer. Captions built from a link go stale when the link is repointed, so re-read them after any repoint.
+
+## Long-running work: brief the owner on the options and their measured times before starting (owner's lesson, 2026-10-17)
+
+**The pattern this stops.** When a step will run for a long time (a backfill, a bulk job, a long suite, a wait on an outside system), sessions have usually picked the slow, one-at-a-time route although a faster option with little downside existed, and have quoted time estimates far from reality. A build looked like an afternoon until one step took three hours. The owner was told the finish time only as it slipped.
+
+**Before any step expected to run longer than about 15 minutes, or long enough to move the session's finish, brief the owner and let them choose.** The brief has four parts:
+1. **The decision:** what has to run and why, and what waits on it.
+2. **The options, the fastest always among them.** Look for these every time: run independent units in parallel (accounts, months, files, services; check what the outside system limits, a rate limit is usually per account or per key, not global); reorder so the step that gates go-live comes first and the rest fills in behind it; shrink what the go-live actually needs; run the long step alongside other work instead of before it.
+3. **The time for each option, measured, never recalled.** Run one unit (one month, one account, one batch), time it, and multiply by the units left, naming the slowest unit, since the slowest one sets the finish when units run in parallel. Say how the number was made. Restate it after the first unit finishes and whenever it drifts by more than a quarter. An estimate from memory is a guess, and the guesses have been wrong in both directions.
+4. **The downside of each, and a recommendation.** Default to the fastest option whose downside is small and reversible.
+
+**At planning, not only at the moment.** A PRD's work items and a ship order name every step that will run long, with its measured or probed time, so the plan's total is honest before the build starts (`/prd` Phase 4, "A long-running step is timed in the plan"). The workspace's case is in its incidents list below.

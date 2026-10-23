@@ -16,4 +16,6 @@ Principles for any workflow where an LLM makes subjective or strategic decisions
 
 **Source content is a hard contract.** Models may structure, emphasize, split, and arrange exact content; they must not silently rewrite, invent, remove, or duplicate source meaning unless explicitly asked.
 
+**A conversational prompt (an interview, an intake chat) needs an explicit reply budget.** Without one, a strong model recaps everything agreed so far before each question. In the first real brand interview (2026-10-19) that meant about 25,000 words of recaps across 62 turns, which the person mostly rubber-stamped, and a 4 h 13 min session against a 25–35 min promise. State the budget ("one sentence of acknowledgement, then the next question, under 80 words, no recaps or tables") and name where checking happens instead, such as a later review step. Prove a prompt change by replaying a real transcript's user turns through the new prompt and comparing reply lengths with the original, before any real user meets it.
+
 **Push back when a proposed fix adds control before understanding.** First ask: is this a prompt/source-of-truth problem, a model-output problem, or an objective code/runtime problem?

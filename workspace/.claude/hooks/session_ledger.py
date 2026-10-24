@@ -25,6 +25,7 @@ ROOT = os.environ.get("CLAUDE_PROJECT_DIR") or os.path.abspath(os.path.join(HERE
 LEDGER = os.path.join(ROOT, "daily-outputs", "sessions.jsonl")
 DEFAULT_TRANSCRIPTS = os.path.expanduser(os.path.join("~/.claude/projects", re.sub(r"[^A-Za-z0-9]", "-", ROOT)))
 STATE_DIR = os.path.expanduser("~/.claude/state/practices-gate")
+ACTIVE_S = 3600  # backfill_missing leaves a transcript this recently written alone
 
 WRITE_TOOLS = {"Edit", "Write", "MultiEdit", "NotebookEdit"}
 SUPABASE_SQL_RE = re.compile(r"^mcp__(claude_ai_)?supabase[^_]*__execute_sql$", re.I)
@@ -246,9 +247,13 @@ def backfill_missing(days=14, tdir=None):
         if sid in known:
             continue
         try:
-            if os.path.getmtime(path) < cutoff:
-                continue
+            mtime = os.path.getmtime(path)
         except OSError:
+            continue
+        # A transcript written in the last hour belongs to a session still open in another
+        # window, not a killed one; a row now would tell the next session it has ended
+        # (2026-10-24: a live ship was listed as unlogged and nearly run twice).
+        if mtime < cutoff or time.time() - mtime < ACTIVE_S:
             continue
         row = build_row(sid, path, "backfill", None)
         if row["prompts"] == 0 and row["tool_calls"] == 0:

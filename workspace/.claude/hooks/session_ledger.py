@@ -242,6 +242,21 @@ def backfill_missing(days=14, tdir=None):
     known = {r.get("session_id") for r in rows}
     cutoff = time.time() - days * 86400
     added = 0
+    # A backfilled row is a guess that the session ended. When its transcript has grown since the
+    # row was written, the session was resumed: rebuild the row from the transcript, so its end,
+    # counts and log mark follow what really happened (otherwise a resumed session is reconstructed by
+    # another session, then logs itself again). A real SessionEnd row is left alone.
+    for i, r in enumerate(rows):
+        if r.get("reason") != "backfill" or not r.get("transcript_path"):
+            continue
+        try:
+            grown = os.path.getmtime(r["transcript_path"]) > time.mktime(
+                time.strptime(r.get("recorded_at") or "", "%Y-%m-%dT%H:%M:%S"))
+        except (OSError, ValueError, OverflowError):
+            continue
+        if grown:
+            rows[i] = build_row(r["session_id"], r["transcript_path"], "backfill", r.get("cwd"))
+            added += 1
     for path in glob.glob(os.path.join(tdir, "*.jsonl")):
         sid = os.path.basename(path)[:-6]
         if sid in known:

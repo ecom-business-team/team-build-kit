@@ -17,6 +17,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -27,6 +28,7 @@ KIT_REPO = "https://raw.githubusercontent.com/ecom-business-team/team-build-kit"
 KIT_RAW = os.environ.get("TBK_BASE") or KIT_REPO + "/main"
 VERSION_RE = re.compile(r"v\d+\.\d+\.\d+(?:-\d+)?")
 LOOKBACK_DAYS = 14
+IDLE_S = 86400  # a transcript written within a day may belong to a session that will resume
 MAX_LIST = 6
 
 
@@ -141,6 +143,11 @@ def main():
             continue  # the running session logs itself at close
         if r.get("id8") and r["id8"] in read(daily_path(r["date"])):
             continue  # reconstructed entry carries "(session <id8>)"
+        try:
+            if time.time() - os.path.getmtime(r.get("transcript_path") or "") < IDLE_S:
+                continue  # possibly still open; it logs itself, or is listed once idle a full day
+        except OSError:
+            pass
         unlogged.append(r)
 
     unprocessed = []

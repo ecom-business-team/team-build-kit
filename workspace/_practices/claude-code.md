@@ -78,6 +78,7 @@ General rule: after any scripted mutation whose success is not self-evident, **r
 ## A skill's text is fixed when it loads (2026-09-29, claude-md-merge)
 
 - **A skill that installs a newer copy of itself runs its old text for the rest of that run.** The session loaded the skill before the install replaced the file, so any step the new version adds does not happen until the next run. A path table for such a command needs the row "first run after the publish", driven by the previous release's text; a fixture that runs the new text cannot see it. `/update-build-kit` now re-reads itself after installing (kit v2026.9.29-10), which fixes this from its next change on; the release that adds the re-read still needs a run-twice announcement (claude-md-merge ship review H1, 2026-09-29).
+- **A skill edit is live the moment it is on disk, so a skill change that matches a service change waits on a branch until that service deploys (2026-10-25, clickup-boards-retired WI-7).** Skills are read when they load, not at a release: an edit saved in `~/.claude/skills/` is what the next run of that skill uses, against whatever the services run now. An edit that assumes the new service code (a lane deleted, a renamed class) breaks the live lanes until the deploy. Keep such edits on a branch of the skills repo and merge them at the ship step that deploys the service; a PRD's impact map lists skills as running code, not as documents.
 
 ## Nested `claude -p` as a proof harness (2026-09-21, onboarding-path build)
 

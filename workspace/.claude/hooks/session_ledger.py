@@ -11,14 +11,22 @@ Usage:
   backfill  session_ledger.py --backfill [--since YYYY-MM-DD] [--dir <transcripts dir>]
 Never exits non-zero: a ledger failure must not break a session close.
 """
+import contextlib
 import datetime as dt
 import glob
+import hashlib
 import json
 import os
 import re
 import shutil
 import sys
+import tempfile
 import time
+
+try:
+    import fcntl
+except ImportError:  # Windows
+    fcntl = None
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.environ.get("CLAUDE_PROJECT_DIR") or os.path.abspath(os.path.join(HERE, "..", ".."))
@@ -177,20 +185,48 @@ def load_rows():
     return rows
 
 
+@contextlib.contextmanager
+def ledger_lock():
+    """Serializes every read-modify-write of the ledger. Sessions start and end together (a window reopening
+    several), each runs a writer, and unserialized writers through one shared temp file lost rows: every
+    concurrent row, and every row after the cut when one read the half-written file (2026-10-31: 252 rows).
+    The lock lives outside the repository. Without fcntl (Windows) writers are unserialized, but each still
+    writes its own temp file, so no reader ever sees a half-written ledger."""
+    if fcntl is None:
+        yield
+        return
+    lock_dir = os.path.expanduser("~/.claude/state/session-ledger")
+    os.makedirs(lock_dir, exist_ok=True)
+    name = hashlib.sha1(os.path.abspath(LEDGER).encode()).hexdigest()[:16] + ".lock"
+    with open(os.path.join(lock_dir, name), "a") as fh:
+        fcntl.flock(fh, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(fh, fcntl.LOCK_UN)
+
+
 def write_rows(rows):
+    """Callers hold ledger_lock() from their load_rows() to here."""
     os.makedirs(os.path.dirname(LEDGER), exist_ok=True)
     rows.sort(key=lambda r: (r.get("date") or "", r.get("started") or ""))
-    tmp = LEDGER + ".tmp"
-    with open(tmp, "w", encoding="utf-8") as fh:
-        for r in rows:
-            fh.write(json.dumps(r, ensure_ascii=False) + "\n")
-    os.replace(tmp, LEDGER)
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(LEDGER), prefix=".sessions.", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            for r in rows:
+                fh.write(json.dumps(r, ensure_ascii=False) + "\n")
+        os.replace(tmp, LEDGER)
+    except BaseException:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+        raise
 
 
 def upsert(row):
-    rows = [r for r in load_rows() if r.get("session_id") != row["session_id"]]
-    rows.append(row)
-    write_rows(rows)
+    with ledger_lock():
+        rows = [r for r in load_rows() if r.get("session_id") != row["session_id"]]
+        rows.append(row)
+        write_rows(rows)
 
 
 def cleanup_markers(max_age_days=7):
@@ -217,19 +253,20 @@ def backfill(args):
             tdir = os.path.expanduser(args[i + 1]); i += 2
         else:
             i += 1
-    rows = load_rows()
-    existing = {r.get("session_id"): r for r in rows}
-    added = 0
-    for path in sorted(glob.glob(os.path.join(tdir, "*.jsonl"))):
-        sid = os.path.basename(path)[:-6]
-        row = build_row(sid, path, "backfill", None)
-        if row["date"] < since or (row["prompts"] == 0 and row["tool_calls"] == 0):
-            continue
-        if sid in existing and existing[sid].get("reason") != "backfill":
-            continue  # a real SessionEnd row wins over a backfill
-        existing[sid] = row
-        added += 1
-    write_rows(list(existing.values()))
+    with ledger_lock():
+        rows = load_rows()
+        existing = {r.get("session_id"): r for r in rows}
+        added = 0
+        for path in sorted(glob.glob(os.path.join(tdir, "*.jsonl"))):
+            sid = os.path.basename(path)[:-6]
+            row = build_row(sid, path, "backfill", None)
+            if row["date"] < since or (row["prompts"] == 0 and row["tool_calls"] == 0):
+                continue
+            if sid in existing and existing[sid].get("reason") != "backfill":
+                continue  # a real SessionEnd row wins over a backfill
+            existing[sid] = row
+            added += 1
+        write_rows(list(existing.values()))
     print(f"backfill: {added} rows written to {LEDGER}")
 
 
@@ -238,10 +275,11 @@ def backfill_missing(days=14, tdir=None):
     window/process is killed, and such a session leaves no trace). Cheap: parses only
     transcripts modified in the last `days` days that are missing from the ledger."""
     tdir = tdir or DEFAULT_TRANSCRIPTS
-    rows = load_rows()
+    rows = load_rows()  # read unlocked: the transcripts are parsed outside the lock, then merged under it
     known = {r.get("session_id") for r in rows}
     cutoff = time.time() - days * 86400
     added = 0
+    rebuilt, new = {}, {}
     # A backfilled row is a guess that the session ended. When its transcript has grown since the
     # row was written, the session was resumed: rebuild the row from the transcript, so its end,
     # counts and log mark follow what really happened (otherwise a resumed session is reconstructed by
@@ -255,8 +293,7 @@ def backfill_missing(days=14, tdir=None):
         except (OSError, ValueError, OverflowError):
             continue
         if grown:
-            rows[i] = build_row(r["session_id"], r["transcript_path"], "backfill", r.get("cwd"))
-            added += 1
+            rebuilt[r["session_id"]] = build_row(r["session_id"], r["transcript_path"], "backfill", r.get("cwd"))
     for path in glob.glob(os.path.join(tdir, "*.jsonl")):
         sid = os.path.basename(path)[:-6]
         if sid in known:
@@ -273,10 +310,21 @@ def backfill_missing(days=14, tdir=None):
         row = build_row(sid, path, "backfill", None)
         if row["prompts"] == 0 and row["tool_calls"] == 0:
             continue
-        rows.append(row)
-        added += 1
-    if added:
-        write_rows(rows)
+        new[sid] = row
+    if not (rebuilt or new):
+        return 0
+    with ledger_lock():
+        rows = load_rows()  # re-read: another session may have written since the unlocked read
+        for i, r in enumerate(rows):
+            sid = r.get("session_id")
+            if sid in rebuilt and r.get("reason") == "backfill":
+                rows[i] = rebuilt[sid]
+                added += 1
+            new.pop(sid, None)  # a row written meanwhile (a real SessionEnd) wins
+        rows.extend(new.values())
+        added += len(new)
+        if added:
+            write_rows(rows)
     return added
 
 

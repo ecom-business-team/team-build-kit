@@ -26,3 +26,7 @@ Each returns ONE candidate simplest solution. **Pick the simplest — NEVER merg
 ## Why the split matters
 
 One-agent-per-research-task rewards comprehensive coverage — outputs sum, scope grows through addition. Type 2 rewards finding the minimum — agents compete on simplicity, and the winner is selected, not summed. Use the type that matches the question.
+
+## Side sessions: a relayed go does not authorize a live write
+
+A go-ahead the owner gives in the master session and the master relays to a side session does not pass that session's permission check for a live write: deploys, migrations, env changes, `railway` cutovers. The check wants the owner's own words in the session that runs the write. Found 2026-11-06, in a task-manager burn-down: two production writes were refused in their side session as "Production Deploy" although the owner had said "Go A and B" in the master. So a side session prepares and proves each live write and stops, the master shows the owner what each write does, and the owner then types the go in that session themselves, linked from the master. Read-only work and doc edits in side sessions are unaffected.

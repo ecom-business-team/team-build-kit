@@ -10,7 +10,7 @@ Usage:  python3 .claude/tools/orientation_cost.py <id8> [<id8> …]   (the 8-cha
         python3 .claude/tools/orientation_cost.py --now {memo|prd|build|ship|quick-fix}
           one line for the handoff card: this session's measured context (found by
           CLAUDE_CODE_SESSION_ID) plus the next step's typical cost, and the continue-or-fresh
-          verdict against the 300k ceiling (_practices/claude-code.md, Context cost)
+          verdict against the 450k ceiling (_practices/claude-code.md, Context cost)
 Baselines: record them in the workspace's daily log on the day they are measured.
 Transcript shape: _practices/claude-code.md → Transcripts."""
 import os, sys
@@ -60,7 +60,7 @@ ORIENT_SET = ('project_log.md', '_prd.md', 'north_star.md', 'CONTEXT.md', 'syste
 # --now: the handoff card's Context line. STEP_COST = median tokens a step adds to context, measured over
 # transcripts from 2026-08-23 to 2026-09-22 (build = one work item, the top of the 30–58k range seen on
 # 2026-09-21/22); the gate-cost instrument re-derives them.
-CEILING = 300_000
+CEILING = 450_000
 STEP_COST = {'memo': 70_000, 'prd': 190_000, 'build': 60_000, 'ship': 129_000, 'quick-fix': 144_000}
 FRESH = 'fresh: /clear, then the command above'
 
@@ -113,7 +113,7 @@ def now_line(step, sid):
         return f'Context: {k(ctx)} measured, compacted → {FRESH}'
     total = ctx + STEP_COST[step]
     head = f'Context: {k(ctx)} measured + {step} ~{k(STEP_COST[step])} = {k(total)}'
-    return f'{head} ≤ 300k, not compacted → continue here' if total <= CEILING else f'{head} > 300k → {FRESH}'
+    return f'{head} ≤ 450k, not compacted → continue here' if total <= CEILING else f'{head} > 450k → {FRESH}'
 
 def main(argv):
     if argv[:1] == ['--now']:

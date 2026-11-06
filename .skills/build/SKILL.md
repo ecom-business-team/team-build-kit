@@ -110,7 +110,7 @@ Two writes and a render, in this order, committed together with the code:
 ### Step 5: Session boundary — measure, then continue or hand off
 With WI-N verified, recorded and snapshotted, measure: `python3 .claude/tools/orientation_cost.py --now build`. Print the **handoff card** (template §4.10). Its values: **Ribbon** = build N/{total}; WI-1…N ✅, WI-N+1 ▶ in the list; **Done** = WI-N, {name}, proved by {the check and its result}, committed {hash}; **Next** = **WI-N+1, {name}:** run `/build {project-name}` (it resumes from state.md), with the line the tool printed; **Written** = `state.md` · `handoff.html`.
 Follow the verdict. **Continue here** → begin WI-N+1 in this session at Phase 1-A step 3 (the snapshot you just wrote is current, so its verify block is already satisfied). **Fresh**, **not measured**, or no `Context:` line at all (the command failed) → stop; the owner types `/clear`, then the Next command. The owner's word overrides the verdict either way; log an override in `project_log.md`.
-Why: build sessions that ran a whole project in one context reached 500k–1M tokens and re-read the same documents 15–29 times each, while a fresh start costs about 60k to load and orient. The measured 300k ceiling keeps the cheap continuations and cuts the marathons (`_practices/claude-code.md`, Context cost).
+Why: build sessions that ran a whole project in one context reached 500k–1M tokens and re-read the same documents 15–29 times each, while a fresh start costs about 60k to load and orient. The measured 450k ceiling keeps the cheap continuations and cuts the marathons (`_practices/claude-code.md`, Context cost).
 
 ### Repeat for each work item.
 

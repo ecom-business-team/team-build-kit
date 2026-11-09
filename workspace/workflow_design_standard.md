@@ -1,6 +1,6 @@
 # Workflow Design Standard
 
-**Canonical.** How processes are designed and verified. Loaded by `/prd` (designing the value stream) and `/build` (Phase 3 end-of-build verification). Not for `/memo` (strategic) or `/quick-fix` (too small). Sibling standard: `documentation_standard.md` (how docs are structured).
+**Canonical.** How processes are designed and verified. Loaded by `/build` at Run (designing and proving the value stream), by `/prd` (designing the value stream) and by the old build skill (`/build-prd` from the lifecycle switch: Phase 3 end-of-build verification). Not for `/memo` (strategic) or `/quick-fix` (too small). Sibling standard: `documentation_standard.md` (how docs are structured).
 
 ## The 6-property step schema
 

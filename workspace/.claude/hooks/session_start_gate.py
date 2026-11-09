@@ -2,9 +2,11 @@
 """SessionStart hook: surface the telemetry backlog to the new session.
 
 Plain stdout from a SessionStart hook is added to Claude's context, so this is the lazy pump:
-  1. substantial sessions with no session-log entry (from daily-outputs/sessions.jsonl)
-  2. days with entries but no /day digest
-  3. the last completed ISO week without a /week review
+  0. one line per build or project in flight: every `_admin/builds/*/brief.md` not done or killed
+     (the /build skill) and every `_admin/prds/*/state.md` (the old lifecycle), plus the lines of
+     each area's position command
+  1-3. one telemetry line: substantial sessions with no session-log entry (the list itself prints
+     with `--unlogged`), days with entries but no /day digest, the last ISO week without a /week review
   4. open tasks in the fallback list (tasks.md at the root) whose due date has come
   5. a newer Team Build Kit than the one installed (the receipt's version line against the
      published VERSION, fetched at most once a day; silent with no receipt, no line or no network)
@@ -16,6 +18,8 @@ import glob
 import json
 import os
 import re
+import shlex
+import subprocess
 import sys
 import time
 import urllib.request
@@ -60,18 +64,51 @@ def load_rows(cutoff):
     return rows
 
 
+CLOSED = ("done", "killed")  # brief stages that are no longer in flight (/build, "Stages")
+
+
 def projects_in_flight():
-    """Every project state.md in the workspace = a build in flight (documentation_standard.md §4).
-    Depth-limited globs: node_modules and gitignored app checkouts are never walked."""
+    """Every /build brief not done or killed, and every old-lifecycle project state.md, in the
+    workspace (documentation_standard.md §4). Depth-limited globs: node_modules and gitignored app
+    checkouts are never walked. Returns (path, stage, next) per build in flight."""
     out = []
-    for pat in ("_admin/prds/*/state.md", "*/_admin/prds/*/state.md", "*/*/_admin/prds/*/state.md"):
-        for path in sorted(glob.glob(os.path.join(ROOT, pat))):
-            text = read(path)
-            m = re.search(r"\*\*Next:\*\*\s*(.+)", text)
-            nxt = (m.group(1).strip() if m else "?")[:120]
-            st = re.search(r"\*\*Stage:\*\*\s*(.+)", text)
-            stage = (st.group(1).strip() if st else "")[:90]
-            out.append((os.path.relpath(path, ROOT), len(text.split()), nxt, stage))
+    for kind in ("builds/*/brief.md", "prds/*/state.md"):
+        for pre in ("", "*/", "*/*/"):
+            for path in sorted(glob.glob(os.path.join(ROOT, pre + "_admin/" + kind))):
+                text = read(path)
+                m = re.search(r"\*\*Next:\*\*\s*(.+)", text)
+                nxt = (m.group(1).strip() if m else "?")[:120]
+                st = re.search(r"\*\*Stage:\*\*\s*(.+)", text)
+                stage = (st.group(1).strip() if st else "?")[:90]
+                if kind.startswith("builds") and stage.split(" ")[0] in CLOSED:
+                    continue
+                out.append((os.path.relpath(path, ROOT), stage, nxt))
+    return out
+
+
+def position_commands():
+    """Areas whose index names a task manager that holds position (documentation_standard.md §4.8,
+    "Where the snapshot lives"): a `**Position command:**` line in an area CONTEXT.md one level down.
+    Each command runs with `in-flight` (5 s) and its lines are printed; a failure prints one line."""
+    out = []
+    for path in sorted(glob.glob(os.path.join(ROOT, "*", "CONTEXT.md"))):
+        m = re.search(r"^\*\*Position command:\*\*\s*`(.+?)`", read(path), re.M)
+        if not m:
+            continue
+        area = os.path.basename(os.path.dirname(path))
+        try:
+            r = subprocess.run(shlex.split(m.group(1)) + ["in-flight"], cwd=ROOT, capture_output=True,
+                               text=True, timeout=5)
+            reason = None if r.returncode == 0 else f"exit {r.returncode}"
+        except subprocess.TimeoutExpired:
+            reason = "timed out after 5 s"
+        except Exception as exc:
+            reason = type(exc).__name__
+        if reason:
+            out.append(f"[State gate - SessionStart] {area}: position command failed ({reason}); "
+                       f"check in-flight work by hand before building there.")
+        else:
+            out.extend(l for l in r.stdout.splitlines() if l.strip())
     return out
 
 
@@ -118,9 +155,27 @@ def kit_update(today_s):
             f"-> mention /update-build-kit to the owner in one line (run it from the workspace root); do NOT run it unasked."]
 
 
+def unlogged_lines(unlogged):
+    """The per-session reconstruction list: printed by `--unlogged`, never at session start."""
+    lines = [f"UNLOGGED SESSIONS ({len(unlogged)}). Standing behaviour (session-close skill): append a one-line "
+             f"entry for each to daily-outputs/YYYY-MM/YYYY-MM-DD.md, reconstructed from the row (open the "
+             f"transcript only if the row is not enough). The heading MUST contain '(session <id8>)' so this "
+             f"gate stops listing it."]
+    for r in unlogged[-MAX_LIST:]:
+        fp = (r.get("first_prompt") or "").replace('"', "'")[:120]
+        lines.append(
+            f"- {r.get('date')} {r.get('started') or '?'}-{r.get('ended') or '?'} · id {r.get('id8')} · "
+            f"{r.get('title') or 'untitled'} · first prompt: \"{fp}\" · tools {r.get('tool_calls')} · "
+            f"writes {'yes' if r.get('write_signal') else 'no'} · transcript {r.get('transcript_path')}")
+    if len(unlogged) > MAX_LIST:
+        lines.append(f"- ... +{len(unlogged) - MAX_LIST} older rows in the ledger")
+    return lines
+
+
 def main():
+    list_only = "--unlogged" in sys.argv[1:]
     try:
-        payload = json.load(sys.stdin)
+        payload = {} if list_only else json.load(sys.stdin)
     except Exception:
         payload = {}
     current_sid = payload.get("session_id")
@@ -149,6 +204,9 @@ def main():
         except OSError:
             pass
         unlogged.append(r)
+    if list_only:
+        print("\n".join(unlogged_lines(unlogged)) if unlogged else "No unlogged sessions.")
+        return
 
     unprocessed = []
     daily_files = {}
@@ -172,41 +230,26 @@ def main():
     week_missing = week_has_days and not any(os.path.exists(p) for p in week_candidates)
 
     projects = projects_in_flight()
+    positions = position_commands()
     due = tasks_due(today_s)
     kit = kit_update(today_s)
-    if not (unlogged or unprocessed or week_missing or projects or due or kit):
+    if not (unlogged or unprocessed or week_missing or projects or positions or due or kit):
         return
 
-    lines = []
-    for rel, words, nxt, stage in projects:
-        ws = "." if rel.startswith("_admin/") else rel.split("/_admin/")[0]
-        lines.append(
-            f"[State gate - SessionStart] PROJECT IN FLIGHT: {rel} ({words} words) · Stage: {stage or '?'} · Next: {nxt} -> before any work in "
-            f"{ws}/: `cat` that file, run its 'Verify before continuing' block, announce the position (/build Phase 1-A). "
-            f"project_log.md is the record - never read it for position.")
-    lines.append("[Telemetry gate - SessionStart - source: daily-outputs/sessions.jsonl]")
+    lines = [f"[State gate - SessionStart] IN FLIGHT: {rel} · {stage} · Next: {nxt}"
+             for rel, stage, nxt in projects]
+    lines.extend(positions)
+    backlog = []
     if unlogged:
-        lines.append(
-            f"UNLOGGED SESSIONS ({len(unlogged)}). Standing behaviour (session-close skill): append a one-line "
-            f"entry for each to daily-outputs/YYYY-MM/YYYY-MM-DD.md, reconstructed from the row (open the "
-            f"transcript only if the row is not enough). The heading MUST contain '(session <id8>)' so this "
-            f"gate stops listing it. Do it before other work unless the user's request is urgent.")
-        for r in unlogged[-MAX_LIST:]:
-            fp = (r.get("first_prompt") or "").replace('"', "'")[:120]
-            lines.append(
-                f"- {r.get('date')} {r.get('started') or '?'}-{r.get('ended') or '?'} · id {r.get('id8')} · "
-                f"{r.get('title') or 'untitled'} · first prompt: \"{fp}\" · tools {r.get('tool_calls')} · "
-                f"writes {'yes' if r.get('write_signal') else 'no'} · transcript {r.get('transcript_path')}")
-        if len(unlogged) > MAX_LIST:
-            lines.append(f"- ... +{len(unlogged) - MAX_LIST} older rows in the ledger")
+        backlog.append(f"{len(unlogged)} unlogged sessions (list: python3 .claude/hooks/session_start_gate.py --unlogged)")
     if unprocessed:
-        lines.append("UNPROCESSED DAYS (entries, no /day digest): "
-                     + ", ".join(f"{d} ({n} entries)" for d, n in unprocessed)
-                     + " -> mention /day to the owner in one line; do NOT run it unasked (the owner runs their own rituals).")
+        backlog.append("/day due for " + ", ".join(d for d, _ in unprocessed))
     if week_missing:
-        lines.append(f"NO /week REVIEW for {week_tag} ({last_monday} to {last_sunday}) -> mention in the same line.")
-    if lines and lines[-1].startswith("[Telemetry gate"):
-        lines.pop()  # nothing telemetric pending; only the state lines remain
+        backlog.append(f"no /week for {week_tag}")
+    if backlog:
+        todo = (["reconstruct the unlogged sessions (session-close skill)"] if unlogged else []) + (
+            ["mention /day and /week to the owner in one line, never run them unasked"] if unprocessed or week_missing else [])
+        lines.append("[Telemetry gate - SessionStart] " + " · ".join(backlog) + " -> " + "; ".join(todo) + ".")
     lines.extend(due)
     lines.extend(kit)
     print("\n".join(lines))

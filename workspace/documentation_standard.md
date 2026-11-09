@@ -67,7 +67,7 @@ project/
 ├── change_log.md       # Keep a Changelog format
 ├── kpis.md             # only when metrics exist
 ├── data_dictionary.md  # only when it owns a schema
-└── _admin/             # memos/ (+ memos/_done/), prds/, _archive/{project}/ (+ backlog lives in the task manager, NOT here)
+└── _admin/             # builds/{slug}/ (brief.md, go.md: one per /build), memos/ (+ memos/_done/), prds/, _archive/{project}/ (+ backlog lives in the task manager, NOT here)
 ```
 
 ### Full — multi-system program (team, money, cross-system contracts)
@@ -120,6 +120,7 @@ The roadmap (the ordered milestones, each with what it kills and what it depends
 |---|---|---|---|
 | Initiative | `_admin/<initiative>/state.md` (≤600 words) | the archived project logs | `north_star.md` |
 | Project | `_admin/prds/<project>/state.md` (≤400 words) | `_admin/prds/<project>/project_log.md` | the memo + the PRD |
+| Build (`/build`) | the `**Stage:**` and `**Next:**` lines of `_admin/builds/<slug>/brief.md` | the brief's `**History:**` line, its Result or the go page | the brief |
 | Session | rewrites the project `state.md` | `daily-outputs/YYYY-MM/YYYY-MM-DD.md` | — |
 
 **Where an initiative fact lives:**

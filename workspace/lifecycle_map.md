@@ -2,6 +2,12 @@
 
 _How work starts, the three checkpoints every build must pass, and one loop that closes only when the problem is solved._
 
+## The current lifecycle
+
+From the lifecycle switch, every build starts with `/build`, which runs three moves. **Ask:** the agent reads the live system first, writes one short brief, and puts every decision only the owner can make to them in one message; the owner's one-line reply is the approval. **Run:** the agent designs, builds and proves the change without stopping, against the proof checklist, and stops only when what it finds changes one of the owner's answers. **Go:** when anyone else relies on the change, the agent writes one go page and ships only after the owner types go in that session; when nobody else does, it ships at the end of Run and reports with the proof. Several builds can run at once, each in its own sub-session. The design is in `_admin/_archive/lifecycle-from-first-principles/`.
+
+The map below is the lifecycle for projects started before the switch. They finish on `/memo`, `/prd`, `/build-prd` and `/ship`.
+
 This page is the map of the kit. The kit is a set of commands you type in Claude Code, such as `/memo`, together with standards, which are the written rules for how documents and folders are laid out, and a few pages like this one that explain them. The map shows every command you install and the loop every piece of work moves through. There are two ways to start, and you use one of them once for each thing: build something new with `/new-workspace`, or bring something that already exists up to standard with `/convert-to-standard`.
 
 1. You want to build something new. `/new-workspace` makes a place for it to live inside your workspace, which is the folder that holds all your work.

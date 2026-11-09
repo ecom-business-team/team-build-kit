@@ -1,6 +1,6 @@
 # Testing Standard
 
-**Canonical.** How quality is proven on code projects. Loaded by `/prd` (deciding what each layer must prove before the build starts) and `/build` (Phase 3 verification and the per-work-item checks). Sibling standards: `documentation_standard.md` (how docs are structured), `workflow_design_standard.md` (how processes are designed).
+**Canonical.** How quality is proven on code projects. Loaded by `/build` at Run (the proof of every path), by `/prd` (deciding what each layer must prove before the build starts) and by the old build skill (`/build-prd` from the lifecycle switch: Phase 3 verification and the per-work-item checks). Sibling standards: `documentation_standard.md` (how docs are structured), `workflow_design_standard.md` (how processes are designed).
 
 **Scope.** Code projects — anything with a repo, a build and a deploy. Automation built from connected systems (a workflow tool, a board, webhooks) is verified differently: its equivalent is "Proof through the real entry point" below, and its regression suite is the reconcile lanes. A project with neither is too small to need this. Which proof a thing owes is decided by its **kind**: the kinds table in `documentation_standard.md` §4 ("The third axis") assigns one to each of the six, and this standard is the method for the three kinds that are code — service, application and tool.
 
@@ -20,7 +20,7 @@ So split the layers by **what each can actually prove**:
 |---|---|---|---|
 | **Unit** | Fixtures | Every push | Pure logic: copy, formatting, parsing, crypto, calculations |
 | **Invariant** | Live, **read-only** | Scheduled + before deploy | *Properties* of real data that must always hold |
-| **Smoke** | Live + a disposable identity | Before deploy, and at `/ship` | The real app answers through the real entry point |
+| **Smoke** | Live + a disposable identity | Before deploy, and at `/ship` or `/build`'s Go | The real app answers through the real entry point |
 
 ### The invariant layer is the one people skip
 

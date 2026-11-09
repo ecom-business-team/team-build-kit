@@ -156,7 +156,8 @@ def main(argv):
             n, inp = t['name'], t['input']
             mut = n in MUT_TOOLS or (n == 'Bash' and bash_is_write(inp.get('command', ''))) \
                 or (n.startswith('mcp__supabase') and (n.endswith('apply_migration') or (n.endswith('execute_sql') and re.search(r'\b(insert|update|delete|create|alter|drop|grant|revoke|refresh)\b', inp.get('query', ''), re.I)))) \
-                or (n.startswith('mcp__todoist__') and re.search(r'(add|update|complete|delete|reschedule|move)', n))
+                or (n.startswith('mcp__todoist__') and re.search(r'(add|update|complete|delete|reschedule|move)', n)) \
+                or (n == 'Bash' and re.search(r'_tracker\.py\s+(set|stage|new|comment)\b', inp.get('command', '') or ''))
             if mut:
                 first_mut = i; break
         orient = tool_uses[:first_mut] if first_mut is not None else tool_uses

@@ -8,6 +8,10 @@
 .skills/memo/SKILL.md
 .skills/prd/SKILL.md
 .skills/build/SKILL.md
+.skills/build/brief_template.md
+.skills/build/go_template.md
+.skills/build/proof_checklist.md
+.skills/build-prd/SKILL.md
 .skills/ship/SKILL.md
 .skills/quick-fix/SKILL.md
 .skills/new-workspace/SKILL.md

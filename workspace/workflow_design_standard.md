@@ -15,7 +15,7 @@ Every step that crosses a system boundary or changes hands between actors must a
 | **Output** | What does it produce? |
 | **Handoff** | What does it trigger next? |
 
-Blank property = under-defined step. A step a person does names exactly one action they take, said as something a person does (approve the memo, read the report and say go, send the invoice), never a vague "review"; a step that needs two human actions is two steps. Vague output ("brand has overview") needs specificity ("brand has program overview with pricing, lifecycle, and terms summary").
+Blank property = under-defined step. A step a person does names exactly one action they take, said as something a person does (approve the memo, read the report and say go, send the invoice), never a vague "review"; a step that needs two human actions is two steps. A step that someone other than the owner will carry out is shown to that person before the design is fixed: input that arrives after the build costs a rebuild (seven days, once). Vague output ("brand has overview") needs specificity ("brand has program overview with pricing, lifecycle, and terms summary").
 
 ## Quality review — three questions about the flow as a whole
 
@@ -24,6 +24,39 @@ Blank property = under-defined step. A step a person does names exactly one acti
 3. **What's the fallback?** For every automated step: does a human have a manual path? For every human step: is a system idle waiting, and does anyone know?
 
 **A notice someone must receive is found by state, not by a cursor.** When a person has to be told about an outcome (their work was rejected, their payment failed), the sender looks for every outcome that has no notice yet, not for the events that arrived after its last position. A cursor moves past anything a failed or skipped pass missed, and that miss is permanent and silent; a read by state heals it on the next pass, and an invariant ("every outcome older than N minutes has its notice") proves it held. (2026-10-08, brand-reject ship H2: a worker rolled back while the app stayed live would have left rejected creators untold for good.)
+
+## Rules for state and writes
+
+Each rule names the silent failure it prevents.
+
+**The record**
+1. **One system holds the record; any other copy is a mirror.** Write the record first and the mirror second, and set a disagreeing mirror back to the record, never the reverse. A new writer of a mirrored status updates every mirror, or the two drift.
+2. **A step acts on the record, not on the event that woke it.** A trigger that carries no intent (a status changed) reads the record first and stops when it does not hold the expected state, so a manual move cannot set off messages or money.
+
+**Writes**
+3. **A check followed by a change is one atomic database function,** and where two inserts can race, a unique index decides. Separate steps race when several arrivals land together.
+4. **Every state write names the state it expects,** so a repeat changes nothing. Stuck work is recovered through the idempotent front door, never by re-running a non-idempotent step or writing its result by hand: a re-run sends its messages again.
+5. **A consumer of someone else's retries stores the producer's event id** on the rows it creates and checks it first. Best-effort delivery is for cosmetic output, never for money or state.
+6. **A lifecycle timestamp is written once, where it is null, by the step that makes the transition.** A lost one stays null, never estimated; a write placed after another writer moved the row never matches.
+7. **A write keyed on a parent names the child states it may touch,** and a decision about a set is taken over the whole current set, doing nothing when the rows disagree. Otherwise a failed item inherits its siblings' success.
+8. **A failed write stops the chain, and a message upstream of a state write has its failure caught.** Otherwise the next step runs on a state that was never saved, or an undeliverable notice strands the work.
+
+**Reads and branches**
+9. **Every branch has a loud place for the case it did not expect.** A router with no fallback drops what it cannot classify and reports success; a path that skips input says what it skipped, by field.
+10. **A failed read is never shown as empty.** A failed query, a field missing from the SELECT, a table nothing writes any more and a stale snapshot all render a complete, wrong picture; a read that fails raises, and a snapshot carries its time.
+11. **A rule that classifies the same things in two places is one function, imported,** matching exact names before prefixes. Two copies drift, and the drift shows up as money.
+
+**Changing the shape of state**
+12. **A new status value, or a reader given a wider population, is a change to every consumer.** List the consumers from the code, or the newly included rows, and rule each in or out before go-live. Removing a state also removes whatever fired on entering it.
+13. **A build that starts acting on another system's output re-rates that system's known defects,** because a defect that was quiet while nothing acted on it now causes actions.
+
+**Watching it run**
+14. **The monitor runs outside what it monitors** and tells "cannot reach" from "refused my key". A recovery part (a retry handler, a re-queue job) gets a detector of its own.
+15. **A step that falls due weeks later is triggered by a dated task created when the work starts.** Nobody remembers it otherwise.
+
+**Money**
+16. **Ask who fronts the cash, and when, before designing anything that pays or bills.**
+17. **A gate about money reads the outside party,** and sums that agree do not prove completeness: keep one independent total from the source and the human spot-check against the source's own screen.
 
 ## The history rule: every change is recorded
 

@@ -19,10 +19,10 @@ Cross-project tool knowledge: how each tool in the stack behaves **anywhere**, l
 
 | File | Covers |
 |------|--------|
-| deploying.md | Cross-host deploy truths (working-tree deploys, deploy-truth-is-live-state) |
-| llm-workflows.md | Architecture principles for LLM-judgment systems |
+| deploying.md | Cross-host deploy truths (working-tree deploys, deploy-truth-is-live-state, a key rotation as a change to every holder) |
+| llm-workflows.md | Architecture principles for LLM-judgment systems; measuring a change against the model's own self-agreement |
 | integration-audit.md | The 6-step cross-system integration audit |
-| investigation.md | Hypothesis-driven investigation protocol (full text behind the tier-1 tripwire) |
+| investigation.md | Hypothesis-driven investigation protocol (full text behind the tier-1 tripwire); proving a cause before a people fix, restoring before tidying, re-running stuck work, sweeping a defect class |
 | subagents.md | Subagent strategy — ground-truth vs simplest-solution agents |
 | claude-code.md | The harness itself: hook events (what can inject context, timeouts, Stop-fires-per-turn), transcript JSONL shape, settings; **silent no-ops** (an unmatched `str.replace()`, an options object in the wrong argument slot) |
 

@@ -30,9 +30,25 @@ A failure that passes on retry is called transient only when the retry used the 
 
 "Brand X stopped tagging its ads" was drawn from one month of code-less ads. Split by week, it was a single nine-day batch from one brand with a clean record after it. Before telling anyone a behaviour started or stopped, break the evidence into weeks and say whether it is still going on.
 
+## Prove the cause before prescribing a fix for people
+
+A cause that blames how people use a system ("they bypass the buttons", "they misread the brief") prescribes training, and a cause in the system prescribes a change to it. The two point in opposite directions, so the people explanation gets the same test as any other hypothesis before anyone is asked to change what they do. Twice the data refuted it: a mirror that drifted from its record was a workflow that never wrote the record back (264 of 264 drifted rows carried that one signature, with no exception), and a week of creators' work failing review was a checker that flagged 89 to 100% of what the reviewers then approved, not creators misreading briefs.
+
+## A live result that contradicts the spec: test whether the old code produced it too
+
+When a result on the live system disagrees with what the design said to expect, the first test is the same input through the code as it was before the change. If the old code gives the same result, the expectation was wrong and the design is corrected; only if it differs is the change at fault.
+
 ## An outage: ask first whether we caused it
 
 "The provider went down" is a hypothesis like any other. The cheapest test is our own record: today's session log, the recent deploys, and any load tests or bulk jobs that ran just before the first error. Read those before anything else. The cause changes the answers. A self-inflicted outage can recur the next time the same job runs, so the recovery must include the rule that stops it happening again, and the handoff must not tell the owner that a vendor failed.
+
+## During an outage, restore the last working shape; tidy later
+
+A sweep that standardises many carriers at once (the same header on every call, the same template on every node) is a change to each of them, and it can remove something one carrier depended on without any error at the edit: a morning sweep dropped one header from three lookups and stopped intake for 14 hours. To end the outage, put back exactly what worked. Standardise only on a second incident or inside planned work, and after any sweep run a behavioural check on every carrier it touched, whatever the size of the edit.
+
+## Re-running stuck work
+
+Confirm the cause is fixed first: re-running into the same fault strands the work again and repeats every side effect on the way (messages, paid model calls). Take the list of stuck items from the system that holds the record, not from the tool's run list. Run each item once. Read the result from the resulting state, not from the run's own status, and send a second failure to a person.
 
 ## After an outage, a clean error list is not a clean system
 
@@ -57,4 +73,4 @@ When a fix addresses a class of defect rather than a one-off, the instance that 
 5. **Read what each carrier does.** Severity follows what the carrier does, not where the defect was filed; the damaging instances are often outside the module the sweep was filed against.
 6. **A reasoning flaw is a class too.** When a gate concludes something about items it never tested, sweep the other gates for the same reasoning shape, and check the worked precedents first: the operator's real practice may already hold the stronger test, waiting to be promoted into the document.
 
-If the same class turns up twice, the recurrence itself is the finding: say so, rather than fixing the second instance quietly.
+If the same class turns up twice, the recurrence itself is the finding: say so, rather than fixing the second instance quietly. Then read the document that states the rule the code follows: one defect came back four times because the sentence in the contract was wrong, so each fix was written to the wrong rule. The durable repair was the corrected sentence and one fixture built from the case it had missed.

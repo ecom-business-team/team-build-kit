@@ -20,6 +20,15 @@ Do it again immediately after any change to the access posture, because that cha
 
 **Taking a GitHub repo private is not one switch (2026-09-30).** Its GitHub Pages site is a separate public surface: a free-plan org cannot serve Pages from a private repo, yet the site stayed published (`public: true`) after the switch until it was deleted (`gh api -X DELETE repos/{owner}/{repo}/pages`). Even then the CDN kept serving the cached copy for up to its `max-age=600`. Right after the switch, members' `git clone` over HTTPS was refused with "Repository … is disabled" (403) while the API said `disabled: false`, and it cleared within a minute of deleting the site. Afterwards, check every surface as a stranger: the repo page, a raw file URL, the Pages URL (cache-busted) and the org's public repo list. Then check as a member: a plain `git clone`, not only `gh`.
 
+## A key rotation is a change to every holder of the key
+
+Rotating a credential invalidates it everywhere at once, and each holder fails the next time it runs, which for a rarely used one is weeks later and silent. Four rules, each from a rotation that broke something:
+
+1. **Every holder is on a written list, added in the session it is given the key.** A rotation missed a bot in its own hosting project because no list of holders existed, and every command it served failed for about 20 hours. A rotation is finished when every row of the list has been proved live.
+2. **A key reached by two routes is two holders.** A workflow read the key from a shared variable while one node still used a stored credential; the rotation updated the variable, and the node, whose stored key nothing else used often enough to notice, failed unseen until its task was next needed. Point every consumer at the one shared source before rotating.
+3. **Prove the new shape with one live call before changing the fleet.** A rotation to a new key format kept a header the new format does not accept, and every call from 28 workflows failed for about four hours.
+4. **Prove each holder through what its users do, not its health check.** A health endpoint and a bot's gateway connection both stayed green while every real request failed on the dead key.
+
 ## A branch push proves the deploy path before `main` moves (2026-09-24)
 
 On a git-integrated host, push the branch first and let its preview build: it proves the build, the environment variables and the region settings on the host's own machines, while production still serves the old commit. A failure there costs nothing; the same failure after a merge is an outage. Merge only once the branch deployment is Ready.

@@ -7,23 +7,25 @@ description: Close out a working session — append the session-log entry to dai
 
 **When:** true close moments — the session is ending, a project archived, a batch finished, or the owner says "close this out." NOT mid-build with the next step queued (just report the handoff and stop). Heuristic: closing a *session/project*, or a *task within one*? If the latter, skip.
 
-## Follow-ups: the session tail, then the filed (the one home of this rule)
+## Follow-ups: do it now, and file only what must wait (the one home of this rule)
 
-**During the session.** A small follow-up of this work that the session can do, but that would break the flow if done now, goes on the session's **tail**: a plain list kept in the conversation, never the task manager. (A document that misled you or contradicts the live system is still fixed at once, by the workspace's doc-friction rule; the tail is for what can wait until the end.) Work that is substantial or standalone (its own quick fix or memo), or that waits on a person, an outside party or a date, is filed in the task manager when it is seen, by the workspace's task-capture rule.
+**Do it now.** A follow-up the session finds is done in the same session, without asking the owner, when three things are true: the session is able to do it, a mistake in it can be undone, and it sits in the area the session is already working in. It is done at the next natural pause or before the stop, and the report says in one line what was done. There is no list of small items offered to the owner at the close, and no batch of small fixes kept for a later session. (A document that misled you or contradicts the live system is fixed at once, by the workspace's doc-friction rule.)
 
-**Filing goes into an existing parent.** Every item this session files is a subtask of the project, initiative, milestone, quick-fix batch or task it belongs to, and one session's related items go under **one** parent, never several. A new top-level task is created only for a new project, a new quick-fix batch, or a new person to ask (one task per person, each ask a subtask). A check goes only under its milestone's ship task or its batch. Titles say what the task does in plain words, never an id or shorthand. Why: filing each loose end as its own top-level task left a backlog where every finished task spawned about three more nobody knew to act on (the owner, 2026-10-15).
+**File only what must wait.** A task goes into the task manager only when the work waits on something this session does not have: a named person, a date or evidence that does not exist yet, a decision that is the owner's, or work large enough to need its own build. A follow-up that cannot be undone, or that reaches outside the area being worked, is the owner's decision: it is put to the owner in one line at the stop, and filed only when the owner says it is for later.
 
-**At the end, before the log entry:**
-1. **Offer the tail.** List each tail item in one line with its minutes, and ask the owner: "These N items take about X minutes. Do them now, or file them for later?" The answer decides, for all of them or item by item: done now, or filed. Nothing on the tail is filed without that answer.
-2. **Announce what was filed.** Every task this session filed, including tail items the owner chose to file, is shown to the owner at the end, before the log entry and even if it was mentioned when filed (on the handoff card's Filed block when the stop prints one), by its title and the title of the parent it sits under, in four parts:
+**Not worth doing is said, not filed.** A follow-up the session judges not worth doing is named in the report in one line with the reason, so the owner can overrule it. It is not filed.
+
+**Filing goes into an existing parent.** Every item this session files is a subtask of the project, initiative, milestone or task it belongs to, and one session's related items go under **one** parent, never several. A new top-level task is created only for a new project or a new person to ask (one task per person, each ask a subtask). A check goes only under its milestone's ship task. Titles say what the task does in plain words, never an id or shorthand.
+
+**At the end, before the log entry: announce what was filed.** Every task this session filed is shown to the owner at the end, even if it was mentioned when filed (on the handoff card's Filed block when the stop prints one), by its title and the title of the parent it sits under, in four parts:
    - **What:** the task in one plain sentence.
    - **Where:** the parent's title (the id after, for lookup).
-   - **Why:** what was seen, and why it is not part of this work.
+   - **Why it waits:** the person, date, decision or build it waits on.
    - **Expect:** who acts, when, and the exact command or step.
 
    A title alone is not an announcement, and an id alone never is.
 
-Why: filing costs the session nothing and moves the cost to the owner, who has to remember the item, come back to it and rebuild its context. A series of small filed items once took about three hours of sessions to clear (the owner, 2026-09-29). Other stops point here: the handoff card's Filed block (template §4.10), `/ship`'s residual review, and the workspace `CLAUDE.md`.
+Why: filing costs the session nothing and moves the cost to the owner, who has to remember the item, come back to it and rebuild its context. An audit of 202 sessions found 289 filed tasks, about a quarter of the task-manager ones labelled as contained work the agent runs itself, and the sessions opened to clear tasks filed 16 new ones while closing 40, so the backlog never emptied (the owner, 2026-11-15; before that, a list offered at the close and batches of small fixes, which kept the filing and added a question). Other stops point here: the handoff card's Filed block (template §4.10), `/ship`'s residual review, and the workspace `CLAUDE.md`.
 
 ## 1. Session-log entry (always — floor is one line)
 
@@ -37,7 +39,7 @@ Append to `daily-outputs/YYYY-MM/YYYY-MM-DD.md` (create month folder/file if abs
 **Open:** threads left hanging → file to the task manager, reference the task here
 ```
 
-**An untasked Open item is refused.** Every thread on the **Open:** line carries one of four things: `done` (the session tail did it), the task id it was filed as, `resolved` with the pointer that shows it, or, for the in-flight project's next step, the exact command (its position already lives in `state.md`). A thread with none of the four is not written until it is filed: file it, then write the id. The log is where threads are found, not where they are kept; a thread that waits for the next `/day` is lost the week `/day` lapses (13 days of backlog found 13 unfiled threads, three of them live defects, 2026-09-28).
+**An untasked Open item is refused.** Every thread on the **Open:** line carries one of four things: `done` (this session did it), the task id it was filed as, `resolved` with the pointer that shows it, or, for the in-flight project's next step, the exact command (its position already lives in `state.md`). A thread with none of the four is not written until it is filed: file it, then write the id. The log is where threads are found, not where they are kept; a thread that waits for the next `/day` is lost the week `/day` lapses (13 days of backlog found 13 unfiled threads, three of them live defects, 2026-09-28).
 
 Trivial session = one line: `## HH:MM · workspace · quick-fix — shipped X (commit abc123)`. Every session logs; selective logging kills the habit. The log is an index of exhaust — never duplicate content that lives in commits, practices, or the task manager.
 

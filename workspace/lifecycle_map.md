@@ -298,7 +298,7 @@ Every session ends the same way: a line in the day's log, and when a project is 
 - It runs only when the blast-radius question says a mistake would travel: someone else depends on it, it writes real data, its output drives decisions, or it touches money or people outside. Otherwise there is no ship review.
 - Six questions, in writing. What breaks. Who notices. What the fallback is, meaning what you do if it breaks. What the contingency is, meaning what you do if the fallback fails too. How we fix it. And what a test that checked a sample tells us about the items it never looked at.
 - For every hole: fix it now, send the design back to the PRD or the memo, or accept it with the owner's explicit sign-off. A hole with no decision blocks go-live.
-- Before the close, every task the project filed along the way is brought to the owner in one list, each with its next action, and ruled: do it now, schedule it, or drop it. A small follow-up goes on the session tail, the short list of small things to finish before the session stops, and is done before the stop unless the owner chooses to file it.
+- Before the close, every task the project filed along the way is brought to the owner in one list, each with its next action, and ruled: do it now, schedule it, or drop it. A follow-up the session can do, that can be undone and that sits in the area being worked, is done before the session stops, without asking; a task is filed only for work that waits on a person, a date, the owner's decision or its own build.
 
 **Produces.**
 
@@ -427,7 +427,7 @@ Three commands sit beside the loop rather than on it. Run `/doc-audit` before a 
 | Ship runs only when one of the four conditions fires; otherwise there is no ship review | `ship/SKILL.md`, "Trigger"; `glossary.md`, "Blast radius", "Checkpoint 3, the ship review" |
 | The six questions: what breaks, who notices, fallback, contingency, how we fix it, what it concludes without testing | `ship/SKILL.md`, "Phase 2: RESILIENCE REVIEW"; `glossary.md`, "Checkpoint 3, the ship review" |
 | Every hole is fixed now, escalated, or accepted with the owner's sign-off; an undispositioned hole blocks go-live | `ship/SKILL.md`, "Phase 3: DISPOSITION" (the table and the go-live check) |
-| A small follow-up goes on the session tail and is offered at the close, do now or file; filed work is announced as What / Why / Expect; before a ship's close every open item is ruled do now, schedule or drop | `session-close/SKILL.md`, "Follow-ups"; `ship/SKILL.md`, "Phase 6" Step 2 ("Residual review") |
+| A follow-up the session can do, undo and that sits in its area is done in the session without asking; only work that must wait is filed, announced as What / Why it waits / Expect; before a ship's close every open item is ruled do now, schedule or drop | `session-close/SKILL.md`, "Follow-ups"; `ship/SKILL.md`, "Phase 6" Step 2 ("Residual review") |
 | Go-live is undoable in one step, smoke-tested in production, with monitoring confirmed to have fired | `ship/SKILL.md`, "Phase 4: PRE-FLIGHT CHECKS" (Reversibility); "Phase 5: GO LIVE" |
 | The shared close: provisional lessons, living documents current, archive, milestone shipped and tray refilled, outcome check scheduled, handoff card | `ship/SKILL.md`, "Phase 6" Step 3; `_shared/project_close.md`, §§1–6 |
 | A silent failure is a hole; a quietly tolerated hole is the failure the checkpoint exists to prevent | `ship/SKILL.md`, "Phase 2" ("Who notices?" row and the sentence that every "nothing" is a hole); "Phase 3" (the go-live check sentence) |

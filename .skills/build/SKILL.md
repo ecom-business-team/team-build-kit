@@ -114,7 +114,7 @@ Given several outcomes:
 
 - **An outcome check is owed** when others rely on the change. File "Outcome check: {outcome}" in the task manager under the area's convention: what must be observed, the proof that will show it, and the first date real use will show it. The build stays `live`. When the check passes, set `done`. When it fails, the failure is a new `/build`.
 - **Parked or killed** on the owner's word: set the stage, with the reason in History.
-- **Follow-ups.** Every loose end is done now or filed in the task manager, with a recommendation where it may not be worth doing. Only the owner drops one. None is left only in the brief.
+- **Follow-ups.** Every loose end is done now, or filed only when it must wait (the `session-close` skill, "Follow-ups"). One not worth doing is named with its reason. None is left only in the brief.
 - Run the `session-close` skill at a true close: the session ending, or a batch of builds done.
 
 **This file and the checklist have word budgets, enforced by tests.** A new lesson replaces or sharpens a line; it never appends a paragraph.

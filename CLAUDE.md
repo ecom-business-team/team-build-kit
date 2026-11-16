@@ -28,7 +28,7 @@ After the interview's handoff card, say:
 >
 > There are two ways to start. `/new-workspace` is for something new; `/convert-to-standard` is for something you already have. Both end with a card that says what to type next.
 >
-> The first time you open your workspace folder in Claude Code it asks once whether to trust the folder's hooks. Say yes — they are the kit's, and they only write notes inside that folder."
+> The first time you open your workspace folder in Claude Code it asks once whether to trust the folder's hooks. Say yes — they are the kit's. Five only write notes inside that folder, and one stops a production deploy (`railway up`, `vercel --prod`) that would ship uncommitted work or remove work on the remote's main branch."
 
 ## Step 5: Leave this folder as it is
 
@@ -39,7 +39,7 @@ This folder is the factory. `.skills/` and `workspace/` are the files it install
 ## If the user asks questions before installing
 
 - **"What is this?"** — "A set of commands that walk you through building real tools properly — think it through, design it, make it safe to rely on — plus the standards they read and a workspace to work in. It takes about ten minutes, most of it a conversation about your work. Type 'get started' when ready."
-- **"Is this safe?"** — "It copies skill files into your Claude Code settings (`~/.claude/skills/`) and creates one new folder for your workspace beside this one, with some standards, notes and five small hooks inside it. No system changes, no hidden installs, nothing hosted. Once a day one hook reads the kit's public version number from GitHub to tell you when a newer kit is out; nothing is sent. It never touches work that is already yours."
+- **"Is this safe?"** — "It copies skill files into your Claude Code settings (`~/.claude/skills/`) and creates one new folder for your workspace beside this one, with some standards, notes and six small hooks inside it. Five hooks keep notes, and one stops a production deploy (`railway up`, `vercel --prod`) that would ship uncommitted work or remove work on the remote's main branch. No system changes, no hidden installs, nothing hosted. Once a day one hook reads the kit's public version number from GitHub to tell you when a newer kit is out; nothing is sent. It never touches work that is already yours."
 - **"Do I need to know how to code?"** — "No. Everything is plain English. The commands do the technical part; you describe what you want."
 - **"Can I make more than one workspace?"** — "Yes. Say 'get started' here again, or type `/onboard` anywhere, and it creates another folder beside this one."
 

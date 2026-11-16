@@ -118,7 +118,7 @@ PY
     [ "$kept" -gt 0 ] && echo "   $kept kit-owned file(s) you had changed were kept — see the ⚠️ line(s) above."
     echo "   Next: open $W in Claude Code."
   else
-    echo "   These are the commands only. The hooks (session notes, the daily new-version check) and the tools the commands"
+    echo "   These are the commands only. The hooks (session notes, the daily new-version check, the pre-deploy check) and the tools the commands"
     echo "   call live in a workspace: type /onboard to create one, or put the kit into a folder you already have with"
     echo "   curl -fsSL $BASE/install.sh | TBK_WORKSPACE=\"<your folder>\" bash"
   fi

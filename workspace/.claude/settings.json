@@ -44,6 +44,16 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/deploy_check.py\"",
+            "timeout": 45
+          }
+        ]
       }
     ],
     "PostToolUse": [

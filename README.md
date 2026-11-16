@@ -48,7 +48,7 @@ Then open that folder in Claude Code and type **`/convert-to-standard`**. It loo
 ### After installing, whichever route you took
 
 - **Always open Claude Code in your workspace folder** when you work. If you open it anywhere else, you have the commands but none of the background parts.
-- **Say yes to the trust question.** The first time Claude Code opens your workspace, it asks once whether to trust the folder's hooks. Say yes: they are the kit's, and they only write notes inside that folder.
+- **Say yes to the trust question.** The first time Claude Code opens your workspace, it asks once whether to trust the folder's hooks. Say yes: they are the kit's. Five only write notes inside that folder, and one stops a production deploy (`railway up`, `vercel --prod`) that would ship uncommitted work or remove work on the remote's main branch.
 - **To check you are in a workspace,** look for a file called `.claude/kit_receipt` inside the folder. If it is there, the background parts are installed. If it is not, you have opened the wrong folder, so open your workspace folder instead. If this is a folder you already work in and want to keep, take Route 3 to put the background parts into it.
 
 ---
@@ -117,10 +117,10 @@ From the day after your first session, Claude mentions it when a day or a week h
 ## What lands where
 
 - **Your Claude Code's skills folder** gets the commands above; Route 2's one-line install touches nothing else.
-- **Your workspace** (created by `/onboard`, or an existing folder named with `TBK_WORKSPACE`) gets the kit-owned files: the three standards, the glossary, the explainer (`why_we_build`, the page that says why the kit works this way) and worked example, the practice notes (short notes on how each tool behaves, in `_practices/`), and the five small hooks together with the settings file that tells Claude Code when to run them. These refresh when you update the kit. A small receipt in `.claude/` records what the kit placed, so an update can tell its own files from your edits: a file you changed is kept, and the kit's new version is put beside it as `.kit-new` with a note. The same holds for the commands in your skills folder.
+- **Your workspace** (created by `/onboard`, or an existing folder named with `TBK_WORKSPACE`) gets the kit-owned files: the three standards, the glossary, the explainer (`why_we_build`, the page that says why the kit works this way) and worked example, the practice notes (short notes on how each tool behaves, in `_practices/`), and the six small hooks (five keep notes inside the folder, and one stops a production deploy (`railway up`, `vercel --prod`) that would ship uncommitted work or remove work on the remote's main branch) together with the settings file that tells Claude Code when to run them. These refresh when you update the kit. A small receipt in `.claude/` records what the kit placed, so an update can tell its own files from your edits: a file you changed is kept, and the kit's new version is put beside it as `.kit-new` with a note. The same holds for the commands in your skills folder.
 - **Your own rules for a kit command** go in `.claude/skills.d/<command>.md` in your workspace (for example `.claude/skills.d/prd.md`). Claude reads that file whenever you run the command; the kit never writes there, so your rules survive every update.
 - **Your map (`CLAUDE.md`), your skills list and every folder you make are yours.** The kit never changes them after the interview, except the kit's own lines in your map, and only in the sections you approve when an update offers them.
-- **One question, once.** The first time Claude Code opens your workspace it asks whether to trust the folder's hooks. Say yes; they are the kit's and only write notes inside that folder.
+- **One question, once.** The first time Claude Code opens your workspace it asks whether to trust the folder's hooks. Say yes; they are the kit's. Five only write notes inside that folder, and one stops a production deploy (`railway up`, `vercel --prod`) that would ship uncommitted work or remove work on the remote's main branch.
 
 ---
 

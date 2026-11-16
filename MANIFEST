@@ -22,6 +22,7 @@
 .skills/day/SKILL.md
 .skills/week/SKILL.md
 .skills/doc-audit/SKILL.md
+.skills/workspace-audit/SKILL.md
 .skills/_shared/documentation_standard.md
 .skills/_shared/project_close.md
 .skills/_shared/claude_md_template.md
@@ -40,6 +41,7 @@ workspace/.claude/tools/orientation_cost.py
 workspace/.claude/tools/gate_cost.py
 workspace/.claude/tools/index_check.py
 workspace/.claude/tools/referrers.py
+workspace/.claude/tools/session_audit.py
 workspace/documentation_standard.md
 workspace/workflow_design_standard.md
 workspace/testing_standard.md

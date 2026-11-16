@@ -73,6 +73,7 @@ Then open that folder in Claude Code and type **`/convert-to-standard`**. It loo
 | `/day` | Turns a day's session logs into one digest, a short paragraph that sums up the day, and files the loose threads in your task manager, the one app or file where every task and open question lives. That is the task app you already use, which you name during `/onboard`, or a `tasks.md` file in your workspace if you use none. |
 | `/week` | Reviews the week's digests and names the one thing that kept getting in the way. |
 | `/doc-audit` | Checks every living document against what actually exists and lists the defects to fix, for one area or the whole workspace. |
+| `/workspace-audit` | Reads your saved sessions and your instruction files, shows what your rules cost against the work you did, and writes a report with three lists: stop, change, add. It changes nothing but the report. |
 | **Your own skills** | |
 | `/new-workflow` | Turns a process you keep repeating into a skill of your own, or, when a person checks the work after each stage, into a set of folders with one folder per stage, so each stage's output waits in its folder for that check, and adds it to your skills list. |
 | **The kit** | |
@@ -109,6 +110,7 @@ Three habits keep your workspace true, and the kit asks for them:
 - **At the end of each session**, type `/session-close`. It writes one line in today's log and checks that the documents match what changed.
 - **At the end of the day, or the next morning**, type `/day`. In about five minutes it turns the day's lines into a short digest and files the loose ends in your task manager.
 - **Once a week**, type `/week`. In about twenty minutes it looks back over the week and names the one thing that kept getting in the way.
+- **Once a month, or when a new model comes out**, type `/workspace-audit`. It compares what your rules cost with the work you really did, and saves a dated report in `_admin/audits/`. It never changes or deletes anything for you. To have it run on a schedule, ask Claude in the desktop app to "run /workspace-audit in this workspace on the first Monday of every month".
 
 From the day after your first session, Claude mentions it when a day or a week has not been reviewed. It only mentions it; nothing runs until you type the command.
 

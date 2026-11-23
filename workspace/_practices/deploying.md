@@ -14,6 +14,7 @@ This file holds what a script cannot see. Three rules that a script can check ar
 
 - **Give each worktree its own Python environment**: `UV_PROJECT_ENVIRONMENT=$HOME/.venvs/<worktree-name> uv sync`, then `uv run …` with the same variable. A wrapper script that points every checkout at one shared environment with an editable install will silently repoint the main checkout's imports at the worktree's code, so do not run the project's `dev.sh` in a worktree unless it refuses there.
 - **A test that reads a fixture by a path relative to a parent folder fails to collect in a worktree outside that folder.** Run that test from the main checkout and the rest in the worktree with `--ignore`.
+- **The repository's local `main` is not the remote's.** It can be an old branch holding commits that were never pushed. Work from `origin/main` (`git fetch`, then branch from it or push `HEAD:main`); never `git checkout main` or `git pull` into it in a worktree, because that moves the worktree onto the stale branch.
 - **A Next.js worktree can borrow the main checkout's packages through a `node_modules` symlink** for `tsc`, `eslint`, `vitest` and Playwright. Next 16's Turbopack dev server panics on the link, so start it with `next dev --webpack`. `next build` with the link works under `~/worktrees/` and fails under `/tmp`, so keep throwaway worktrees under `~/worktrees/` too.
 
 ## What is live, and who can reach it

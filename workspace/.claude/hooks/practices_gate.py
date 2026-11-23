@@ -10,10 +10,18 @@ into Claude's context via additionalContext. Once per file per session (marker f
 ~/.claude/state/practices-gate/<session>/). Replaces reliance on CONTEXT.md pointers alone,
 which most CONTEXT.md files turned out not to carry when audited.
 Silent (exit 0, no output) when nothing is due. Never blocks a tool call.
+
+A shell command loads a tool's file only when the tool is the command word of a segment: the start
+of the line, or after `&&`, `||`, `;`, `|`, `(` or a new line, once leading VAR=value words and
+wrappers (`npx`, `timeout 60`, `env`) are dropped. A tool named only as an argument, a file name,
+quoted text or a heredoc body loads nothing. A pattern that is a web address or a variable name
+matches anywhere in the text, because those are always arguments. A line that cannot be read as
+shell (an unclosed quote) falls back to matching the tool's word anywhere.
 """
 import json
 import os
 import re
+import shlex
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -22,17 +30,88 @@ PRACTICES = os.path.join(ROOT, "_practices")
 STATE_DIR = os.path.expanduser("~/.claude/state/practices-gate")
 CAP = 9000  # additionalContext is capped at 10,000 chars by Claude Code
 
+# A text rule (a pattern string) matches anywhere in the command. A command rule (a tuple of the
+# command word and, optionally, the word that must follow it) matches only a segment's command word.
 BASH_RULES = [
     (r"N8N_API|n8n\.cloud|/api/v1/(workflows|executions|credentials)|/webhook(-test)?/", ["n8n"]),
-    (r"\brailway\b", ["railway", "deploying"]),
+    (("railway",), ["railway", "deploying"]),
     (r"frame\.io|\bf\.io/", ["frameio"]),
-    (r"\bvercel\b", ["vercel", "deploying"]),
-    (r"googleapis\.com|\bgcloud auth\b|GOOGLE_APPLICATION_CREDENTIALS", ["google-apis"]),
+    (("vercel",), ["vercel", "deploying"]),
+    (r"googleapis\.com|GOOGLE_APPLICATION_CREDENTIALS", ["google-apis"]),
+    (("gcloud", "auth"), ["google-apis"]),
     (r"api\.clickup\.com|CLICKUP_API", ["clickup"]),
     (r"discord(app)?\.com/api|DISCORD_BOT_TOKEN", ["discord"]),
     (r"api\.tally\.so|TALLY_API_KEY", ["tally"]),
-    (r"supabase\.co/(rest|rpc)|SUPABASE_(URL|SERVICE|KEY|ANON)|\bpsql\b|\bpostgrest\b", ["supabase"]),
+    (r"supabase\.co/(rest|rpc)|SUPABASE_(URL|SERVICE|KEY|ANON)", ["supabase"]),
+    (("psql",), ["supabase"]),
+    (("postgrest",), ["supabase"]),
 ]
+WRAPPERS = {"command", "exec", "time", "nohup", "env", "sudo", "npx", "bunx", "pnpm", "dlx", "-y", "--yes"}
+
+
+def command_words(command):
+    """The command word of each segment of a shell line, with the word after it: [(word, next word)].
+    Quotes are respected, a heredoc body is skipped. Raises ValueError on a line shlex cannot read."""
+    lex = shlex.shlex(command, posix=True, punctuation_chars="();<>|&\n")
+    lex.whitespace, lex.whitespace_split, lex.commenters = " \t\r", True, ""
+    segs, seg, pending, body_end, prev = [], [], [], None, "\n"
+    for tok in lex:
+        separator = set(tok) <= set("&|;()\n")
+        if body_end is not None:                      # inside a heredoc body: skip to its end word
+            if tok == body_end and "\n" in prev:
+                body_end = pending.pop(0) if pending else None
+        elif prev == "<<":                            # the heredoc's end word
+            pending.append(tok.lstrip("-"))
+        elif separator:
+            if seg:
+                segs.append(seg)
+            seg = []
+            if "\n" in tok and pending:
+                body_end = pending.pop(0)
+        else:
+            if tok.startswith("`") and seg:           # a backtick opens a command inside the segment
+                segs.append(seg)
+                seg = []
+            seg.append(tok)
+        prev = tok
+    if seg:
+        segs.append(seg)
+    out = []
+    for seg in segs:
+        i = 0
+        while i < len(seg):
+            t = seg[i]
+            if "=" in t and t.split("=", 1)[0].replace("_", "").isalnum() and not t.startswith("-"):
+                pass                                  # VAR=value
+            elif t in WRAPPERS or t == "$":           # "$" is what shlex leaves of "$(" before the "("
+                pass
+            elif t == "timeout" and i + 1 < len(seg):
+                i += 1
+            else:
+                break
+            i += 1
+        if i < len(seg):
+            word = os.path.basename(seg[i].lstrip("`")).split("@")[0]
+            out.append((word, seg[i + 1].rstrip("`") if i + 1 < len(seg) else ""))
+    return out
+
+
+def bash_files(cmd):
+    try:
+        words = command_words(cmd)
+    except ValueError:
+        words = None
+    out = []
+    for rule, files in BASH_RULES:
+        if isinstance(rule, str):
+            hit = re.search(rule, cmd)
+        elif words is None:
+            hit = re.search(r"\b" + r"\s+".join(map(re.escape, rule)) + r"\b", cmd)
+        else:
+            hit = any(w == rule[0] and (len(rule) == 1 or nxt == rule[1]) for w, nxt in words)
+        if hit:
+            out.extend(files)
+    return out
 
 
 def files_for(tool_name, tool_input):
@@ -52,10 +131,7 @@ def files_for(tool_name, tool_input):
             server = server.split("-")[0]
         out.extend([server, server + "_conventions"])
     elif tool_name == "Bash":
-        cmd = tool_input.get("command", "") or ""
-        for pattern, files in BASH_RULES:
-            if re.search(pattern, cmd):
-                out.extend(files)
+        out.extend(bash_files(tool_input.get("command", "") or ""))
     seen, uniq = set(), []
     for f in out:
         if f not in seen:

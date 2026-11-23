@@ -72,6 +72,19 @@ Any build that holds important state records its history in an append-only event
 
 **Why.** This is the common standard, under three names: an audit log (what SOC 2 and ISO 27001 expect for changes to important data), domain events (the business moments a system records), and the event objects of payment platforms such as Stripe, where every change to every object emits a typed, timestamped event. It answers, for any object, what happened, who did it, when, and why, without anyone having to reconstruct it.
 
+## The transition rule: every allowed move is declared
+
+Any build whose rows carry a status declares the moves that status may make, in one place, and checks its history against the declaration. A status is any column that says where a thing stands in a lifecycle: a submission's stage, a payout's state, a member's standing. The rule has four parts.
+
+1. **One declaration, held as data.** One table (or one file the checks read) lists every allowed move: the status before, the status after, the one program that makes the move, and the guard or the decision that allows it. A move that is not listed is not allowed, however reasonable it looks. The declaration names what is permitted; it never lists what is forbidden. Any page people read is generated from it, so the page cannot drift.
+2. **One writer per move.** Each move names the function, job or action that makes it. A second program that needs the same move calls the first; it does not write the status itself.
+3. **The history is checked against the declaration.** A scheduled check compares every status change the history recorded (the history rule above) with the declaration, and tells a named person the same day about any move outside it. The check reports first. A refusal in the database is added later, only for states that carry money, and only after the declaration has been quiet for one full cycle of the work it covers.
+4. **The declaration ships with the change.** A build that adds a status value, a writer or a move adds it to the declaration in the same change. A mechanical check fails the build when the status allows a value that no declared move mentions.
+
+**Exceptions are declared too.** A move that skips the usual path by decision, a move that only test data makes, and a move that was observed and is waiting for the owner's ruling each get a row that says which of these it is. An exception that lives only in someone's memory is an undeclared move.
+
+**Why.** Each program that sets a status is written and tested on its own, so each passes its tests, and the rules for how a thing may move end up spread across all of them. Nobody wrote the whole set down, and the combination allows moves that no one intended: the field calls this an implicit state machine. The history rule shows that such a move happened only to someone who reads the history against the rules; this rule makes that reading a daily check. It is the standard practice under two names: a finite state machine with an explicit transition table, and the object lifecycles that payment platforms publish for each object.
+
 ## Human review gates
 
 For multi-stage workflows where quality matters more than speed: each stage produces output, and exactly one person takes one named action on it (reads the report and approves it, corrects the list, says go) before the next stage consumes it. A vague "review" is not a check. The intermediate artifact (markdown, JSON, report) IS the communication channel — folder structure is the state machine; no orchestration code.

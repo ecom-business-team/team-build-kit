@@ -1472,6 +1472,11 @@ def source_for(html_path: Path) -> Path | None:
 def stale(root: Path) -> list[Path]:
     found = []
     for h in sorted(root.rglob("*.html")):
+        # Other sessions' checkouts live under .claude/worktrees/; their pages are
+        # theirs to render (a root-level run re-rendered 299 of them, 2026-11-24).
+        rel = h.relative_to(root).parts
+        if any(a == ".claude" and b == "worktrees" for a, b in zip(rel, rel[1:])):
+            continue
         src = source_for(h)
         if src and src.stat().st_mtime > h.stat().st_mtime:
             found.append(h)

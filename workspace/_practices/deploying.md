@@ -9,6 +9,7 @@ This file holds what a script cannot see. Three rules that a script can check ar
 - **The remote's `main` must hold what runs.** When a service is deployed from a local branch, fast-forward the remote's `main` to that commit before the project closes. Other sessions build from `main`, so a later deploy from it would remove your work with no error. `git rev-list --left-right --count origin/main...<deployed branch>` reads `0 0` after the push.
 - **The pre-deploy check compares with the remote's `main`, not with the running service.** When a service may have been deployed from a branch that was never pushed, read the running deployment's commit and confirm your branch contains it.
 - **Commit and push a code project when it closes**, after verification, so git-integrated hosts pick the work up.
+- **Never chain a deploy command after a test line.** Run the tests, read the result, then deploy in a separate step. A deploy chained with `;` after a failed test still ships, and the deploy's own success hides the failure (2026-11-19).
 
 ## Worktrees
 
